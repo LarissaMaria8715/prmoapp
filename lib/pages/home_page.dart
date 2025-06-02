@@ -10,6 +10,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -17,27 +19,75 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: AppColors.fundo,
         appBar: buildAppBar(),
         body: buildBody(),
-      ),
-    );
-  }
-
-  AppBar buildAppBar() {
-    return AppBar(
-      title: Text(
-        'Página Inicial',
-        style: GoogleFonts.poppins(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: AppColors.texto,
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: selectedIndex,
+          onTap: (index) {
+            setState(() {
+              selectedIndex = index;
+            });
+            print(index);
+          },
+          selectedItemColor: Colors.blue,
+          showSelectedLabels: true,
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Início',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.emoji_emotions_outlined),
+              label: 'Humor',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.check_box),
+              label: 'Hábitos',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.air),
+              label: 'Respiração',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.note_alt_outlined),
+              label: 'Metas',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Perfil',
+            ),
+          ],
         ),
       ),
-      centerTitle: true,
-      backgroundColor: AppColors.primario,
-      elevation: 0,
     );
   }
 
-  Widget buildBody() {
+  buildAppBar() {
+    return AppBar(
+      toolbarHeight: 75,
+      backgroundColor: AppColors.primario,
+      elevation: 0,
+      centerTitle: true,
+      title: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.favorite_outlined,
+              color: AppColors.texto
+          ),
+          SizedBox(width: 8),
+          Text(
+            'EQUILIBRE',
+            style: GoogleFonts.jaldi(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: AppColors.texto,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  buildBody() {
     return Center(
       child: Text(
         'Bem-vindo ao app!',
