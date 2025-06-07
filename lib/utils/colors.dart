@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AppColors {
-  static const fundo = Color(0xFFF7F9F9);
-  static const primario = Color(0xFF4A8C82);
-  static const secundario = Color(0xFF89B6A5);
-  static const destaque = Color(0xFFE5C07B);
-  static const texto = Color(0xFF2F3E46);
-  static const alerta = Color(0xFFE57373);
+  static const background = Color(0xFFE8F5E9);
+  static const primary = Color(0xFF2E7D32);
+  static const primaryVariant = Color(0xFF1B5E20);
+  static const secondary = Color(0xFF80CBC4);
+  static const secondaryVariant = Color(0xFF4DB6AC);
+  static const accent = Color(0xFF26A69A);
+  static const blueLight = Color(0xFF88B2DB);
+  static const blue = Color(0xFF2196F3);
+  static const blueDark = Color(0xFF002F67);
+  static const sandLight = Color(0xFFFFF8E1);
+  static const sand = Color(0xFFD4B962);
+  static const sandDark = Color(0xFFFFD54F);
+  static const grayLight = Color(0xFFEEEEEE);
+  static const gray = Color(0xFF9E9E9E);
+  static const grayDark = Color(0xFF616161);
+  static const white = Color(0xFFFFFFFF);
+  static const black = Color(0xFF000000);
+  static const textPrimary = Color(0xFF1B5E20);
+  static const textSecondary = Color(0xFF4CAF50);
+  static const error = Color(0xFFD32F2F);
 }
