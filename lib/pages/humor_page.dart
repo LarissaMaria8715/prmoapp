@@ -5,6 +5,7 @@ import '../utils/colors.dart';
 class HumorPage extends StatelessWidget {
   const HumorPage({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
