@@ -22,14 +22,3 @@ class AppColors {
   static const textSecondary = Color(0xFF4CAF50);
   static const error = Color(0xFFD32F2F);
 }
-
-
-
-
-
-
-
-
-
-
-
