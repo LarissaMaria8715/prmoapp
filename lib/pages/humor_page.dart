@@ -5,30 +5,11 @@ import '../utils/colors.dart';
 class HumorPage extends StatelessWidget {
   const HumorPage({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        toolbarHeight: 80,
-        centerTitle: true,
-        backgroundColor: AppColors.accent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.white),
-          onPressed: () {
-            // Navegação não implementada aqui
-          },
-        ),
-        title: Text(
-          'Como você está se sentindo?',
-          style: GoogleFonts.lato(
-            color: AppColors.white,
-            fontWeight: FontWeight.w700,
-            fontSize: 22,
-          ),
-        ),
-      ),
+      appBar: _buildAppBar(context),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -67,8 +48,13 @@ class HumorPage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.check, color: AppColors.white),
+              onPressed: () {
+                // Ação futura ao confirmar humor
+              },
+              icon: const Icon(
+                  Icons.check,
+                  size: 34,
+                  color: AppColors.white),
               label: Text(
                 "Confirmar",
                 style: GoogleFonts.lato(
@@ -91,21 +77,25 @@ class HumorPage extends StatelessWidget {
     );
   }
 
-  Widget _buildHumorOption(String emoji, String label) {
-    return Container(
-      width: 120,
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: BoxDecoration(
-        color: AppColors.accent.withOpacity(0.15), // fundo leve do accent
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.accent, width: 1.5), // borda accent
+  _buildHumorOption(String emoji, String label) {
+    return ElevatedButton(
+      onPressed: () {
+        // Ação futura ao selecionar o humor
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.accent.withOpacity(0.15),
+        foregroundColor: AppColors.accent,
+        elevation: 0,
+        minimumSize: const Size(120, 100),
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: AppColors.accent, width: 1.5),
+        ),
       ),
       child: Column(
         children: [
-          Text(
-            emoji,
-            style: const TextStyle(fontSize: 40),
-          ),
+          Text(emoji, style: const TextStyle(fontSize: 40)),
           const SizedBox(height: 8),
           Text(
             label,
@@ -117,6 +107,28 @@ class HumorPage extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  _buildAppBar(BuildContext context) {
+    return AppBar(
+      toolbarHeight: 80,
+      centerTitle: true,
+      backgroundColor: AppColors.accent,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: AppColors.white),
+        onPressed: () {
+          // Navegação futura
+        },
+      ),
+      title: Text(
+        'Como você está se sentindo?',
+        style: GoogleFonts.lato(
+          color: AppColors.white,
+          fontWeight: FontWeight.w700,
+          fontSize: 22,
+        ),
       ),
     );
   }
