@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: AppColors.sandLight,
+        backgroundColor: AppColors.background,
         appBar: _buildAppBar(),
         body: _buildBody(),
         bottomNavigationBar: _buildBottomNavigationBar(),
@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   _buildAppBar() {
     return AppBar(
       toolbarHeight: 90,
-      backgroundColor: AppColors.purpleExtraDarker,
+      backgroundColor: AppColors.purpleDarker,
       centerTitle: true,
       title: Row(
         mainAxisSize: MainAxisSize.min,
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
           selectedIndex = index;
         });
       },
-      backgroundColor: AppColors.purpleExtraDarker,
+      backgroundColor: AppColors.purpleDarker,
       selectedItemColor: AppColors.white,
       unselectedItemColor: AppColors.gray.withOpacity(0.7),
       showSelectedLabels: true,
@@ -160,7 +160,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               Expanded(child: _actionButton(Icons.menu_book, 'Diário', AppColors.blueDark)),
               const SizedBox(width: 30),
-              Expanded(child: _actionButton(Icons.rocket_launch, 'Motivação', AppColors.sandDark)),
+              Expanded(child: _actionButton(Icons.rocket_launch, 'Motivação', AppColors.amberDarker)),
             ],
           ),
           const SizedBox(height: 30),
