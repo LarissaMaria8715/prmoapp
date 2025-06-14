@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppColors.purpleExtraExtraLight,
         appBar: _buildAppBar(),
         body: _buildBody(),
         bottomNavigationBar: _buildBottomNavigationBar(),
@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   _buildAppBar() {
     return AppBar(
       toolbarHeight: 90,
-      backgroundColor: AppColors.purpleDarker,
+      backgroundColor: AppColors.purpleExtraExtraDark,
       centerTitle: true,
       title: Row(
         mainAxisSize: MainAxisSize.min,
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
           selectedIndex = index;
         });
       },
-      backgroundColor: AppColors.purpleDarker,
+      backgroundColor: AppColors.purpleExtraExtraDark,
       selectedItemColor: AppColors.white,
       unselectedItemColor: AppColors.gray.withOpacity(0.7),
       showSelectedLabels: true,
@@ -142,14 +142,14 @@ class _HomePageState extends State<HomePage> {
             children: [
               Expanded(child: _actionButton(Icons.sentiment_satisfied_alt, 'Humor', AppColors.cyan)),
               const SizedBox(width: 30),
-              Expanded(child: _actionButton(Icons.water_drop, 'Hábitos', AppColors.pinkLight)),
+              Expanded(child: _actionButton(Icons.water_drop, 'Hábitos', AppColors.purple)),
             ],
           ),
           const SizedBox(height: 30),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(child: _actionButton(Icons.self_improvement, 'Respiração', AppColors.purple)),
+              Expanded(child: _actionButton(Icons.self_improvement, 'Respiração', AppColors.petrolDark)),
               const SizedBox(width: 30),
               Expanded(child: _actionButton(Icons.track_changes, 'Metas', AppColors.orange)),
             ],
@@ -158,9 +158,9 @@ class _HomePageState extends State<HomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(child: _actionButton(Icons.menu_book, 'Diário', AppColors.blueDark)),
+              Expanded(child: _actionButton(Icons.menu_book, 'Diário', AppColors.limeExtraDark)),
               const SizedBox(width: 30),
-              Expanded(child: _actionButton(Icons.rocket_launch, 'Motivação', AppColors.amberDarker)),
+              Expanded(child: _actionButton(Icons.rocket_launch, 'Motivação', AppColors.turquoiseDarker)),
             ],
           ),
           const SizedBox(height: 30),
