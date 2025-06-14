@@ -28,7 +28,6 @@ class _HomePageState extends State<HomePage> {
     return AppBar(
       toolbarHeight: 90,
       backgroundColor: AppColors.blueDark,
-      elevation: 0,
       centerTitle: true,
       title: Row(
         mainAxisSize: MainAxisSize.min,
@@ -68,7 +67,7 @@ class _HomePageState extends State<HomePage> {
         });
       },
       backgroundColor: AppColors.white,
-      selectedItemColor: AppColors.blue,
+      selectedItemColor: AppColors.blueDark,
       unselectedItemColor: AppColors.gray.withOpacity(0.7),
       showSelectedLabels: true,
       showUnselectedLabels: true,
@@ -176,9 +175,6 @@ class _HomePageState extends State<HomePage> {
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: backgroundColor,
-        disabledBackgroundColor: backgroundColor,
-        shadowColor: backgroundColor.withOpacity(0.4),
-        elevation: 6,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -187,13 +183,17 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: Colors.white, size: 60),
+          Icon(
+              icon,
+              color: Colors.white,
+              size: 50
+          ),
           const SizedBox(height: 26),
           Text(
             label,
             style: GoogleFonts.poppins(
               color: Colors.white,
-              fontSize: 22,
+              fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),
