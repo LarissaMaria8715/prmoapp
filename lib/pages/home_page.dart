@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: AppColors.sandLight,
+        backgroundColor: AppColors.background,
         appBar: _buildAppBar(),
         body: _buildBody(),
         bottomNavigationBar: _buildBottomNavigationBar(),
@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   _buildAppBar() {
     return AppBar(
       toolbarHeight: 90,
-      backgroundColor: AppColors.blueDark,
+      backgroundColor: AppColors.purpleDarker,
       centerTitle: true,
       title: Row(
         mainAxisSize: MainAxisSize.min,
@@ -66,8 +66,8 @@ class _HomePageState extends State<HomePage> {
           selectedIndex = index;
         });
       },
-      backgroundColor: AppColors.white,
-      selectedItemColor: AppColors.blueDark,
+      backgroundColor: AppColors.purpleDarker,
+      selectedItemColor: AppColors.white,
       unselectedItemColor: AppColors.gray.withOpacity(0.7),
       showSelectedLabels: true,
       showUnselectedLabels: true,
@@ -140,18 +140,18 @@ class _HomePageState extends State<HomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(child: _actionButton(Icons.sentiment_satisfied_alt, 'Humor', AppColors.accent)),
+              Expanded(child: _actionButton(Icons.sentiment_satisfied_alt, 'Humor', AppColors.cyan)),
               const SizedBox(width: 30),
-              Expanded(child: _actionButton(Icons.water_drop, 'Hábitos', AppColors.secondary)),
+              Expanded(child: _actionButton(Icons.water_drop, 'Hábitos', AppColors.pinkLight)),
             ],
           ),
           const SizedBox(height: 30),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(child: _actionButton(Icons.self_improvement, 'Respiração', AppColors.blueLight)),
+              Expanded(child: _actionButton(Icons.self_improvement, 'Respiração', AppColors.purple)),
               const SizedBox(width: 30),
-              Expanded(child: _actionButton(Icons.track_changes, 'Metas', AppColors.sand)),
+              Expanded(child: _actionButton(Icons.track_changes, 'Metas', AppColors.orange)),
             ],
           ),
           const SizedBox(height: 30),
@@ -160,7 +160,16 @@ class _HomePageState extends State<HomePage> {
             children: [
               Expanded(child: _actionButton(Icons.menu_book, 'Diário', AppColors.blueDark)),
               const SizedBox(width: 30),
-              Expanded(child: _actionButton(Icons.rocket_launch, 'Motivação', AppColors.sandDark)),
+              Expanded(child: _actionButton(Icons.rocket_launch, 'Motivação', AppColors.amberDarker)),
+            ],
+          ),
+          const SizedBox(height: 30),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(child: _actionButton(Icons.calendar_month_outlined, 'Agenda', AppColors.pink)),
+              const SizedBox(width: 30),
+              Expanded(child: Container()),
             ],
           ),
         ],
@@ -178,7 +187,7 @@ class _HomePageState extends State<HomePage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(10),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -186,14 +195,14 @@ class _HomePageState extends State<HomePage> {
           Icon(
               icon,
               color: Colors.white,
-              size: 50
+              size: 60
           ),
-          const SizedBox(height: 26),
+          const SizedBox(height: 16),
           Text(
             label,
             style: GoogleFonts.poppins(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: 21,
               fontWeight: FontWeight.w600,
             ),
           ),
