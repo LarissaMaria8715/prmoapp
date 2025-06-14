@@ -158,7 +158,7 @@ class _HomePageState extends State<HomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(child: _actionButton(Icons.menu_book, 'Diário', AppColors.tealDark)),
+              Expanded(child: _actionButton(Icons.menu_book, 'Diário', AppColors.limeExtraDark)),
               const SizedBox(width: 30),
               Expanded(child: _actionButton(Icons.rocket_launch, 'Motivação', AppColors.turquoiseDarker)),
             ],
