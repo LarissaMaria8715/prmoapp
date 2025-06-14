@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/colors.dart';
+
 class RespiracaoPage extends StatefulWidget {
   const RespiracaoPage({super.key});
 
@@ -72,75 +73,83 @@ class _RespiracaoPageState extends State<RespiracaoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
+        toolbarHeight: 90,
         title: Text(
           'Respiração Consciente',
           style: GoogleFonts.lato(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: AppColors.white,
+            color: Colors.white,
           ),
         ),
         centerTitle: true,
-        backgroundColor: AppColors.accent,
-        foregroundColor: AppColors.white,
+        backgroundColor: AppColors.blueLight,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.white),
+          onPressed: () {
+            // Navegação futura
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               _faseTexto,
               style: GoogleFonts.lato(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
-                color: AppColors.accent,
+                color: AppColors.blueDark,
               ),
             ),
-            const SizedBox(height: 40),
-            AnimatedContainer(
-              duration: const Duration(seconds: 4),
-              width: _tamanhoCirculo,
-              height: _tamanhoCirculo,
-              decoration: BoxDecoration(
-                color: AppColors.accent.withOpacity(0.6),
-                shape: BoxShape.circle,
+            const SizedBox(height: 20),
+            Expanded(
+              child: Center(
+                child: AnimatedContainer(
+                  duration: const Duration(seconds: 4),
+                  width: _tamanhoCirculo,
+                  height: _tamanhoCirculo,
+                  decoration: BoxDecoration(
+                    color: AppColors.blueLight.withOpacity(0.6),
+                    shape: BoxShape.circle,
+                  ),
+                ),
               ),
             ),
-            const SizedBox(height: 40),
             Text(
               "Tempo restante: $_tempoRestante s",
               style: GoogleFonts.lato(
                 fontSize: 18,
-                color: AppColors.accent.withOpacity(0.7),
+                color: AppColors.blueDark.withOpacity(0.7),
               ),
             ),
             const SizedBox(height: 30),
             ElevatedButton.icon(
               onPressed: _reiniciarPratica,
-              icon: const Icon(Icons.replay, color: AppColors.white),
+              icon: const Icon(Icons.replay, color: Colors.white),
               label: Text(
                 "Reiniciar",
                 style: GoogleFonts.lato(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.white,
+                  color: Colors.white,
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.accent,
+                backgroundColor: AppColors.blueLight,
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
             ),
+            const SizedBox(height: 30),
           ],
         ),
       ),
     );
   }
 }
-
