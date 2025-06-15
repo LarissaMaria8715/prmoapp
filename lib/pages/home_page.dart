@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: AppColors.sandLight,
+        backgroundColor: AppColors.background,
         appBar: _buildAppBar(),
         body: _buildBody(),
         bottomNavigationBar: _buildBottomNavigationBar(),
@@ -26,17 +26,16 @@ class _HomePageState extends State<HomePage> {
 
   _buildAppBar() {
     return AppBar(
-      toolbarHeight: 80,
-      backgroundColor: AppColors.blueDark,
-      elevation: 0,
+      toolbarHeight: 90,
+      backgroundColor: AppColors.purpleDarker,
       centerTitle: true,
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             'EQUILIBRE',
-            style: GoogleFonts.jaldi(
-              fontSize: 32,
+            style: GoogleFonts.rubik(
+              fontSize: 36,
               fontWeight: FontWeight.bold,
               color: AppColors.white,
             ),
@@ -59,7 +58,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
   _buildBottomNavigationBar() {
     return BottomNavigationBar(
       currentIndex: selectedIndex,
@@ -68,8 +66,8 @@ class _HomePageState extends State<HomePage> {
           selectedIndex = index;
         });
       },
-      backgroundColor: AppColors.white,
-      selectedItemColor: AppColors.blue,
+      backgroundColor: AppColors.purpleDarker,
+      selectedItemColor: AppColors.white,
       unselectedItemColor: AppColors.gray.withOpacity(0.7),
       showSelectedLabels: true,
       showUnselectedLabels: true,
@@ -90,13 +88,6 @@ class _HomePageState extends State<HomePage> {
         _welcomeCard(),
         const SizedBox(height: 32),
         _actionButtonsGrid(),
-        const SizedBox(height: 40),
-        _motivationCard(),
-        const SizedBox(height: 32),
-        _dailyTipCard(),
-        const SizedBox(height: 32),
-        _quickReflectionCard(),
-        const SizedBox(height: 60),
       ],
     );
   }
@@ -149,27 +140,36 @@ class _HomePageState extends State<HomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(child: _actionButton(Icons.sentiment_satisfied_alt, 'Humor', AppColors.accent)),
-              const SizedBox(width: 24),
-              Expanded(child: _actionButton(Icons.water_drop, 'Hábitos', AppColors.secondary)),
+              Expanded(child: _actionButton(Icons.sentiment_satisfied_alt, 'Humor', AppColors.cyan)),
+              const SizedBox(width: 30),
+              Expanded(child: _actionButton(Icons.water_drop, 'Hábitos', AppColors.pinkLight)),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 30),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(child: _actionButton(Icons.self_improvement, 'Respiração', AppColors.blueLight)),
-              const SizedBox(width: 24),
-              Expanded(child: _actionButton(Icons.track_changes, 'Metas', AppColors.sand)),
+              Expanded(child: _actionButton(Icons.self_improvement, 'Respiração', AppColors.purple)),
+              const SizedBox(width: 30),
+              Expanded(child: _actionButton(Icons.track_changes, 'Metas', AppColors.orange)),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 30),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(child: _actionButton(Icons.menu_book, 'Diário', AppColors.blueDark)),
-              const SizedBox(width: 24),
-              Expanded(child: _actionButton(Icons.rocket_launch, 'Motivação', AppColors.sandDark)),
+              const SizedBox(width: 30),
+              Expanded(child: _actionButton(Icons.rocket_launch, 'Motivação', AppColors.amberDarker)),
+            ],
+          ),
+          const SizedBox(height: 30),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(child: _actionButton(Icons.calendar_month_outlined, 'Agenda', AppColors.pink)),
+              const SizedBox(width: 30),
+              Expanded(child: Container()),
             ],
           ),
         ],
@@ -184,119 +184,26 @@ class _HomePageState extends State<HomePage> {
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: backgroundColor,
-        disabledBackgroundColor: backgroundColor,
-        shadowColor: backgroundColor.withOpacity(0.4),
-        elevation: 6,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(10),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: Colors.white, size: 40),
-          const SizedBox(height: 12),
+          Icon(
+              icon,
+              color: Colors.white,
+              size: 60
+          ),
+          const SizedBox(height: 16),
           Text(
             label,
             style: GoogleFonts.poppins(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: 21,
               fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  _motivationCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.accent.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Motivação do dia',
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-              color: AppColors.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            '"A verdadeira felicidade está no equilíbrio entre mente, corpo e espírito."',
-            style: GoogleFonts.poppins(
-              fontSize: 18,
-              fontStyle: FontStyle.italic,
-              color: AppColors.textPrimary.withOpacity(0.85),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  _dailyTipCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.accent.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Dica do Dia',
-            style: GoogleFonts.poppins(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: AppColors.accent,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            'Faça uma pausa de 5 minutos para respirar profundamente. Seu cérebro agradece!',
-            style: GoogleFonts.poppins(
-                fontSize: 18,
-                color: AppColors.textPrimary),
-          ),
-        ],
-      ),
-    );
-  }
-  _quickReflectionCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.sandDark.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Reflexão Rápida',
-            style: GoogleFonts.poppins(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: AppColors.sandDark,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            'Hoje, o que você fez por você mesmo?',
-            style: GoogleFonts.poppins(
-              fontSize: 18,
-              fontStyle: FontStyle.italic,
-              color: AppColors.textPrimary.withOpacity(0.9),
             ),
           ),
         ],
