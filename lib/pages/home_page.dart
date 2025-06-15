@@ -26,10 +26,10 @@ class _HomePageState extends State<HomePage> {
 
   _buildAppBar() {
     return AppBar(
-      toolbarHeight: 90,
+      toolbarHeight: 100,
       backgroundColor: AppColors.darkPurple5,
       centerTitle: true,
-      title: Row(
+      title: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
@@ -40,21 +40,17 @@ class _HomePageState extends State<HomePage> {
               color: AppColors.white,
             ),
           ),
+          const SizedBox(height: 4),
+          Text(
+            'Cuide do seu equilíbrio mental e emocional',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(
+              color: AppColors.white.withOpacity(0.9),
+              fontSize: 16,
+            ),
+          ),
         ],
       ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 16),
-          child: IconButton(
-            icon: const Icon(Icons.notifications),
-            iconSize: 36,
-            color: AppColors.white,
-            onPressed: () {
-              // ação futura de notificações
-            },
-          ),
-        ),
-      ],
     );
   }
 
@@ -85,50 +81,8 @@ class _HomePageState extends State<HomePage> {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
       children: [
-        _welcomeCard(),
-        const SizedBox(height: 32),
         _actionButtonsGrid(),
       ],
-    );
-  }
-
-  _welcomeCard() {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: AppColors.darkBlueDark1,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.darkBlueDark1.withOpacity(0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      width: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            'Bem-vindo ao Equilibre',
-            style: GoogleFonts.poppins(
-              color: AppColors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Cuide do seu equilíbrio mental e emocional',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(
-              color: AppColors.white.withOpacity(0.9),
-              fontSize: 16,
-            ),
-          ),
-        ],
-      ),
     );
   }
 
