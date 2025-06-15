@@ -50,7 +50,7 @@ class _DiarioPageState extends State<DiarioPage> {
         appBar: AppBar(
           toolbarHeight: 80,
           centerTitle: true,
-          backgroundColor: AppColors.blueDark,
+          backgroundColor: AppColors.darkRed3,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: AppColors.white),
             onPressed: () {},
@@ -76,7 +76,7 @@ class _DiarioPageState extends State<DiarioPage> {
                       style: GoogleFonts.lato(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.blueDark,
+                        color: AppColors.darkRed3,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -84,11 +84,11 @@ class _DiarioPageState extends State<DiarioPage> {
                       flex: 3,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: AppColors.blueDark.withOpacity(0.05),
+                          color: AppColors.darkRed3.withOpacity(0.05),
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.black.withOpacity(0.1),
+                              color: AppColors.darkRed3.withOpacity(0.1),
                               blurRadius: 4,
                               offset: const Offset(2, 4),
                             )
@@ -101,12 +101,12 @@ class _DiarioPageState extends State<DiarioPage> {
                           keyboardType: TextInputType.multiline,
                           style: GoogleFonts.lato(
                             fontSize: 16,
-                            color: AppColors.blueDark,
+                            color: AppColors.darkRed3,
                           ),
                           decoration: InputDecoration.collapsed(
                             hintText: 'Escreva aqui sobre seu dia...',
                             hintStyle: GoogleFonts.lato(
-                              color: AppColors.blueDark.withOpacity(0.5),
+                              color: AppColors.darkRed3.withOpacity(0.5),
                             ),
                           ),
                         ),
@@ -119,7 +119,7 @@ class _DiarioPageState extends State<DiarioPage> {
                           ? Text(
                         'Nenhuma entrada ainda.',
                         style: GoogleFonts.lato(
-                          color: AppColors.blueDark.withOpacity(0.5),
+                          color: AppColors.darkRed3.withOpacity(0.5),
                         ),
                       )
                           : ListView.builder(
@@ -130,11 +130,11 @@ class _DiarioPageState extends State<DiarioPage> {
                             margin: const EdgeInsets.symmetric(vertical: 6),
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: AppColors.blueDark.withOpacity(0.05),
+                              color: AppColors.darkRed3.withOpacity(0.05),
                               borderRadius: BorderRadius.circular(10),
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppColors.black.withOpacity(0.05),
+                                  color: AppColors.darkRed3.withOpacity(0.05),
                                   blurRadius: 3,
                                   offset: const Offset(1, 2),
                                 )
@@ -147,7 +147,7 @@ class _DiarioPageState extends State<DiarioPage> {
                                   entrada.texto,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.lato(color: AppColors.blueDark),
+                                  style: GoogleFonts.lato(color: AppColors.darkRed3),
                                 ),
                                 const SizedBox(height: 6),
                                 Text(
@@ -155,7 +155,7 @@ class _DiarioPageState extends State<DiarioPage> {
                                   style: GoogleFonts.lato(
                                     fontStyle: FontStyle.italic,
                                     fontSize: 12,
-                                    color: AppColors.blueDark.withOpacity(0.6),
+                                    color: AppColors.darkRed3.withOpacity(0.6),
                                   ),
                                 ),
                               ],
