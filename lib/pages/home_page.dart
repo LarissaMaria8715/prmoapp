@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppColors.lightBlue1,
         appBar: _buildAppBar(),
         body: _buildBody(),
         bottomNavigationBar: _buildBottomNavigationBar(),
@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   _buildAppBar() {
     return AppBar(
       toolbarHeight: 90,
-      backgroundColor: AppColors.purpleDarker,
+      backgroundColor: AppColors.darkPurple5,
       centerTitle: true,
       title: Row(
         mainAxisSize: MainAxisSize.min,
@@ -66,9 +66,9 @@ class _HomePageState extends State<HomePage> {
           selectedIndex = index;
         });
       },
-      backgroundColor: AppColors.purpleDarker,
+      backgroundColor: AppColors.darkPurple5,
       selectedItemColor: AppColors.white,
-      unselectedItemColor: AppColors.gray.withOpacity(0.7),
+      unselectedItemColor: AppColors.lightPurple1.withOpacity(0.7),
       showSelectedLabels: true,
       showUnselectedLabels: true,
       type: BottomNavigationBarType.fixed,
@@ -96,11 +96,11 @@ class _HomePageState extends State<HomePage> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.blue,
+        color: AppColors.darkBlueDark1,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: AppColors.blueDark.withOpacity(0.3),
+            color: AppColors.darkBlueDark1.withOpacity(0.3),
             blurRadius: 10,
             offset: const Offset(0, 6),
           ),
@@ -140,34 +140,34 @@ class _HomePageState extends State<HomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(child: _actionButton(Icons.sentiment_satisfied_alt, 'Humor', AppColors.cyan)),
+              Expanded(child: _actionButton(Icons.sentiment_satisfied_alt, 'Humor', AppColors.lightBlueDark4)),
               const SizedBox(width: 30),
-              Expanded(child: _actionButton(Icons.water_drop, 'Hábitos', AppColors.pinkLight)),
+              Expanded(child: _actionButton(Icons.water_drop, 'Hábitos', AppColors.darkPurple3)),
             ],
           ),
           const SizedBox(height: 30),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(child: _actionButton(Icons.self_improvement, 'Respiração', AppColors.purple)),
+              Expanded(child: _actionButton(Icons.self_improvement, 'Respiração', AppColors.darkGreen3)),
               const SizedBox(width: 30),
-              Expanded(child: _actionButton(Icons.track_changes, 'Metas', AppColors.orange)),
+              Expanded(child: _actionButton(Icons.track_changes, 'Metas', AppColors.darkYellow3)),
             ],
           ),
           const SizedBox(height: 30),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(child: _actionButton(Icons.menu_book, 'Diário', AppColors.blueDark)),
+              Expanded(child: _actionButton(Icons.menu_book, 'Diário', AppColors.darkRed3)),
               const SizedBox(width: 30),
-              Expanded(child: _actionButton(Icons.rocket_launch, 'Motivação', AppColors.amberDarker)),
+              Expanded(child: _actionButton(Icons.rocket_launch, 'Motivação', AppColors.darkOrange2)),
             ],
           ),
           const SizedBox(height: 30),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(child: _actionButton(Icons.calendar_month_outlined, 'Agenda', AppColors.pink)),
+              Expanded(child: _actionButton(Icons.calendar_month_outlined, 'Agenda', AppColors.darkBordeaux3)),
               const SizedBox(width: 30),
               Expanded(child: Container()),
             ],
@@ -202,7 +202,7 @@ class _HomePageState extends State<HomePage> {
             label,
             style: GoogleFonts.poppins(
               color: Colors.white,
-              fontSize: 21,
+              fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),

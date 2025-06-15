@@ -85,7 +85,7 @@ class _RespiracaoPageState extends State<RespiracaoPage> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: AppColors.blueLight,
+        backgroundColor: AppColors.darkGreen3,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.white),
           onPressed: () {
@@ -102,7 +102,7 @@ class _RespiracaoPageState extends State<RespiracaoPage> {
               style: GoogleFonts.lato(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
-                color: AppColors.blueDark,
+                color: AppColors.darkGreen3,
               ),
             ),
             const SizedBox(height: 20),
@@ -113,7 +113,7 @@ class _RespiracaoPageState extends State<RespiracaoPage> {
                   width: _tamanhoCirculo,
                   height: _tamanhoCirculo,
                   decoration: BoxDecoration(
-                    color: AppColors.blueLight.withOpacity(0.6),
+                    color: AppColors.darkGreen3.withOpacity(0.6),
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -123,7 +123,7 @@ class _RespiracaoPageState extends State<RespiracaoPage> {
               "Tempo restante: $_tempoRestante s",
               style: GoogleFonts.lato(
                 fontSize: 18,
-                color: AppColors.blueDark.withOpacity(0.7),
+                color: AppColors.darkGreen3.withOpacity(0.7),
               ),
             ),
             const SizedBox(height: 30),
@@ -139,7 +139,7 @@ class _RespiracaoPageState extends State<RespiracaoPage> {
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.blueLight,
+                backgroundColor: AppColors.darkGreen3,
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
