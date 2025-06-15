@@ -9,37 +9,13 @@ class DiarioPage extends StatefulWidget {
   State<DiarioPage> createState() => _DiarioPageState();
 }
 
-class DiarioEntry {
-  final String texto;
-  final DateTime data;
-
-  DiarioEntry({required this.texto, required this.data});
-}
-
 class _DiarioPageState extends State<DiarioPage> {
   final TextEditingController _controller = TextEditingController();
-  final List<DiarioEntry> _entradas = [];
-  bool _salvando = false;
 
-  void _salvarEntrada() {
-    if (_controller.text.trim().isEmpty) return;
-
-    setState(() => _salvando = true);
-
-    Future.delayed(const Duration(milliseconds: 500), () {
-      setState(() {
-        _entradas.insert(
-          0,
-          DiarioEntry(texto: _controller.text.trim(), data: DateTime.now()),
-        );
-        _controller.clear();
-        _salvando = false;
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Entrada salva com sucesso!")),
-      );
-    });
+  @override
+  void dispose() {
+    _controller.dispose(); // Importante para evitar memory leaks
+    super.dispose();
   }
 
   @override
@@ -53,7 +29,8 @@ class _DiarioPageState extends State<DiarioPage> {
           backgroundColor: AppColors.darkRed3,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: AppColors.white),
-            onPressed: () {},
+            onPressed: () {
+            },
           ),
           title: Text(
             'Diário Pessoal',
@@ -112,58 +89,6 @@ class _DiarioPageState extends State<DiarioPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 24),
-                    Expanded(
-                      flex: 3,
-                      child: _entradas.isEmpty
-                          ? Text(
-                        'Nenhuma entrada ainda.',
-                        style: GoogleFonts.lato(
-                          color: AppColors.darkRed3.withOpacity(0.5),
-                        ),
-                      )
-                          : ListView.builder(
-                        itemCount: _entradas.length,
-                        itemBuilder: (context, index) {
-                          final entrada = _entradas[index];
-                          return Container(
-                            margin: const EdgeInsets.symmetric(vertical: 6),
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: AppColors.darkRed3.withOpacity(0.05),
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.darkRed3.withOpacity(0.05),
-                                  blurRadius: 3,
-                                  offset: const Offset(1, 2),
-                                )
-                              ],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  entrada.texto,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.lato(color: AppColors.darkRed3),
-                                ),
-                                const SizedBox(height: 6),
-                                Text(
-                                  _formatarData(entrada.data),
-                                  style: GoogleFonts.lato(
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 12,
-                                    color: AppColors.darkRed3.withOpacity(0.6),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -173,19 +98,11 @@ class _DiarioPageState extends State<DiarioPage> {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: _salvando ? null : _salvarEntrada,
-                  icon: _salvando
-                      ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: AppColors.white,
-                    ),
-                  )
-                      : const Icon(Icons.save, color: AppColors.white),
+                  onPressed: () {
+                  },
+                  icon: const Icon(Icons.save, color: AppColors.white),
                   label: Text(
-                    _salvando ? 'Salvando...' : 'Salvar Entrada',
+                    'Salvar Entrada',
                     style: GoogleFonts.lato(
                       color: AppColors.white,
                       fontSize: 16,
@@ -193,7 +110,7 @@ class _DiarioPageState extends State<DiarioPage> {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.blueDark,
+                    backgroundColor: AppColors.darkRed3,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -207,11 +124,4 @@ class _DiarioPageState extends State<DiarioPage> {
       ),
     );
   }
-
-  String _formatarData(DateTime data) {
-    return '${data.day.toString().padLeft(2, '0')}/'
-        '${data.month.toString().padLeft(2, '0')}/'
-        '${data.year}';
-  }
 }
-

@@ -1,74 +1,9 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/colors.dart';
 
-class RespiracaoPage extends StatefulWidget {
+class RespiracaoPage extends StatelessWidget {
   const RespiracaoPage({super.key});
-
-  @override
-  State<RespiracaoPage> createState() => _RespiracaoPageState();
-}
-
-class _RespiracaoPageState extends State<RespiracaoPage> {
-  bool _expandindo = true;
-  String _faseTexto = "Inspire";
-  double _tamanhoCirculo = 150;
-  Timer? _animacaoTimer;
-  Timer? _cronometro;
-  int _tempoRestante = 60;
-  final int _tempoInicial = 60;
-
-  @override
-  void initState() {
-    super.initState();
-    _iniciarAnimacao();
-    _iniciarCronometro();
-  }
-
-  void _iniciarAnimacao() {
-    _animacaoTimer?.cancel();
-    _animacaoTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
-      setState(() {
-        _expandindo = !_expandindo;
-        _faseTexto = _expandindo ? "Inspire" : "Expire";
-        _tamanhoCirculo = _expandindo ? 220 : 150;
-      });
-    });
-  }
-
-  void _iniciarCronometro() {
-    _cronometro?.cancel();
-    _cronometro = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_tempoRestante > 0) {
-          _tempoRestante--;
-        } else {
-          _animacaoTimer?.cancel();
-          _cronometro?.cancel();
-          _faseTexto = "Concluído";
-        }
-      });
-    });
-  }
-
-  void _reiniciarPratica() {
-    setState(() {
-      _tempoRestante = _tempoInicial;
-      _faseTexto = "Inspire";
-      _expandindo = true;
-      _tamanhoCirculo = 150;
-    });
-    _iniciarAnimacao();
-    _iniciarCronometro();
-  }
-
-  @override
-  void dispose() {
-    _animacaoTimer?.cancel();
-    _cronometro?.cancel();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +24,7 @@ class _RespiracaoPageState extends State<RespiracaoPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.white),
           onPressed: () {
-            // Navegação futura
+            Navigator.pop(context); // Agora com ação de voltar
           },
         ),
       ),
@@ -98,7 +33,7 @@ class _RespiracaoPageState extends State<RespiracaoPage> {
         child: Column(
           children: [
             Text(
-              _faseTexto,
+              "Inspire", // Texto fixo agora
               style: GoogleFonts.lato(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
@@ -108,10 +43,9 @@ class _RespiracaoPageState extends State<RespiracaoPage> {
             const SizedBox(height: 20),
             Expanded(
               child: Center(
-                child: AnimatedContainer(
-                  duration: const Duration(seconds: 4),
-                  width: _tamanhoCirculo,
-                  height: _tamanhoCirculo,
+                child: Container(
+                  width: 220, // Tamanho fixo
+                  height: 220,
                   decoration: BoxDecoration(
                     color: AppColors.darkGreen3.withOpacity(0.6),
                     shape: BoxShape.circle,
@@ -120,7 +54,7 @@ class _RespiracaoPageState extends State<RespiracaoPage> {
               ),
             ),
             Text(
-              "Tempo restante: $_tempoRestante s",
+              "Tempo restante: 60 s", // Valor fixo
               style: GoogleFonts.lato(
                 fontSize: 18,
                 color: AppColors.darkGreen3.withOpacity(0.7),
@@ -128,7 +62,9 @@ class _RespiracaoPageState extends State<RespiracaoPage> {
             ),
             const SizedBox(height: 30),
             ElevatedButton.icon(
-              onPressed: _reiniciarPratica,
+              onPressed: () {
+                // Sem ação (ou coloque uma ação futura)
+              },
               icon: const Icon(Icons.replay, color: Colors.white),
               label: Text(
                 "Reiniciar",
@@ -153,4 +89,3 @@ class _RespiracaoPageState extends State<RespiracaoPage> {
     );
   }
 }
-
