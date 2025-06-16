@@ -20,6 +20,7 @@ class AgendaPage extends StatelessWidget {
               color: Colors.white,
             ),
           ),
+
           centerTitle: true,
           backgroundColor: AppColors.lightBordeaux3,
           leading: IconButton(
