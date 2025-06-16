@@ -10,6 +10,6 @@ import 'package:equilibreapp/pages/humor_page.dart';
 
 void main(){
   runApp(MaterialApp(
-    home:DiarioPage(),
+    home:HomePage(),
   ));
 }

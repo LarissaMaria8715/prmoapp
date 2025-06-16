@@ -69,10 +69,22 @@ class _HomePageState extends State<HomePage> {
       showUnselectedLabels: true,
       type: BottomNavigationBarType.fixed,
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
-        BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: 'Resumo'),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Configurações'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home'
+        ),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Perfil'
+        ),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.menu_book),
+            label: 'Resumo'
+        ),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Configurações'
+        ),
       ],
     );
   }
