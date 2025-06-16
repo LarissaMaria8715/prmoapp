@@ -1,31 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../utils/colors.dart';
 
-class AppColors {
-  static const fundo = Color(0xFFF7F9F9);
-  static const primario = Color(0xFF4A8C82);
-  static const secundario = Color(0xFF89B6A5);
-  static const destaque = Color(0xFFE5C07B);
-  static const texto = Color(0xFF2F3E46);
-  static const alerta = Color(0xFFE57373);
-}
 
 class AgendaPage extends StatelessWidget {
   const AgendaPage({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: AppColors.fundo,
+        backgroundColor: AppColors.lightBordeaux1,
         appBar: AppBar(
-          backgroundColor: AppColors.primario,
+          toolbarHeight: 90,
           title: Text(
             'Agenda',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.lato(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
               color: Colors.white,
-              fontWeight: FontWeight.w600,
             ),
+          ),
+
+
+          centerTitle: true,
+          backgroundColor: AppColors.lightBordeaux3,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: AppColors.white),
+            onPressed: () {
+              Navigator.pop(context); // Agora com ação de voltar
+            },
           ),
         ),
         body: Padding(
@@ -37,7 +42,7 @@ class AgendaPage extends StatelessWidget {
                 style: GoogleFonts.poppins(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.texto,
+                  color: AppColors.white,
                 ),
               ),
               SizedBox(height: 16),
@@ -47,17 +52,17 @@ class AgendaPage extends StatelessWidget {
                     _buildEventoCard(
                       hora: '08:00',
                       titulo: 'Reunião com equipe',
-                      cor: AppColors.primario,
+                      cor: AppColors.darkBordeaux4,
                     ),
                     _buildEventoCard(
                       hora: '13:30',
                       titulo: 'Aula de Matemática',
-                      cor: AppColors.secundario,
+                      cor: AppColors.Bordeaux,
                     ),
                     _buildEventoCard(
                       hora: '19:00',
                       titulo: 'Treino de Karatê',
-                      cor: AppColors.destaque,
+                      cor: AppColors.darkBordeaux4,
                     ),
                   ],
                 ),
@@ -68,7 +73,7 @@ class AgendaPage extends StatelessWidget {
                 icon: Icon(Icons.add),
                 label: Text('Adicionar Evento'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primario,
+                  backgroundColor: AppColors.Bordeaux,
                   foregroundColor: Colors.white,
                   textStyle: GoogleFonts.poppins(),
                 ),
@@ -79,6 +84,7 @@ class AgendaPage extends StatelessWidget {
       ),
     );
   }
+
 
   Widget _buildEventoCard({
     required String hora,
@@ -103,7 +109,7 @@ class AgendaPage extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Row(
             children: [
-              Icon(Icons.access_time, color: AppColors.texto),
+              Icon(Icons.access_time, color: AppColors.white),
               SizedBox(width: 12),
               Expanded(
                 child: Text(
@@ -111,7 +117,7 @@ class AgendaPage extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.texto,
+                    color: AppColors.white,
                   ),
                 ),
               ),
@@ -122,3 +128,4 @@ class AgendaPage extends StatelessWidget {
     );
   }
 }
+
