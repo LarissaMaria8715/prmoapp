@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../utils/colors.dart';
 
 class HabitosPage extends StatefulWidget {
@@ -7,11 +6,9 @@ class HabitosPage extends StatefulWidget {
  _HabitosPageState createState() => _HabitosPageState();
 }
 
-
 class _HabitosPageState extends State<HabitosPage> {
  double aguaLitros = 0.0;
  double horasSono = 0.0;
-
 
  Widget CalculoHoras(){
    if(horasSono == 8){
@@ -76,7 +73,7 @@ class _HabitosPageState extends State<HabitosPage> {
    return Scaffold(
      appBar: AppBar(
        title: Text('Hábitos Diários'),
-       backgroundColor: Colors.Purple,
+       backgroundColor: AppColors.Purple,
        leading: IconButton(
          icon: const Icon(Icons.arrow_back, color: AppColors.white),
          onPressed: () {
