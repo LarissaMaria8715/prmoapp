@@ -107,7 +107,6 @@ class _HabitosPageState extends State<HabitosPage> {
 
                Text('Meta de Sono (horas)', style: TextStyle(fontSize: 18)),
 
-
                Slider(
                  value: horasSono,
                  min: 0,

@@ -20,7 +20,6 @@ class AgendaPage extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-
           centerTitle: true,
           backgroundColor: AppColors.lightBordeaux3,
           leading: IconButton(
@@ -82,7 +81,8 @@ class AgendaPage extends StatelessWidget {
     );
   }
 
-  Widget _buildEventoCard({
+
+  _buildEventoCard({
     required String hora,
     required String titulo,
     required Color cor,
@@ -124,3 +124,4 @@ class AgendaPage extends StatelessWidget {
     );
   }
 }
+

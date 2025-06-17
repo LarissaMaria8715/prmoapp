@@ -65,8 +65,6 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: AppColors.darkPurple5,
       selectedItemColor: AppColors.white,
       unselectedItemColor: AppColors.lightPurple1.withOpacity(0.7),
-      showSelectedLabels: true,
-      showUnselectedLabels: true,
       type: BottomNavigationBarType.fixed,
       items: const [
         BottomNavigationBarItem(
@@ -104,7 +102,6 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(child: _actionButton(Icons.sentiment_satisfied_alt, 'Humor', AppColors.lightBlueDark4)),
               const SizedBox(width: 30),
@@ -113,7 +110,6 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(height: 30),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(child: _actionButton(Icons.self_improvement, 'Respiração', AppColors.darkGreen3)),
               const SizedBox(width: 30),
@@ -122,7 +118,6 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(height: 30),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(child: _actionButton(Icons.menu_book, 'Diário', AppColors.darkRed3)),
               const SizedBox(width: 30),
@@ -131,7 +126,6 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(height: 30),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(child: _actionButton(Icons.calendar_month_outlined, 'Agenda', AppColors.darkBordeaux3)),
               const SizedBox(width: 30),
