@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/colors.dart';
 
-
 class AgendaPage extends StatelessWidget {
   const AgendaPage({Key? key}) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +20,6 @@ class AgendaPage extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-
-
           centerTitle: true,
           backgroundColor: AppColors.lightBordeaux3,
           leading: IconButton(
@@ -86,7 +82,7 @@ class AgendaPage extends StatelessWidget {
   }
 
 
-  Widget _buildEventoCard({
+  _buildEventoCard({
     required String hora,
     required String titulo,
     required Color cor,
