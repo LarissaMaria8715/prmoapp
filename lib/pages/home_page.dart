@@ -1,7 +1,6 @@
 import 'package:equilibreapp/pages/home_content_page.dart';
 import 'package:equilibreapp/pages/perfil_page.dart';
 import 'package:equilibreapp/pages/settings_page.dart';
-import 'package:equilibreapp/wigets/style_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/colors.dart';
@@ -19,8 +18,8 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     const HomeContent(),
     const PerfilPage(),
+    Center(child: Text('Resumo', style: TextStyle(fontSize: 24))),
     const SettingsPage(),
-    Center(child: Text('Configurações', style: TextStyle(fontSize: 24))),
   ];
 
   @override

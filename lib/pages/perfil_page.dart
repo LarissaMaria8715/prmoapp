@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/colors.dart';
 
+
+
+// Laranja   PERFIL-PAGE
+
+
+
+
+
 class PerfilPage extends StatelessWidget {
   const PerfilPage({super.key});
 

@@ -2,16 +2,6 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static const white = Color(0xFFFFFFFF);
-  // Verde
-  static const lightGreen1 = Color(0xFFE8F5E9);
-  static const lightGreen2 = Color(0xFFC8E6C9);
-  static const lightGreen3 = Color(0xFFA5D6A7);
-  static const lightGreen4 = Color(0xFF81C784);
-  static const Green = Color(0xFF4CAF50);
-  static const darkGreen1 = Color(0xFF43A047);
-  static const darkGreen2 = Color(0xFF388E3C);
-  static const darkGreen3 = Color(0xFF2E7D32);
-  static const darkGreen4 = Color(0xFF1B5E20);
 
   // Azul Claro
   static const lightBlue1 = Color(0xFFE1F5FE);
@@ -23,8 +13,38 @@ class AppColors {
   static const darkBlueLight2 = Color(0xFF0288D1);
   static const darkBlueLight3 = Color(0xFF0277BD);
   static const darkBlueLight4 = Color(0xFF01579B);
+  static const darkBlueLight5 = Color(0xFF003157);
 
-  // Azul Escuro
+  // Rosa
+  static const lightPink1 = Color(0xFFF8BBD0);
+  static const lightPink2 = Color(0xFFF48FB1);
+  static const lightPink3 = Color(0xFFF06292);
+  static const lightPink4 = Color(0xFFEC407A);
+  static const Pink = Color(0xFFE91E63);
+  static const darkPink1 = Color(0xFFD81B60);
+  static const darkPink2 = Color(0xFFC2185B);
+  static const darkPink3 = Color(0xFFAD1457);
+  static const darkPink4 = Color(0xFF880E4F);
+  static const darkPink5 = Color(0xFF54002D);
+
+
+
+
+
+  // Verde   RESPIRAÇÃO-PAGE
+  static const lightGreen1 = Color(0xFFE8F5E9);
+  static const lightGreen2 = Color(0xFFC8E6C9);
+  static const lightGreen3 = Color(0xFFA5D6A7);
+  static const lightGreen4 = Color(0xFF81C784);
+  static const Green = Color(0xFF4CAF50);
+  static const darkGreen1 = Color(0xFF43A047);
+  static const darkGreen2 = Color(0xFF388E3C);
+  static const darkGreen3 = Color(0xFF2E7D32);
+  static const darkGreen4 = Color(0xFF1B5E20);
+  static const darkGreen5 = Color(0xFF004D08);
+
+
+  // Azul Escuro  HUMOR-PAGE
   static const lightBlueDark1 = Color(0xFFBBDEFB);
   static const lightBlueDark2 = Color(0xFF90CAF9);
   static const lightBlueDark3 = Color(0xFF64B5F6);
@@ -37,19 +57,7 @@ class AppColors {
   static const darkBlueDark5 = Color(0xFF002E74);
 
 
-  // Rosa
-  static const lightPink1 = Color(0xFFF8BBD0);
-  static const lightPink2 = Color(0xFFF48FB1);
-  static const lightPink3 = Color(0xFFF06292);
-  static const lightPink4 = Color(0xFFEC407A);
-  static const Pink = Color(0xFFE91E63);
-  static const darkPink1 = Color(0xFFD81B60);
-  static const darkPink2 = Color(0xFFC2185B);
-  static const darkPink3 = Color(0xFFAD1457);
-  static const darkPink4 = Color(0xFF880E4F);
-
-  // Roxo
-  //Backgraund
+  // Roxo HÁBITOS-PAGE
   static const lightPurple1 = Color(0xFFE1BEE7);
   static const lightPurple2 = Color(0xFFCE93D8);
   static const lightPurple3 = Color(0xFFBA68C8);
@@ -61,8 +69,7 @@ class AppColors {
   static const darkPurple4 = Color(0xFF4A148C);
   static const darkPurple5 = Color(0xFF29005F);
 
-
-  // Laranja
+  // Laranja   MOTIVAÇÃO-PAGE
   static const lightOrange1 = Color(0xFFFFE0B2);
   static const lightOrange2 = Color(0xFFFFCC80);
   static const lightOrange3 = Color(0xFFFFB74D);
@@ -73,7 +80,7 @@ class AppColors {
   static const darkOrange3 = Color(0xFFEF6C00);
   static const darkOrange4 = Color(0xFFE65100);
 
-  // Vermelho
+  // Vermelho DIÁRIO-PAGE
   static const lightRed1 = Color(0xFFFFCDD2);
   static const lightRed2 = Color(0xFFEF9A9A);
   static const lightRed3 = Color(0xFFE57373);
@@ -84,7 +91,7 @@ class AppColors {
   static const darkRed3 = Color(0xFFC62828);
   static const darkRed4 = Color(0xFFB71C1C);
 
-  // Cinza
+  // Cinza LOGIN-PAGE e REGISTER-PAGE
   static const lightGray1 = Color(0xFFF5F5F5);
   static const lightGray2 = Color(0xFFEEEEEE);
   static const lightGray3 = Color(0xFFE0E0E0);
@@ -95,7 +102,7 @@ class AppColors {
   static const darkGray3 = Color(0xFF424242);
   static const darkGray4 = Color(0xFF212121);
 
-  // Marrom
+  // Marrom  SETTINGS-PAGE
   static const lightBrown1 = Color(0xFFD7CCC8);
   static const lightBrown2 = Color(0xFFBCAAA4);
   static const lightBrown3 = Color(0xFFA1887F);
@@ -106,7 +113,7 @@ class AppColors {
   static const darkBrown3 = Color(0xFF4E342E);
   static const darkBrown4 = Color(0xFF3E2723);
 
-  // Vinho
+  // Vinho  PERFIL-PAGE
   static const lightWine1 = Color(0xFFF3E5F5);
   static const lightWine2 = Color(0xFFE1BEE7);
   static const lightWine3 = Color(0xFFCE93D8);
@@ -117,7 +124,7 @@ class AppColors {
   static const darkWine3 = Color(0xFF6A1B9A);
   static const darkWine4 = Color(0xFF4A148C);
 
-  // Bordô
+  // Bordô = AGENDA-PAGE
   static const lightBordeaux1 = Color(0xFFF8BBD0);
   static const lightBordeaux2 = Color(0xFFF48FB1);
   static const lightBordeaux3 = Color(0xFFF06292);
@@ -128,7 +135,7 @@ class AppColors {
   static const darkBordeaux3 = Color(0xFFAD1457);
   static const darkBordeaux4 = Color(0xFF880E4F);
 
-  // Amarelo
+  // Amarelo  METAS-PAGE
   static const lightYellow1 = Color(0xFFFFF9C4);
   static const lightYellow2 = Color(0xFFFFF59D);
   static const lightYellow3 = Color(0xFFFFF176);
@@ -139,3 +146,5 @@ class AppColors {
   static const darkYellow3 = Color(0xFFF9A825);
   static const darkYellow4 = Color(0xFFF57F17);
 }
+
+
