@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/colors.dart';
 
-class RespiracaoPage extends StatelessWidget {
+class RespiracaoPage extends StatefulWidget {
   const RespiracaoPage({super.key});
 
+  @override
+  State<RespiracaoPage> createState() => _RespiracaoPageState();
+}
+
+class _RespiracaoPageState extends State<RespiracaoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

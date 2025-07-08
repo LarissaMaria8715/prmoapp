@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/colors.dart';
 
-class AgendaPage extends StatelessWidget {
+class AgendaPage extends StatefulWidget {
   const AgendaPage({Key? key}) : super(key: key);
 
+  @override
+  State<AgendaPage> createState() => _AgendaPageState();
+}
+
+class _AgendaPageState extends State<AgendaPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -25,7 +30,6 @@ class AgendaPage extends StatelessWidget {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: AppColors.white),
             onPressed: () {
-              Navigator.pop(context); // Agora com ação de voltar
             },
           ),
         ),
@@ -80,7 +84,6 @@ class AgendaPage extends StatelessWidget {
       ),
     );
   }
-
 
   _buildEventoCard({
     required String hora,

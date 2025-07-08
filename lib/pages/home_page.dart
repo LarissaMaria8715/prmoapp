@@ -1,3 +1,7 @@
+import 'package:equilibreapp/pages/home_content_page.dart';
+import 'package:equilibreapp/pages/perfil_page.dart';
+import 'package:equilibreapp/pages/settings_page.dart';
+import 'package:equilibreapp/wigets/style_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/colors.dart';
@@ -12,13 +16,20 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
 
+  final List<Widget> _pages = [
+    const HomeContent(),
+    const PerfilPage(),
+    const SettingsPage(),
+    Center(child: Text('Configurações', style: TextStyle(fontSize: 24))),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.lightBlue1,
         appBar: _buildAppBar(),
-        body: _buildBody(),
+        body: _pages[selectedIndex], // Exibe a página com base no índice
         bottomNavigationBar: _buildBottomNavigationBar(),
       ),
     );
@@ -54,7 +65,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _buildBottomNavigationBar() {
+   _buildBottomNavigationBar() {
     return BottomNavigationBar(
       currentIndex: selectedIndex,
       onTap: (int index) {
@@ -67,107 +78,11 @@ class _HomePageState extends State<HomePage> {
       unselectedItemColor: AppColors.lightPurple1.withOpacity(0.7),
       type: BottomNavigationBarType.fixed,
       items: const [
-        BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home'
-        ),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Perfil'
-        ),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book),
-            label: 'Resumo'
-        ),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Configurações'
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
+        BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: 'Resumo'),
+        BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Configurações'),
       ],
-    );
-  }
-
-  _buildBody() {
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-      children: [
-        _actionButtonsGrid(),
-      ],
-    );
-  }
-
-  _actionButtonsGrid() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(child: _actionButton(Icons.sentiment_satisfied_alt, 'Humor', AppColors.lightBlueDark4)),
-              const SizedBox(width: 30),
-              Expanded(child: _actionButton(Icons.water_drop, 'Hábitos', AppColors.darkPurple3)),
-            ],
-          ),
-          const SizedBox(height: 30),
-          Row(
-            children: [
-              Expanded(child: _actionButton(Icons.self_improvement, 'Respiração', AppColors.darkGreen3)),
-              const SizedBox(width: 30),
-              Expanded(child: _actionButton(Icons.track_changes, 'Metas', AppColors.darkYellow3)),
-            ],
-          ),
-          const SizedBox(height: 30),
-          Row(
-            children: [
-              Expanded(child: _actionButton(Icons.menu_book, 'Diário', AppColors.darkRed3)),
-              const SizedBox(width: 30),
-              Expanded(child: _actionButton(Icons.rocket_launch, 'Motivação', AppColors.darkOrange2)),
-            ],
-          ),
-          const SizedBox(height: 30),
-          Row(
-            children: [
-              Expanded(child: _actionButton(Icons.calendar_month_outlined, 'Agenda', AppColors.darkBordeaux3)),
-              const SizedBox(width: 30),
-              Expanded(child: Container()),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  _actionButton(IconData icon, String label, Color backgroundColor) {
-    return ElevatedButton(
-      onPressed: () {
-        // Navegação não implementada aqui
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        padding: const EdgeInsets.all(10),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-              icon,
-              color: Colors.white,
-              size: 60
-          ),
-          const SizedBox(height: 16),
-          Text(
-            label,
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
