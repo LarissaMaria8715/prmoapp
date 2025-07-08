@@ -4,6 +4,12 @@ import 'package:equilibreapp/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+
+// Cinza LOGIN-PAGE e REGISTER-PAGE
+
+
+
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 

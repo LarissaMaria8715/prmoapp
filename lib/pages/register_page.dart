@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:equilibreapp/utils/colors.dart';
 
+
+
+
+// Cinza LOGIN-PAGE e REGISTER-PAGE
+
+
+
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
