@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:equilibreapp/utils/colors.dart';
 
+import '../database/database.dart';
+
 
 
 
@@ -17,6 +19,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final DataBase db = DataBase();
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final emailController = TextEditingController();
@@ -149,17 +152,19 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void _handleRegister() {
     if (_formKey.currentState!.validate()) {
+      // adiciona o usuário no "banco"
+      db.addUser(emailController.text.trim(), passwordController.text);
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Cadastro realizado com sucesso!'),
           backgroundColor: AppColors.Green,
-          duration: Duration(seconds: 2), // para o usuário ver a mensagem
+          duration: Duration(seconds: 2),
         ),
       );
 
-      // Espera o SnackBar aparecer antes de voltar
       Future.delayed(Duration(seconds: 2), () {
-        Navigator.pop(context); // Volta para a tela de login
+        Navigator.pop(context); // volta para login
       });
     }
   }

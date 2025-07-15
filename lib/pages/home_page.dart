@@ -27,39 +27,8 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.lightBlue1,
-        appBar: _buildAppBar(),
-        body: _pages[selectedIndex], // Exibe a página com base no índice
+        body: _pages[selectedIndex],
         bottomNavigationBar: _buildBottomNavigationBar(),
-      ),
-    );
-  }
-
-  _buildAppBar() {
-    return AppBar(
-      toolbarHeight: 100,
-      backgroundColor: AppColors.darkPurple5,
-      centerTitle: true,
-      title: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'EQUILIBRE',
-            style: GoogleFonts.rubik(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-              color: AppColors.white,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Cuide do seu equilíbrio mental e emocional',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(
-              color: AppColors.white.withOpacity(0.9),
-              fontSize: 16,
-            ),
-          ),
-        ],
       ),
     );
   }
