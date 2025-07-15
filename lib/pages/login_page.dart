@@ -3,6 +3,7 @@ import 'package:equilibreapp/pages/register_page.dart';
 import 'package:equilibreapp/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../database/database.dart';
 
 
 // Cinza LOGIN-PAGE e REGISTER-PAGE
@@ -18,6 +19,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final DataBase db = DataBase();
+
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -129,7 +132,9 @@ class _LoginPageState extends State<LoginPage> {
     String email = emailController.text.trim();
     String password = passwordController.text;
 
-    if (email == 'joao@gmail.com' && password == '123456') {
+    bool isValid = db.validateUser(email, password);
+
+    if (isValid) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => HomePage()),
@@ -140,4 +145,5 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
   }
+
 }

@@ -114,6 +114,7 @@ class AppColors {
   static const darkBrown4 = Color(0xFF3E2723);
 
   // Vinho  PERFIL-PAGE
+  static const lightWine0 = Color(0xFFFCF7FD);
   static const lightWine1 = Color(0xFFF3E5F5);
   static const lightWine2 = Color(0xFFE1BEE7);
   static const lightWine3 = Color(0xFFCE93D8);
@@ -123,6 +124,7 @@ class AppColors {
   static const darkWine2 = Color(0xFF7B1FA2);
   static const darkWine3 = Color(0xFF6A1B9A);
   static const darkWine4 = Color(0xFF4A148C);
+  static const darkWine5 = Color(0xFF280656);
 
   // Bordô = AGENDA-PAGE
   static const lightBordeaux1 = Color(0xFFF8BBD0);

@@ -9,109 +9,160 @@ class HomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-      children: [
-        _actionButtonsGrid(),
-      ],
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+        children: [
+          _actionButtonsGrid(context),
+        ],
+      ),
     );
   }
 
-   _actionButtonsGrid() {
+  AppBar _buildAppBar() {
+    return AppBar(
+      toolbarHeight: 100,
+      backgroundColor: AppColors.darkPurple5,
+      centerTitle: true,
+      title: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'EQUILIBRE',
+            style: GoogleFonts.rubik(
+              fontSize: 36,
+              fontWeight: FontWeight.bold,
+              color: AppColors.white,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Cuide do seu equilíbrio mental e emocional',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(
+              color: AppColors.white.withOpacity(0.9),
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _actionButtonsGrid(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Column(
         children: [
           Row(
             children: [
-              Expanded(child: _actionButton(
-                Icons.sentiment_satisfied_alt,
-                'Humor',
-                AppColors.lightBlueDark4,
-                    () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HumorPage()),
-                  );
-                },
-              )),
+              Expanded(
+                child: _actionButton(
+                  Icons.sentiment_satisfied_alt,
+                  'Humor',
+                  AppColors.lightBlueDark4,
+                      () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HumorPage()),
+                    );
+                  },
+                ),
+              ),
               const SizedBox(width: 30),
-              Expanded(child: _actionButton(
-                Icons.water_drop,
-                'Hábitos',
-                AppColors.darkPurple3,
-                    () {
-                  print('Botão Hábitos clicado');
-                },
-              )),
+              Expanded(
+                child: _actionButton(
+                  Icons.water_drop,
+                  'Hábitos',
+                  AppColors.darkPurple3,
+                      () {
+                    print('Botão Hábitos clicado');
+                  },
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 30),
           Row(
             children: [
-              Expanded(child: _actionButton(
-                Icons.self_improvement,
-                'Respiração',
-                AppColors.darkGreen3,
-                    () {
-                  print('Botão Respiração clicado');
-                },
-              )),
+              Expanded(
+                child: _actionButton(
+                  Icons.self_improvement,
+                  'Respiração',
+                  AppColors.darkGreen3,
+                      () {
+                    print('Botão Respiração clicado');
+                  },
+                ),
+              ),
               const SizedBox(width: 30),
-              Expanded(child: _actionButton(
-                Icons.track_changes,
-                'Metas',
-                AppColors.darkYellow3,
-                    () {
-                  print('Botão Metas clicado');
-                },
-              )),
+              Expanded(
+                child: _actionButton(
+                  Icons.track_changes,
+                  'Metas',
+                  AppColors.darkYellow3,
+                      () {
+                    print('Botão Metas clicado');
+                  },
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 30),
           Row(
             children: [
-              Expanded(child: _actionButton(
-                Icons.menu_book,
-                'Diário',
-                AppColors.darkRed3,
-                    () {
-                  print('Botão Diário clicado');
-                },
-              )),
+              Expanded(
+                child: _actionButton(
+                  Icons.menu_book,
+                  'Diário',
+                  AppColors.darkRed3,
+                      () {
+                    print('Botão Diário clicado');
+                  },
+                ),
+              ),
               const SizedBox(width: 30),
-              Expanded(child: _actionButton(
-                Icons.rocket_launch,
-                'Motivação',
-                AppColors.darkOrange2,
-                    () {
-                  print('Botão Motivação clicado');
-                },
-              )),
+              Expanded(
+                child: _actionButton(
+                  Icons.rocket_launch,
+                  'Motivação',
+                  AppColors.darkOrange2,
+                      () {
+                    print('Botão Motivação clicado');
+                  },
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 30),
           Row(
             children: [
-              Expanded(child: _actionButton(
-                Icons.calendar_month_outlined,
-                'Agenda',
-                AppColors.darkBordeaux3,
-                    () {
-                  print('Botão Agenda clicado');
-                },
-              )),
+              Expanded(
+                child: _actionButton(
+                  Icons.calendar_month_outlined,
+                  'Agenda',
+                  AppColors.darkBordeaux3,
+                      () {
+                    print('Botão Agenda clicado');
+                  },
+                ),
+              ),
               const SizedBox(width: 30),
-              Expanded(child: Container()),
+              const Expanded(child: SizedBox()), // espaço vazio para balancear
             ],
           ),
         ],
-
       ),
     );
   }
 
-   _actionButton(IconData icon, String label, Color backgroundColor, VoidCallback onPressed) {
+  _actionButton(
+      IconData icon,
+      String label,
+      Color backgroundColor,
+      VoidCallback onPressed,
+      ) {
     return StyleButton(
       icon: icon,
       label: label,

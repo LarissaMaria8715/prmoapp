@@ -2,31 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/colors.dart';
 
-
-
-// Laranja   PERFIL-PAGE
-
-
-
-
-
 class PerfilPage extends StatelessWidget {
   const PerfilPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBlue1,
+      backgroundColor: AppColors.lightWine0,
       appBar: AppBar(
+        toolbarHeight: 80,
         title: Text(
-          'Perfil',
+          'PERFIL',
           style: GoogleFonts.lato(
             color: AppColors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 24,
+            fontSize: 30,
           ),
         ),
-        backgroundColor: AppColors.darkPurple3,
+        backgroundColor: AppColors.darkWine5,
         centerTitle: true,
       ),
       body: ListView(
@@ -47,10 +40,14 @@ class PerfilPage extends StatelessWidget {
             icon: const Icon(Icons.edit),
             label: Text(
               'Editar perfil',
-              style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
+              style: GoogleFonts.lato(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.lightWine0,
+              ),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.darkPurple3,
+              backgroundColor: AppColors.darkWine5,
               padding: const EdgeInsets.symmetric(vertical: 14),
             ),
             onPressed: () {
@@ -61,13 +58,20 @@ class PerfilPage extends StatelessWidget {
           const SizedBox(height: 12),
 
           ElevatedButton.icon(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(
+                Icons.logout,
+                color: AppColors.darkWine5,
+            ),
             label: Text(
               'Sair',
-              style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
+              style: GoogleFonts.lato(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppColors.darkWine5,
+              ),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.darkRed2,
+              backgroundColor: AppColors.lightWine3,
               padding: const EdgeInsets.symmetric(vertical: 14),
             ),
             onPressed: () {
@@ -84,18 +88,18 @@ class PerfilPage extends StatelessWidget {
       child: Stack(
         children: [
           CircleAvatar(
-            radius: 60,
-            backgroundColor: AppColors.lightGray2,
+            radius: 100,
+            backgroundColor: AppColors.lightWine1,
             backgroundImage: null, // substitua por uma imagem se desejar
-            child: Icon(Icons.person, size: 80, color: AppColors.darkGray1),
+            child: Icon(Icons.person, size: 100, color: AppColors.darkWine4),
           ),
           Positioned(
             bottom: 0,
             right: 4,
             child: CircleAvatar(
-              backgroundColor: AppColors.darkPurple3,
-              radius: 20,
-              child: Icon(Icons.edit, size: 22, color: AppColors.white),
+              backgroundColor: AppColors.darkWine4,
+              radius: 35,
+              child: Icon(Icons.edit, size: 34, color: AppColors.white),
             ),
           ),
         ],
