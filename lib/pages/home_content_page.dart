@@ -20,7 +20,7 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-  AppBar _buildAppBar() {
+  _buildAppBar() {
     return AppBar(
       toolbarHeight: 100,
       backgroundColor: AppColors.darkPurple5,
@@ -149,7 +149,7 @@ class HomeContent extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 30),
-              const Expanded(child: SizedBox()), // espaço vazio para balancear
+              const Expanded(child: SizedBox()),
             ],
           ),
         ],
@@ -157,12 +157,7 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-  _actionButton(
-      IconData icon,
-      String label,
-      Color backgroundColor,
-      VoidCallback onPressed,
-      ) {
+  _actionButton(IconData icon, String label, Color backgroundColor, VoidCallback onPressed,) {
     return StyleButton(
       icon: icon,
       label: label,
