@@ -8,9 +8,6 @@ import '../database/database.dart';
 
 // Cinza LOGIN-PAGE e REGISTER-PAGE
 
-
-
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -19,7 +16,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final DataBase db = DataBase();
+  final Database db = Database();
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();

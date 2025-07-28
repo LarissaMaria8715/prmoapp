@@ -1,6 +1,5 @@
 import 'package:equilibreapp/pages/home_content_page.dart';
 import 'package:equilibreapp/pages/perfil_page.dart';
-import 'package:equilibreapp/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/colors.dart';
@@ -16,10 +15,9 @@ class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
 
   final List<Widget> _pages = [
-    const HomeContent(),
-    const PerfilPage(),
+    HomeContent(),
+    PerfilPage(),
     Center(child: Text('Resumo', style: TextStyle(fontSize: 24))),
-    const SettingsPage(),
   ];
 
   @override
@@ -49,7 +47,6 @@ class _HomePageState extends State<HomePage> {
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: 'Resumo'),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Configurações'),
       ],
     );
   }
