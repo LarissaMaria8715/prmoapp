@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static const white = Color(0xFFFFFFFF);
+  static const black = Color(0xFF000000);
 
   // Azul Claro
   static const lightBlue1 = Color(0xFFE1F5FE);
@@ -102,7 +103,7 @@ class AppColors {
   static const darkGray3 = Color(0xFF424242);
   static const darkGray4 = Color(0xFF212121);
 
-  // Marrom  SETTINGS-PAGE
+  // Marrom
   static const lightBrown1 = Color(0xFFD7CCC8);
   static const lightBrown2 = Color(0xFFBCAAA4);
   static const lightBrown3 = Color(0xFFA1887F);

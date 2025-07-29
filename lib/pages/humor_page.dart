@@ -1,11 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/colors.dart';
+import 'package:intl/intl.dart';
 
-
-class HumorPage extends StatelessWidget {
+class HumorPage extends StatefulWidget {
   const HumorPage({super.key});
 
+  @override
+  State<HumorPage> createState() => _HumorPageState();
+}
+
+class _HumorPageState extends State<HumorPage> {
+  String? _selectedHumorEmoji;
+  String? _selectedHumorLabel;
+  String _name = '';
+  DateTime? _selectedDate;
+
+  final TextEditingController _nameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  void _onSelectHumor(String emoji, String label) {
+    setState(() {
+      _selectedHumorEmoji = emoji;
+      _selectedHumorLabel = label;
+      _selectedDate = DateTime.now();
+    });
+  }
+
+  void _onConfirm() {
+    if (_name.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, digite seu nome')),
+      );
+      return;
+    }
+    if (_selectedHumorLabel == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, selecione seu humor')),
+      );
+      return;
+    }
+
+    final formattedDate = DateFormat('dd/MM/yyyy').format(_selectedDate!);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Nome: $_name\nHumor: $_selectedHumorLabel $_selectedHumorEmoji\nData: $formattedDate',
+          style: const TextStyle(fontSize: 16),
+        ),
+        duration: const Duration(seconds: 4),
+      ),
+    );
+
+    // Aqui você pode salvar no banco de dados, enviar para servidor, etc.
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +71,30 @@ class HumorPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Text(
+              "Digite seu nome",
+              style: GoogleFonts.lato(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppColors.darkBlueLight4,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _nameController,
+              onChanged: (val) => setState(() {
+                _name = val;
+              }),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white.withOpacity(0.9),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                hintText: 'Seu nome',
+              ),
+            ),
+            const SizedBox(height: 24),
+
             Text(
               "Escolha seu humor",
               style: GoogleFonts.lato(
@@ -49,14 +127,26 @@ class HumorPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
+
+            if (_selectedDate != null)
+              Text(
+                'Data da seleção: ${DateFormat('dd/MM/yyyy').format(_selectedDate!)}',
+                style: GoogleFonts.lato(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.darkBlueLight4,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+            const SizedBox(height: 16),
             ElevatedButton.icon(
-              onPressed: () {
-                // Ação futura ao confirmar humor
-              },
+              onPressed: _onConfirm,
               icon: const Icon(
-                  Icons.check,
-                  size: 34,
-                  color: AppColors.white),
+                Icons.check,
+                size: 34,
+                color: AppColors.white,
+              ),
               label: Text(
                 "Confirmar",
                 style: GoogleFonts.lato(
@@ -79,26 +169,34 @@ class HumorPage extends StatelessWidget {
     );
   }
 
+  Widget _buildHumorOption(String emoji, String label) {
+    final isSelected = _selectedHumorLabel == label;
 
-  _buildHumorOption(String emoji, String label) {
     return ElevatedButton(
-      onPressed: () {
-        // Ação futura ao selecionar o humor
-      },
+      onPressed: () => _onSelectHumor(emoji, label),
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.darkBlueLight4.withOpacity(0.15),
-        foregroundColor: AppColors.darkBlueLight4,
+        backgroundColor: isSelected
+            ? AppColors.darkBlueLight4
+            : AppColors.darkBlueLight4.withOpacity(0.15),
+        foregroundColor: isSelected
+            ? Colors.white
+            : AppColors.darkBlueLight4,
         elevation: 0,
         minimumSize: const Size(120, 100),
         padding: const EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: AppColors.darkBlueLight4, width: 1.5),
+          side: BorderSide(
+            color: isSelected
+                ? Colors.white
+                : AppColors.darkBlueLight4,
+            width: 2,
+          ),
         ),
       ),
       child: Column(
         children: [
-          Text(emoji, style: const TextStyle(fontSize: 40)),
+          Text(emoji, style: TextStyle(fontSize: 40)),
           const SizedBox(height: 8),
           Text(
             label,
@@ -106,7 +204,7 @@ class HumorPage extends StatelessWidget {
             style: GoogleFonts.lato(
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: AppColors.darkBlueLight4,
+              color: isSelected ? Colors.white : AppColors.darkBlueLight4,
             ),
           ),
         ],
@@ -114,8 +212,7 @@ class HumorPage extends StatelessWidget {
     );
   }
 
-
-  _buildAppBar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       toolbarHeight: 80,
       centerTitle: true,
@@ -123,7 +220,7 @@ class HumorPage extends StatelessWidget {
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: AppColors.white),
         onPressed: () {
-          // Navegação futura
+          Navigator.pop(context);
         },
       ),
       title: Text(
@@ -137,4 +234,3 @@ class HumorPage extends StatelessWidget {
     );
   }
 }
-
