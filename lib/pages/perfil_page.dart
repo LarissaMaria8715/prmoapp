@@ -2,112 +2,125 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/colors.dart';
 
-class PerfilPage extends StatelessWidget {
+class PerfilPage extends StatefulWidget {
   const PerfilPage({super.key});
+
+  @override
+  State<PerfilPage> createState() => _PerfilPageState();
+}
+
+class _PerfilPageState extends State<PerfilPage> {
+  final nomeController = TextEditingController(text: "Nome Completo da Silva");
+  final dataNascimentoController = TextEditingController(text: "01/01/1111");
+  final generoController = TextEditingController(text: "Prefiro não informar");
+  final alturaController = TextEditingController(text: "300cm");
+  final pesoController = TextEditingController(text: "1000kg");
+  final telefoneController = TextEditingController(text: "(99) 99999-9999");
+  final emailController = TextEditingController(text: "email@example.com");
+  final senhaController = TextEditingController(text: "senha");
+
+  bool _isPasswordVisible = false;
+
+  @override
+  void dispose() {
+    nomeController.dispose();
+    dataNascimentoController.dispose();
+    generoController.dispose();
+    alturaController.dispose();
+    pesoController.dispose();
+    telefoneController.dispose();
+    emailController.dispose();
+    senhaController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightWine0,
-      appBar: AppBar(
-        toolbarHeight: 80,
-        title: Text(
-          'PERFIL',
-          style: GoogleFonts.lato(
-            color: AppColors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 30,
-          ),
-        ),
-        backgroundColor: AppColors.darkWine5,
-        centerTitle: true,
-      ),
+      backgroundColor: AppColors.white,
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         children: [
-          _buildSectionTitle("Informações básicas"),
-          const SizedBox(height: 16),
           _buildProfilePhoto(),
-          const SizedBox(height: 20),
-          _buildDisplayField(label: "Nome", value: "Larissa Maria da Silva"),
-          _buildDisplayField(label: "Email", value: "larissa@example.com"),
-          _buildDisplayField(label: "Telefone", value: "(99) 99999-9999"),
-          _buildDisplayField(label: "Data de nascimento", value: "01/01/1990"),
-          _buildDisplayField(label: "Endereço", value: "Rua Exemplo, 123 - Cidade, Estado"),
           const SizedBox(height: 32),
 
-          ElevatedButton.icon(
-            icon: const Icon(Icons.edit),
-            label: Text(
-              'Editar perfil',
-              style: GoogleFonts.lato(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.lightWine0,
+          _buildSectionTitle("INFORMAÇÕES PESSOAIS"),
+          const SizedBox(height: 16),
+          _buildEditableField(label: "Nome", controller: nomeController),
+          _buildEditableField(label: "Data de nascimento", controller: dataNascimentoController),
+          _buildEditableField(label: "Gênero", controller: generoController),
+          _buildEditableField(label: "Altura (cm)", controller: alturaController),
+          _buildEditableField(label: "Peso (kg)", controller: pesoController),
+          _buildEditableField(label: "Telefone", controller: telefoneController),
+
+          const SizedBox(height: 32),
+
+          _buildSectionTitle("INFORMAÇÕES DA CONTA"),
+          const SizedBox(height: 16),
+          _buildEditableField(label: "Email", controller: emailController),
+          _buildEditableField(
+            label: "Senha",
+            controller: senhaController,
+            obscureText: !_isPasswordVisible,
+            suffixIcon: IconButton(
+              icon: Icon(
+                _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                color: AppColors.darkTerracotta3,
               ),
+              onPressed: () {
+                setState(() {
+                  _isPasswordVisible = !_isPasswordVisible;
+                });
+              },
             ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.darkWine5,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-            ),
-            onPressed: () {
-              // Aqui poderia abrir um formulário para editar o perfil
-            },
           ),
 
-          const SizedBox(height: 12),
+          const SizedBox(height: 40),
 
           ElevatedButton.icon(
-            icon: const Icon(
-                Icons.logout,
-                color: AppColors.darkWine5,
-            ),
+            icon: const Icon(Icons.save_outlined, color: AppColors.white, size: 25),
             label: Text(
-              'Sair',
+              'Salvar Alterações',
               style: GoogleFonts.lato(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: AppColors.darkWine5,
+                color: AppColors.white,
               ),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.lightWine3,
-              padding: const EdgeInsets.symmetric(vertical: 14),
+              backgroundColor: AppColors.darkTerracotta2,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              elevation: 2,
             ),
             onPressed: () {
-              // Função para deslogar
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Salvar alterações?'),
+                  content: Text('Atenção! As alterações feitas não podem ser desfeitas!'),
+                  actions: [
+                    TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancelar')),
+                    TextButton(onPressed: () {}, child: Text('Salvar')),
+                  ],
+                ),
+              );
             },
           ),
+          const SizedBox(height: 24),
         ],
       ),
     );
   }
 
-  _buildProfilePhoto() {
-    return Center(
-      child: Stack(
-        children: [
-          CircleAvatar(
-            radius: 100,
-            backgroundColor: AppColors.lightWine1,
-            backgroundImage: null, // substitua por uma imagem se desejar
-            child: Icon(Icons.person, size: 100, color: AppColors.darkWine4),
-          ),
-          Positioned(
-            bottom: 0,
-            right: 4,
-            child: CircleAvatar(
-              backgroundColor: AppColors.darkWine4,
-              radius: 35,
-              child: Icon(Icons.edit, size: 34, color: AppColors.white),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  _buildDisplayField({required String label, required String value}) {
+  Widget _buildEditableField({
+    required String label,
+    required TextEditingController controller,
+    bool obscureText = false,
+    Widget? suffixIcon,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
@@ -118,21 +131,27 @@ class PerfilPage extends StatelessWidget {
             style: GoogleFonts.lato(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: AppColors.darkGray2,
+              color: AppColors.darkTerracotta3,
             ),
           ),
           const SizedBox(height: 4),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: AppColors.lightGray3),
-            ),
-            child: Text(
-              value,
-              style: GoogleFonts.lato(fontSize: 16, color: AppColors.darkGray3),
+          TextFormField(
+            controller: controller,
+            obscureText: obscureText,
+            style: GoogleFonts.lato(fontSize: 16, color: AppColors.black),
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+              filled: true,
+              fillColor: AppColors.white,
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: AppColors.darkTerracotta3),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: AppColors.darkTerracotta1, width: 2),
+              ),
+              suffixIcon: suffixIcon,
             ),
           ),
         ],
@@ -140,13 +159,55 @@ class PerfilPage extends StatelessWidget {
     );
   }
 
-  _buildSectionTitle(String text) {
-    return Text(
-      text,
-      style: GoogleFonts.lato(
-        fontSize: 22,
-        fontWeight: FontWeight.w800,
-        color: AppColors.darkGray4,
+  Widget _buildProfilePhoto() {
+    return Center(
+      child: Stack(
+        children: [
+          CircleAvatar(
+            radius: 100,
+            backgroundColor: AppColors.darkTerracotta3,
+            backgroundImage: null,
+            child: Icon(Icons.person, size: 100, color: AppColors.lightTerracotta1),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 4,
+            child: CircleAvatar(
+              backgroundColor: AppColors.lightTerracotta1,
+              radius: 35,
+              child: Icon(Icons.edit, size: 34, color: AppColors.darkTerracotta3),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String text) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+      decoration: BoxDecoration(
+        color: AppColors.lightTerracotta1,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Center(
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.lato(
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+            color: AppColors.darkGray4,
+            shadows: [
+              const Shadow(
+                blurRadius: 2,
+                color: Colors.black12,
+                offset: Offset(1, 1),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

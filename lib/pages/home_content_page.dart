@@ -1,8 +1,14 @@
+import 'package:equilibreapp/pages/agenda_page.dart';
+import 'package:equilibreapp/pages/habitos_page.dart';
 import 'package:equilibreapp/pages/humor_page.dart';
+import 'package:equilibreapp/pages/metas_page.dart';
+import 'package:equilibreapp/pages/respiracao_page.dart';
 import 'package:equilibreapp/wigets/style_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/colors.dart';
+import 'diario_page.dart';
+import 'motivacao_page.dart';
 
 class HomeContent extends StatelessWidget {
   const HomeContent({super.key});
@@ -16,7 +22,7 @@ class HomeContent extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: 420),
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
-            color: Colors.white, // Caixa branca como na login
+            color: Colors.white,
             borderRadius: BorderRadius.circular(28),
             boxShadow: [
               BoxShadow(
@@ -68,7 +74,7 @@ class HomeContent extends StatelessWidget {
                     () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const HumorPage()),
+                    MaterialPageRoute(builder: (context) => HumorPage()),
                   );
                 },
               ),
@@ -78,8 +84,13 @@ class HomeContent extends StatelessWidget {
               child: _actionButton(
                 Icons.water_drop,
                 'Hábitos',
-                AppColors.darkPurple3,
-                    () => print('Botão Hábitos clicado'),
+                AppColors.purple,
+                () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HabitosPage()),
+                  );
+                }
               ),
             ),
           ],
@@ -92,7 +103,12 @@ class HomeContent extends StatelessWidget {
                 Icons.self_improvement,
                 'Respiração',
                 AppColors.darkGreen3,
-                    () => print('Botão Respiração clicado'),
+                      () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RespiracaoPage()),
+                    );
+                  }
               ),
             ),
             const SizedBox(width: 30),
@@ -101,7 +117,12 @@ class HomeContent extends StatelessWidget {
                 Icons.track_changes,
                 'Metas',
                 AppColors.darkYellow3,
-                    () => print('Botão Metas clicado'),
+                      () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MetasPage()),
+                    );
+                  }
               ),
             ),
           ],
@@ -114,7 +135,12 @@ class HomeContent extends StatelessWidget {
                 Icons.menu_book,
                 'Diário',
                 AppColors.darkRed3,
-                    () => print('Botão Diário clicado'),
+                      () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => DiarioPage()),
+                    );
+                  }
               ),
             ),
             const SizedBox(width: 30),
@@ -123,7 +149,12 @@ class HomeContent extends StatelessWidget {
                 Icons.rocket_launch,
                 'Motivação',
                 AppColors.darkOrange2,
-                    () => print('Botão Motivação clicado'),
+                      () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MotivacaoPage()),
+                    );
+                  }
               ),
             ),
           ],
@@ -136,7 +167,12 @@ class HomeContent extends StatelessWidget {
                 Icons.calendar_month_outlined,
                 'Agenda',
                 AppColors.darkBordeaux3,
-                    () => print('Botão Agenda clicado'),
+                      () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AgendaPage()),
+                    );
+                  }
               ),
             ),
             const SizedBox(width: 30),

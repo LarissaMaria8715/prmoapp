@@ -2,6 +2,18 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
+  static final DatabaseHelper _instance = DatabaseHelper._internal();
+  factory DatabaseHelper() => _instance;
+  DatabaseHelper._internal();
+
+  static Database? _database;
+
+  Future<Database> getDatabase() async {
+    if (_database != null) return _database!;
+    _database = await initDB();
+    return _database!;
+  }
+
   Future<Database> initDB() async {
     String path = await getDatabasesPath();
     String dbName = 'equilibre.db';
@@ -9,99 +21,90 @@ class DatabaseHelper {
 
     print("Caminho do banco: $dbPath");
 
-    var db = await openDatabase(
+    return await openDatabase(
       dbPath,
       version: 1,
-      onCreate: onCreate,
+      onCreate: (Database db, int version) async {
+        await _onCreate(db, version);
+      },
     );
-
-    return db;
   }
 
-  Future onCreate(Database db, int version) async {
+  Future<void> _onCreate(Database db, int version) async {
+    // Criação da tabela de usuários
     await db.execute('''
       CREATE TABLE usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nome TEXT,
-        email TEXT,
-        senha TEXT
+        nome TEXT NOT NULL,
+        email TEXT NOT NULL UNIQUE,
+        senha TEXT NOT NULL,
+        dataNascimento TEXT,
+        genero TEXT,
+        altura REAL,
+        peso REAL,
+        telefone TEXT,
+        cidade TEXT,
+        estado TEXT,
+        objetivo TEXT,
+        praticaMeditacao INTEGER,
+        recebeNotificacoes INTEGER,
+        condicaoSaude TEXT
       );
     ''');
 
-    await db.execute('''
-      CREATE TABLE humor (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        data TEXT,
-        emoji TEXT,
-        humor TEXT,
-        descricao TEXT
-      );
-    ''');
-
-    await db.execute('''
-      CREATE TABLE agenda (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        titulo TEXT,
-        descricao TEXT,
-        data TEXT,
-        hora TEXT,
-        concluido INTEGER DEFAULT 0
-      );
-    ''');
-
-    await db.execute('''
-      CREATE TABLE diario (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        data TEXT,
-        titulo TEXT,
-        conteudo TEXT
-      );
-    ''');
-
+    // Criação da tabela de hábitos
     await db.execute('''
       CREATE TABLE habitos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nome TEXT,
-        descricao TEXT,
-        frequencia TEXT,
-        ultimo_registro TEXT
+        aguaLitros REAL,
+        horasSono REAL,
+        nivelEstresse REAL,
+        tempoTela REAL,
+        tempoAoArLivre REAL,
+        nivelMotivacao REAL,
+        meditou INTEGER,
+        fezExercicio INTEGER,
+        alimentacaoSaudavel INTEGER,
+        comeuFrutas INTEGER,
+        leuLivro INTEGER,
+        teveContatoSocial INTEGER,
+        praticouGratidao INTEGER,
+        autoAvaliacao INTEGER,
+        observacoes TEXT,
+        data TEXT
       );
     ''');
 
+    // Criação da tabela de metas
     await db.execute('''
       CREATE TABLE metas (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        titulo TEXT,
-        descricao TEXT,
-        data_limite TEXT,
-        concluida INTEGER DEFAULT 0
+        descricao TEXT NOT NULL,
+        concluida INTEGER NOT NULL
       );
     ''');
 
-    await db.execute('''
-      CREATE TABLE motivacoes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        tipo TEXT,
-        conteudo TEXT,
-        favorito INTEGER DEFAULT 0
-      );
-    ''');
-
-    await db.execute('''
-      CREATE TABLE respiracoes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        data TEXT,
-        duracao INTEGER,
-        tipo TEXT
-      );
-    ''');
-
-    await db.execute('''
-      CREATE TABLE configuracoes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        tema TEXT,
-        notificacoes INTEGER DEFAULT 1
-      );
-    ''');
+    // Inserção automática de um usuário padrão
+    //não tá inserindo no bd
+    await db.insert(
+      'usuarios',
+      {
+        'nome': 'Larissa Maria',
+        'email': 'larissa@email.com',
+        'senha': '123456',
+        'dataNascimento': '2000-01-01',
+        'genero': 'Feminino',
+        'altura': 1.65,
+        'peso': 60.0,
+        'telefone': '82999999999',
+        'cidade': 'Arapiraca',
+        'estado': 'AL',
+        'objetivo': 'Melhorar a saúde mental',
+        'praticaMeditacao': 1,
+        'recebeNotificacoes': 1,
+        'condicaoSaude': 'Nenhuma',
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 }

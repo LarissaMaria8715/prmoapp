@@ -39,7 +39,7 @@ class UserModel {
       'nome': nome,
       'email': email,
       'senha': senha,
-      'data_nascimento': dataNascimento,
+      'dataNascimento': dataNascimento, // Corrigido aqui
       'genero': genero,
       'altura': altura,
       'peso': peso,
@@ -59,7 +59,7 @@ class UserModel {
       nome: map['nome'],
       email: map['email'],
       senha: map['senha'],
-      dataNascimento: map['dataNascimento'],
+      dataNascimento: map['dataNascimento'], // Corrigido aqui
       genero: map['genero'],
       altura: map['altura'],
       peso: map['peso'],

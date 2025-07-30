@@ -71,36 +71,13 @@ class _HumorPageState extends State<HumorPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              "Digite seu nome",
-              style: GoogleFonts.lato(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: AppColors.darkBlueLight4,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _nameController,
-              onChanged: (val) => setState(() {
-                _name = val;
-              }),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white.withOpacity(0.9),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                hintText: 'Seu nome',
-              ),
-            ),
             const SizedBox(height: 24),
-
             Text(
               "Escolha seu humor",
               style: GoogleFonts.lato(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: AppColors.darkBlueLight4,
+                color: AppColors.lightBlueDark4,
               ),
               textAlign: TextAlign.center,
             ),
@@ -134,7 +111,7 @@ class _HumorPageState extends State<HumorPage> {
                 style: GoogleFonts.lato(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.darkBlueLight4,
+                  color: AppColors.lightBlueDark4,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -156,7 +133,7 @@ class _HumorPageState extends State<HumorPage> {
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.darkBlueLight4,
+                backgroundColor: AppColors.lightBlueDark4,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -176,11 +153,11 @@ class _HumorPageState extends State<HumorPage> {
       onPressed: () => _onSelectHumor(emoji, label),
       style: ElevatedButton.styleFrom(
         backgroundColor: isSelected
-            ? AppColors.darkBlueLight4
-            : AppColors.darkBlueLight4.withOpacity(0.15),
+            ? AppColors.lightBlueDark4
+            : AppColors.lightBlueDark4.withOpacity(0.15),
         foregroundColor: isSelected
             ? Colors.white
-            : AppColors.darkBlueLight4,
+            : AppColors.lightBlueDark4,
         elevation: 0,
         minimumSize: const Size(120, 100),
         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -189,7 +166,7 @@ class _HumorPageState extends State<HumorPage> {
           side: BorderSide(
             color: isSelected
                 ? Colors.white
-                : AppColors.darkBlueLight4,
+                : AppColors.lightBlueDark4,
             width: 2,
           ),
         ),
@@ -204,7 +181,7 @@ class _HumorPageState extends State<HumorPage> {
             style: GoogleFonts.lato(
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: isSelected ? Colors.white : AppColors.darkBlueLight4,
+              color: isSelected ? Colors.white : AppColors.lightBlueDark4,
             ),
           ),
         ],
@@ -216,7 +193,7 @@ class _HumorPageState extends State<HumorPage> {
     return AppBar(
       toolbarHeight: 80,
       centerTitle: true,
-      backgroundColor: AppColors.darkBlueLight4,
+      backgroundColor: AppColors.lightBlueDark4,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: AppColors.white),
         onPressed: () {

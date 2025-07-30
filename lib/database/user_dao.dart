@@ -1,98 +1,103 @@
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
-import '../model/user_model.dart';
+import 'package:sqflite/sqflite.dart';           // Biblioteca para manipulação de banco de dados SQLite
+import '../model/user_model.dart';               // Modelo de dados do usuário
+import 'database_helper.dart';                  // Classe auxiliar para abrir o banco de dados
 
+// Classe responsável pelas operações de acesso ao banco de dados relacionadas ao usuário
 class UserDAO {
+
+  // Metodo privado que abre e retorna a instância do banco de dados
   Future<Database> _getDatabase() async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'equilibre.db');
-
-    return openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute('''
-          CREATE TABLE users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome TEXT NOT NULL,
-            email TEXT NOT NULL UNIQUE,
-            senha TEXT NOT NULL,
-            dataNascimento TEXT,
-            genero TEXT,
-            altura REAL,
-            peso REAL,
-            objetivo TEXT,
-            praticaMeditacao INTEGER,
-            recebeNotificacoes INTEGER,
-            condicaoSaude TEXT,
-            telefone TEXT,
-            cidade TEXT,
-            estado TEXT
-          )
-        ''');
-
-        await db.insert('users', {
-          'nome': 'Larissa',
-          'email': 'larissa@email.com',
-          'senha': '123456',
-          'dataNascimento': '2000-01-01',
-          'genero': 'Feminino',
-          'altura': 1.65,
-          'peso': 60.0,
-          'objetivo': 'Reduzir estresse',
-          'praticaMeditacao': 1,
-          'recebeNotificacoes': 1,
-          'condicaoSaude': null,
-          'telefone': '82999990000',
-          'cidade': 'Arapiraca',
-          'estado': 'AL',
-        });
-
-        await db.insert('users', {
-          'nome': 'Gaby',
-          'email': 'gaby@email.com',
-          'senha': 'senha123',
-          'dataNascimento': '1998-05-15',
-          'genero': 'Feminino',
-          'altura': 1.70,
-          'peso': 65.0,
-          'objetivo': 'Melhorar foco',
-          'praticaMeditacao': 0,
-          'recebeNotificacoes': 1,
-          'condicaoSaude': null,
-          'telefone': '82988880000',
-          'cidade': 'Maceió',
-          'estado': 'AL',
-        });
-      },
-    );
+    return await DatabaseHelper().initDB();      // Chama o mtodo initDB() da classe DatabaseHelper
   }
 
+  // ---------------------------
+  // LISTAR TODOS OS USUÁRIOS
+  // ---------------------------
+  Future<List<UserModel>> listarUsuarios() async {
+    final db = await _getDatabase();             // Obtém o banco de dados aberto
+    final result = await db.query('usuarios');   // Executa um SELECT * FROM usuarios
+
+    // Converte cada linha do resultado (Map) em um objeto UserModel
+    List<UserModel> lista = result.map((json) => UserModel.fromMap(json)).toList();
+    return lista;                                // Retorna a lista de usuários
+  }
+
+  // ---------------------------
+  // INSERIR NOVO USUÁRIO
+  // ---------------------------
   Future<int> insertUser(UserModel user) async {
-    final db = await _getDatabase();
-    return await db.insert('users', user.toMap());
-  }
-
-  Future<bool> validateUser(String email, String senha) async {
-    final db = await _getDatabase();
-    final result = await db.query(
-      'users',
-      where: 'email = ? AND senha = ?',
-      whereArgs: [email, senha],
+    final db = await _getDatabase();             // Abre o banco
+    return await db.insert(                      // Insere na tabela 'usuarios'
+      'usuarios',
+      user.toMap(),                              // Converte o objeto em um mapa para salvar
     );
-    return result.isNotEmpty;
   }
 
-  Future<UserModel?> getUserByEmail(String email) async {
-    final db = await _getDatabase();
+  // ---------------------------
+  // ATUALIZAR USUÁRIO EXISTENTE
+  // ---------------------------
+  Future<int> updateUser(UserModel user) async {
+    final db = await _getDatabase();             // Abre o banco
+
+    return await db.update(                      // Atualiza a tabela 'usuarios'
+      'usuarios',
+      user.toMap(),                              // Novos dados do usuário
+      where: 'id = ?',                           // Condição WHERE (por ID)
+      whereArgs: [user.id],                      // Substitui ? pelo valor do ID
+    );
+  }
+
+  // ---------------------------
+  // VALIDAR LOGIN DO USUÁRIO
+  // ---------------------------
+  Future<bool> validateUser(String email, String senha) async {
+    final db = await _getDatabase();             // Abre o banco
+
+    // Faz uma consulta para verificar se existe um usuário com o email e senha fornecidos
     final result = await db.query(
-      'users',
-      where: 'email = ?',
+      'usuarios',
+      where: 'email = ? AND senha = ?',          // Condição WHERE com email e senha
+      whereArgs: [email, senha],                 // Substitui os ? pelos valores
+    );
+
+    return result.isNotEmpty;                    // Retorna true se encontrou o usuário
+  }
+
+  // ---------------------------
+  // BUSCAR USUÁRIO PELO EMAIL
+  // ---------------------------
+  Future<UserModel?> getUserByEmail(String email) async {
+    final db = await _getDatabase();             // Abre o banco
+
+    final result = await db.query(
+      'usuarios',
+      where: 'email = ?',                        // Condição WHERE com email
       whereArgs: [email],
     );
+
     if (result.isNotEmpty) {
-      return UserModel.fromMap(result.first);
+      return UserModel.fromMap(result.first);    // Converte o resultado em UserModel
     }
-    return null;
+
+    return null;                                 // Retorna null se não encontrou
+  }
+
+  // ---------------------------
+  // BUSCAR USUÁRIO PELO ID
+  // ---------------------------
+  Future<UserModel?> getUserById(int id) async {
+    final db = await _getDatabase();             // Abre o banco
+
+    final result = await db.query(
+      'usuarios',
+      where: 'id = ?',                           // Condição WHERE com id
+      whereArgs: [id],
+    );
+
+    if (result.isNotEmpty) {
+      return UserModel.fromMap(result.first);    // Converte o resultado em UserModel
+    }
+
+    return null;                                 // Retorna null se não encontrou
   }
 }
