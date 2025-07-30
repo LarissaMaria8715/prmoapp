@@ -1,12 +1,10 @@
+import 'package:equilibreapp/pages/perfil_page.dart';
+import 'package:equilibreapp/pages/resumo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// Aqui substitua pelas suas cores
-class AppColors {
-  static const Color darkGreen5 = Color(0xFF1B5E20);
-  static const Color white = Colors.white;
-  static const Color greenAccent = Colors.greenAccent;
-}
+import '../utils/colors.dart';
+import 'home_content_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,9 +22,9 @@ class _HomePageState extends State<HomePage> {
 
   // Páginas simuladas
   final List<Widget> _pages = [
-    Center(child: Text('Home Content', style: TextStyle(fontSize: 24))),
-    Center(child: Text('Perfil Page', style: TextStyle(fontSize: 24))),
-    Center(child: Text('Resumo Page', style: TextStyle(fontSize: 24))),
+    const HomeContent(),
+    const PerfilPage(),
+    const ResumoPage(),
   ];
 
   @override
@@ -65,15 +63,6 @@ class _HomePageState extends State<HomePage> {
         ),
         const SizedBox(width: 12),
       ],
-      title: Text(
-        'EQUILIBRE',
-        style: GoogleFonts.raleway(
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-          letterSpacing: 1.2,
-        ),
-      ),
     );
   }
 
@@ -106,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                 SwitchListTile(
                   title: Text('Modo escuro', style: GoogleFonts.poppins(color: Colors.white70)),
                   value: _darkMode,
-                  activeColor: AppColors.greenAccent,
+                  activeColor: AppColors.lightOrange1,
                   onChanged: (val) {
                     setState(() {
                       _darkMode = val;
@@ -117,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                 SwitchListTile(
                   title: Text('Notificações', style: GoogleFonts.poppins(color: Colors.white70)),
                   value: _notificationsEnabled,
-                  activeColor: AppColors.greenAccent,
+                  activeColor: AppColors.lightOrange1,
                   onChanged: (val) {
                     setState(() {
                       _notificationsEnabled = val;
