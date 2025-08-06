@@ -76,7 +76,7 @@ class _RespiracaoPageState extends State<RespiracaoPage>
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        toolbarHeight: 90,
+        toolbarHeight: 80,
         title: Text(
           'Respiração Consciente',
           style: GoogleFonts.lato(

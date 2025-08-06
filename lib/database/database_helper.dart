@@ -2,37 +2,20 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper _instance = DatabaseHelper._internal();
-  factory DatabaseHelper() => _instance;
-  DatabaseHelper._internal();
-
-  static Database? _database;
-
-  Future<Database> getDatabase() async {
-    if (_database != null) return _database!;
-    _database = await initDB();
-    return _database!;
-  }
-
   Future<Database> initDB() async {
     String path = await getDatabasesPath();
     String dbName = 'equilibre.db';
-    String dbPath = join(path, dbName);
 
+    String dbPath = join(path, dbName);
     print("Caminho do banco: $dbPath");
 
-    return await openDatabase(
-      dbPath,
-      version: 1,
-      onCreate: (Database db, int version) async {
-        await _onCreate(db, version);
-      },
-    );
+    var db = await openDatabase(dbPath, version: 1, onCreate: onCreate);
+    return db;
   }
 
-  Future<void> _onCreate(Database db, int version) async {
-    // Criação da tabela de usuários
-    await db.execute('''
+  Future<void> onCreate(Database db, int version) async {
+    // Criação da tabela usuários
+    String sqlCreateUsuarios = '''
       CREATE TABLE usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT NOT NULL,
@@ -50,12 +33,24 @@ class DatabaseHelper {
         recebeNotificacoes INTEGER,
         condicaoSaude TEXT
       );
-    ''');
+    ''';
+    await db.execute(sqlCreateUsuarios);
 
-    // Criação da tabela de hábitos
-    await db.execute('''
+    String sqlInsertUsuario = """
+      INSERT INTO usuarios (
+        nome, email, senha, dataNascimento, genero, altura, peso, objetivo, praticaMeditacao, condicaoSaude, recebeNotificacoes
+      ) VALUES (
+        'Larissa Maria', 'larissa@example.com', '123456', '1995-08-06', 'Feminino', 1.65, 60.0, 'Relaxar', 1, '', 1
+      );
+    """;
+    await db.execute(sqlInsertUsuario);
+    print('Usuário inserido com raw SQL!');
+
+    // Criação da tabela hábitos
+    String sqlCreateHabitos = '''
       CREATE TABLE habitos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        usuario_id INTEGER NOT NULL,
         aguaLitros REAL,
         horasSono REAL,
         nivelEstresse REAL,
@@ -71,40 +66,22 @@ class DatabaseHelper {
         praticouGratidao INTEGER,
         autoAvaliacao INTEGER,
         observacoes TEXT,
-        data TEXT
+        data TEXT,
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
       );
-    ''');
+    ''';
+    await db.execute(sqlCreateHabitos);
 
-    // Criação da tabela de metas
-    await db.execute('''
+    // Criação da tabela metas
+    String sqlCreateMetas = '''
       CREATE TABLE metas (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        usuario_id INTEGER NOT NULL,
         descricao TEXT NOT NULL,
-        concluida INTEGER NOT NULL
+        concluida INTEGER NOT NULL,
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
       );
-    ''');
-
-    // Inserção automática de um usuário padrão
-    //não tá inserindo no bd
-    await db.insert(
-      'usuarios',
-      {
-        'nome': 'Larissa Maria',
-        'email': 'larissa@email.com',
-        'senha': '123456',
-        'dataNascimento': '2000-01-01',
-        'genero': 'Feminino',
-        'altura': 1.65,
-        'peso': 60.0,
-        'telefone': '82999999999',
-        'cidade': 'Arapiraca',
-        'estado': 'AL',
-        'objetivo': 'Melhorar a saúde mental',
-        'praticaMeditacao': 1,
-        'recebeNotificacoes': 1,
-        'condicaoSaude': 'Nenhuma',
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    ''';
+    await db.execute(sqlCreateMetas);
   }
 }

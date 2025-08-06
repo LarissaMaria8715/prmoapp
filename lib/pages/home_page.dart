@@ -7,7 +7,10 @@ import '../utils/colors.dart';
 import 'home_content_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String email;
+  final String senha;
+
+  const HomePage({super.key, required this.email, required this.senha});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -20,12 +23,17 @@ class _HomePageState extends State<HomePage> {
   bool _darkMode = false;
   bool _notificationsEnabled = true;
 
-  // Páginas simuladas
-  final List<Widget> _pages = [
-    const HomeContent(),
-    const PerfilPage(),
-    const ResumoPage(),
-  ];
+  late List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      HomeContent(email: widget.email, senha: widget.senha),
+      PerfilPage(),
+      ResumoPage(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {

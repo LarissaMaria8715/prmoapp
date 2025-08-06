@@ -39,6 +39,7 @@ class _DiarioPageState extends State<DiarioPage> {
       child: Scaffold(
         backgroundColor: AppColors.lightRed1,
         appBar: AppBar(
+          toolbarHeight: 80,
           backgroundColor: AppColors.darkRed4,
           title: Text(
             'Diário Pessoal',

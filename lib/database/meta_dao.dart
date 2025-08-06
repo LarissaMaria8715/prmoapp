@@ -1,31 +1,34 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:equilibreapp/database/database_helper.dart';
-import 'package:equilibreapp/model/meta_model.dart';
 
 class MetaDAO {
-  static Future<void> inserirMeta(Meta meta) async {
+  static Future<void> inserirMeta(Map<String, dynamic> meta) async {
     final db = await DatabaseHelper().initDB();
-    await db.insert('metas', meta.toMap());
+    await db.insert('metas', meta);
   }
 
-  static Future<List<Meta>> listarMetas() async {
+  static Future<List<Map<String, dynamic>>> listarMetas() async {
     final db = await DatabaseHelper().initDB();
     final List<Map<String, dynamic>> maps = await db.query('metas');
-    return maps.map((map) => Meta.fromMap(map)).toList();
+    return maps;
   }
 
-  static Future<void> atualizarMeta(Meta meta) async {
+  static Future<void> atualizarMeta(Map<String, dynamic> meta) async {
     final db = await DatabaseHelper().initDB();
     await db.update(
       'metas',
-      meta.toMap(),
+      meta,
       where: 'id = ?',
-      whereArgs: [meta.id],
+      whereArgs: [meta['id']],
     );
   }
 
   static Future<void> deletarMeta(int id) async {
     final db = await DatabaseHelper().initDB();
-    await db.delete('metas', where: 'id = ?', whereArgs: [id]);
+    await db.delete(
+      'metas',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 }

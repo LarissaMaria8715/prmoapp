@@ -1,9 +1,6 @@
-// Arquivo: register_page.dart
-
 import 'package:flutter/material.dart';
 import 'package:equilibreapp/utils/colors.dart';
 import '../database/user_dao.dart';
-import '../model/user_model.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -185,26 +182,27 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    final user = UserModel(
-      nome: nameController.text.trim(),
-      email: emailController.text.trim(),
-      senha: passwordController.text,
-      dataNascimento: birthDateController.text,
-      genero: selectedGender ?? '',
-      altura: double.tryParse(heightController.text) ?? 0.0,
-      peso: double.tryParse(weightController.text) ?? 0.0,
-      objetivo: selectedGoal ?? '',
-      praticaMeditacao: meditate,
-      condicaoSaude: healthConditionController.text.trim().isEmpty ? null : healthConditionController.text.trim(),
-      recebeNotificacoes: receiveNotifications,
-      telefone: null, // Adicione um campo de telefone no formulário se desejar
-      cidade: null,   // Idem
-      estado: null,   // Idem
-    );
-
+    // Criando o mapa com os dados do usuário
+    Map<String, dynamic> user = {
+      'nome': nameController.text.trim(),
+      'email': emailController.text.trim(),
+      'senha': passwordController.text,
+      'dataNascimento': birthDateController.text,
+      'genero': selectedGender ?? '',
+      'altura': double.tryParse(heightController.text) ?? 0.0,
+      'peso': double.tryParse(weightController.text) ?? 0.0,
+      'objetivo': selectedGoal ?? '',
+      'praticaMeditacao': meditate ? 1 : 0, // armazena 1 ou 0
+      'condicaoSaude': healthConditionController.text.trim().isEmpty ? null : healthConditionController.text.trim(),
+      'recebeNotificacoes': receiveNotifications ? 1 : 0,
+      'telefone': null,
+      'cidade': null,
+      'estado': null,
+    };
 
     try {
-      await userDAO.insertUser(user);
+      await userDAO.insert(user);
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Cadastro realizado com sucesso!'), backgroundColor: AppColors.green),
       );
