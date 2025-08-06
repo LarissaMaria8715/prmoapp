@@ -112,7 +112,7 @@ class ResumoPage extends StatelessWidget {
                 FlSpot(0, 6),
                 FlSpot(1, 7),
                 FlSpot(2, 6.5),
-                FlSpot(3, 5),
+                FlSpot(3, 7),
                 FlSpot(4, 7.5),
                 FlSpot(5, 8),
                 FlSpot(6, 6.8),

@@ -1,7 +1,7 @@
 import 'package:equilibreapp/pages/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../database/database.dart';
+import '../database/database_helper.dart';
 import '../database/user_dao.dart';
 import 'package:equilibreapp/utils/colors.dart';
 
@@ -15,7 +15,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final Database db = Database();
+  final DatabaseHelper db = DatabaseHelper();
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -196,12 +196,14 @@ class _LoginPageState extends State<LoginPage> {
     String email = emailController.text.trim();
     String password = passwordController.text;
 
-    bool isValid = await userDAO.validateUser(email, password);
+    bool isValid = await userDAO.validate(email, password);
 
     if (isValid) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const HomePage()),
+        MaterialPageRoute(
+          builder: (_) => HomePage(email: email, senha: password),
+        ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -209,6 +211,7 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
   }
+
 }
 
 // Botão glassmorphism customizado

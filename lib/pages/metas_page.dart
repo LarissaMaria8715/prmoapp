@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:equilibreapp/utils/colors.dart';
-import '../database/database_helper.dart';
-import '../model/meta_model.dart';
+import '../database/meta_dao.dart';
 
 class MetasPage extends StatefulWidget {
+  final int usuarioId;
+
+  const MetasPage({Key? key, required this.usuarioId}) : super(key: key);
+
   @override
   _MetasPageState createState() => _MetasPageState();
 }
 
 class _MetasPageState extends State<MetasPage> {
-  List<Meta> metas = [];
+  List<Map<String, dynamic>> metas = [];
   final TextEditingController novaMetaController = TextEditingController();
 
   @override
@@ -19,38 +22,51 @@ class _MetasPageState extends State<MetasPage> {
   }
 
   Future<void> _carregarMetas() async {
-    final db = await DatabaseHelper().initDB();
-    final List<Map<String, dynamic>> maps = await db.query('metas');
+    List<Map<String, dynamic>> todasMetas = await MetaDAO.listarMetas();
+    // Filtrar as metas do usuário atual
+    final usuarioMetas = todasMetas.where((m) => m['usuario_id'] == widget.usuarioId).toList();
+
     setState(() {
-      metas = List.generate(maps.length, (i) => Meta.fromMap(maps[i]));
+      metas = usuarioMetas;
     });
   }
 
   Future<void> adicionarMeta() async {
     final texto = novaMetaController.text.trim();
-    if (texto.isNotEmpty && !metas.any((meta) => meta.descricao == texto)) {
-      final novaMeta = Meta(descricao: texto, concluida: false);
-      final db = await DatabaseHelper().initDB();
-      novaMeta.id = await db.insert('metas', novaMeta.toMap());
-      setState(() {
-        metas.add(novaMeta);
-        novaMetaController.clear();
-      });
-    } else {
+    if (texto.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Digite uma meta válida e única!')),
+        const SnackBar(content: Text('Digite uma meta válida!')),
       );
+      return;
     }
+    if (metas.any((meta) => meta['descricao'] == texto)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Meta já cadastrada!')),
+      );
+      return;
+    }
+
+    Map<String, dynamic> novaMeta = {
+      'usuario_id': widget.usuarioId,
+      'descricao': texto,
+      'concluida': 0,
+    };
+
+    await MetaDAO.inserirMeta(novaMeta);
+    novaMetaController.clear();
+    await _carregarMetas();
   }
 
-  Future<void> atualizarMeta(Meta meta) async {
-    final db = await DatabaseHelper().initDB();
-    await db.update(
-      'metas',
-      {'concluida': meta.concluida ? 1 : 0},
-      where: 'id = ?',
-      whereArgs: [meta.id],
-    );
+  Future<void> atualizarMeta(Map<String, dynamic> meta, bool concluida) async {
+    meta['concluida'] = concluida ? 1 : 0;
+    await MetaDAO.atualizarMeta(meta);
+    await _carregarMetas();
+  }
+
+  @override
+  void dispose() {
+    novaMetaController.dispose();
+    super.dispose();
   }
 
   @override
@@ -58,9 +74,11 @@ class _MetasPageState extends State<MetasPage> {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
+        toolbarHeight: 80,
         title: const Text(
           'Metas Diárias',
-          style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.darkYellow3,
         centerTitle: true,
@@ -98,8 +116,10 @@ class _MetasPageState extends State<MetasPage> {
                   onPressed: adicionarMeta,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.darkYellow3,
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
                   ),
                   child: const Icon(Icons.add, color: Colors.white),
                 ),
@@ -125,6 +145,7 @@ class _MetasPageState extends State<MetasPage> {
                 itemCount: metas.length,
                 itemBuilder: (context, index) {
                   final meta = metas[index];
+                  final concluida = meta['concluida'] == 1;
                   return Card(
                     elevation: 2,
                     margin: const EdgeInsets.symmetric(vertical: 6),
@@ -133,19 +154,19 @@ class _MetasPageState extends State<MetasPage> {
                     ),
                     child: CheckboxListTile(
                       title: Text(
-                        meta.descricao,
+                        meta['descricao'] ?? '',
                         style: TextStyle(
                           fontSize: 16,
-                          decoration: meta.concluida ? TextDecoration.lineThrough : null,
-                          color: meta.concluida ? Colors.grey : Colors.black,
+                          decoration: concluida
+                              ? TextDecoration.lineThrough
+                              : null,
+                          color: concluida ? Colors.grey : Colors.black,
                         ),
                       ),
-                      value: meta.concluida,
+                      value: concluida,
                       onChanged: (bool? value) {
-                        setState(() {
-                          meta.concluida = value ?? false;
-                        });
-                        atualizarMeta(meta);
+                        if (value == null) return;
+                        atualizarMeta(meta, value);
                       },
                       activeColor: AppColors.darkYellow3,
                       checkColor: Colors.white,

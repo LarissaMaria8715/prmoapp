@@ -16,7 +16,7 @@ class _AgendaPageState extends State<AgendaPage> {
       child: Scaffold(
         backgroundColor: AppColors.lightBordeaux0,
         appBar: AppBar(
-          toolbarHeight: 90,
+          toolbarHeight: 80,
           backgroundColor: AppColors.lightBordeaux3,
           elevation: 0,
           centerTitle: true,
