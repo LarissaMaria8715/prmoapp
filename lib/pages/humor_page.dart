@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../utils/colors.dart';
 import 'package:intl/intl.dart';
+import '../utils/colors.dart';
+import '../database/humor_dao.dart';
 
 class HumorPage extends StatefulWidget {
   const HumorPage({super.key});
@@ -13,15 +14,24 @@ class HumorPage extends StatefulWidget {
 class _HumorPageState extends State<HumorPage> {
   String? _selectedHumorEmoji;
   String? _selectedHumorLabel;
-  String _name = '';
   DateTime? _selectedDate;
 
-  final TextEditingController _nameController = TextEditingController();
+  final HumorDAO _dao = HumorDAO();
+  final int usuarioId = 1;
+
+  List<Map<String, dynamic>> _humores = [];
 
   @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    _loadHumores();
+  }
+
+  Future<void> _loadHumores() async {
+    final list = await _dao.getHumoresByUser(usuarioId);
+    setState(() {
+      _humores = list;
+    });
   }
 
   void _onSelectHumor(String emoji, String label) {
@@ -32,13 +42,7 @@ class _HumorPageState extends State<HumorPage> {
     });
   }
 
-  void _onConfirm() {
-    if (_name.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor, digite seu nome')),
-      );
-      return;
-    }
+  Future<void> _onConfirm() async {
     if (_selectedHumorLabel == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Por favor, selecione seu humor')),
@@ -48,17 +52,30 @@ class _HumorPageState extends State<HumorPage> {
 
     final formattedDate = DateFormat('dd/MM/yyyy').format(_selectedDate!);
 
+    await _dao.insertHumor(
+      usuarioId: usuarioId,
+      humorLabel: _selectedHumorLabel!,
+      humorEmoji: _selectedHumorEmoji!,
+      data: formattedDate,
+    );
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          'Nome: $_name\nHumor: $_selectedHumorLabel $_selectedHumorEmoji\nData: $formattedDate',
+          'Humor salvo!\nHumor: $_selectedHumorLabel $_selectedHumorEmoji\nData: $formattedDate',
           style: const TextStyle(fontSize: 16),
         ),
-        duration: const Duration(seconds: 4),
+        duration: const Duration(seconds: 3),
       ),
     );
 
-    // Aqui você pode salvar no banco de dados, enviar para servidor, etc.
+    setState(() {
+      _selectedHumorEmoji = null;
+      _selectedHumorLabel = null;
+      _selectedDate = null;
+    });
+
+    _loadHumores();
   }
 
   @override
@@ -71,7 +88,7 @@ class _HumorPageState extends State<HumorPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             Text(
               "Escolha seu humor",
               style: GoogleFonts.lato(
@@ -81,63 +98,155 @@ class _HumorPageState extends State<HumorPage> {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Wrap(
-                  spacing: 16,
-                  runSpacing: 20,
-                  alignment: WrapAlignment.center,
-                  children: [
-                    _buildHumorOption("😄", "Muito feliz"),
-                    _buildHumorOption("🙂", "Feliz"),
-                    _buildHumorOption("😐", "Neutro"),
-                    _buildHumorOption("🙁", "Triste"),
-                    _buildHumorOption("😢", "Muito triste"),
-                    _buildHumorOption("😠", "Irritado"),
-                    _buildHumorOption("😤", "Frustrado"),
-                    _buildHumorOption("😨", "Ansioso"),
-                    _buildHumorOption("😕", "Confuso"),
-                    _buildHumorOption("😬", "Nervoso"),
-                  ],
+            const SizedBox(height: 12),
+
+            // GRID de opções
+            GridView.count(
+              crossAxisCount: 5,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              children: [
+                _buildHumorOption("😄", "Muito feliz"),
+                _buildHumorOption("🙂", "Feliz"),
+                _buildHumorOption("😐", "Neutro"),
+                _buildHumorOption("🙁", "Triste"),
+                _buildHumorOption("😢", "Muito triste"),
+                _buildHumorOption("😠", "Irritado"),
+                _buildHumorOption("😤", "Frustrado"),
+                _buildHumorOption("😨", "Ansioso"),
+                _buildHumorOption("😕", "Confuso"),
+                _buildHumorOption("😬", "Nervoso"),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+
+            if (_selectedHumorLabel != null)
+              ElevatedButton.icon(
+                onPressed: _onConfirm,
+                icon: const Icon(Icons.check, size: 28, color: AppColors.white),
+                label: Text(
+                  "Confirmar Humor",
+                  style: GoogleFonts.lato(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.white,
+                  ),
                 ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.lightBlueDark4,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+              ),
+
+            const SizedBox(height: 20),
+            Text(
+              "Histórico de humores",
+              style: GoogleFonts.lato(
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+                color: AppColors.lightBlueDark4,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 10),
 
-            if (_selectedDate != null)
-              Text(
-                'Data da seleção: ${DateFormat('dd/MM/yyyy').format(_selectedDate!)}',
-                style: GoogleFonts.lato(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.lightBlueDark4,
+            Expanded(
+              child: _humores.isEmpty
+                  ? Center(
+                child: Text(
+                  "Nenhum humor registrado ainda.",
+                  style: GoogleFonts.lato(
+                    fontSize: 16,
+                    color: AppColors.lightBlueDark4,
+                  ),
                 ),
-                textAlign: TextAlign.center,
-              ),
+              )
+                  : ListView.builder(
+                itemCount: _humores.length,
+                itemBuilder: (context, index) {
+                  final humor = _humores[index];
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 6),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    color: Colors.white,
+                    elevation: 2,
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      leading: Text(
+                        humor['humorEmoji'],
+                        style: const TextStyle(fontSize: 34),
+                      ),
+                      title: Text(
+                        humor['humorLabel'],
+                        style: GoogleFonts.lato(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.lightBlueDark4,
+                        ),
+                      ),
+                      subtitle: Row(
+                        children: [
+                          const Icon(Icons.calendar_today,
+                              size: 16, color: Colors.grey),
+                          const SizedBox(width: 6),
+                          Text(
+                            humor['data'],
+                            style: GoogleFonts.lato(
+                              fontSize: 14,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                        ],
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () async {
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text("Confirmar exclusão"),
+                              content: const Text(
+                                  "Deseja realmente excluir este registro de humor?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  child: const Text("Cancelar"),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, true),
+                                  child: const Text(
+                                    "Excluir",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
 
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: _onConfirm,
-              icon: const Icon(
-                Icons.check,
-                size: 34,
-                color: AppColors.white,
-              ),
-              label: Text(
-                "Confirmar",
-                style: GoogleFonts.lato(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.white,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.lightBlueDark4,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                          if (confirm == true) {
+                            await _dao.deleteHumor(humor['id']);
+                            _loadHumores();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content:
+                                  Text("Humor excluído com sucesso")),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ],
@@ -154,33 +263,31 @@ class _HumorPageState extends State<HumorPage> {
       style: ElevatedButton.styleFrom(
         backgroundColor: isSelected
             ? AppColors.lightBlueDark4
-            : AppColors.lightBlueDark4.withOpacity(0.15),
-        foregroundColor: isSelected
-            ? Colors.white
-            : AppColors.lightBlueDark4,
-        elevation: 0,
-        minimumSize: const Size(120, 100),
-        padding: const EdgeInsets.symmetric(vertical: 16),
+            : AppColors.darkBlueDark4,
+        foregroundColor:
+        isSelected ? Colors.white : AppColors.lightBlueDark4,
+        elevation: 1,
+        minimumSize: const Size(80, 80),
+        padding: const EdgeInsets.all(6),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
           side: BorderSide(
-            color: isSelected
-                ? Colors.white
-                : AppColors.lightBlueDark4,
-            width: 2,
+            color: isSelected ? Colors.white : AppColors.lightBlueDark4,
+            width: 1.5,
           ),
         ),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(emoji, style: TextStyle(fontSize: 40)),
-          const SizedBox(height: 8),
+          Text(emoji, style: const TextStyle(fontSize: 26)),
+          const SizedBox(height: 4),
           Text(
             label,
             textAlign: TextAlign.center,
             style: GoogleFonts.lato(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
               color: isSelected ? Colors.white : AppColors.lightBlueDark4,
             ),
           ),
@@ -191,7 +298,7 @@ class _HumorPageState extends State<HumorPage> {
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-      toolbarHeight: 80,
+      toolbarHeight: 70,
       centerTitle: true,
       backgroundColor: AppColors.lightBlueDark4,
       leading: IconButton(
@@ -205,7 +312,7 @@ class _HumorPageState extends State<HumorPage> {
         style: GoogleFonts.lato(
           color: AppColors.white,
           fontWeight: FontWeight.w700,
-          fontSize: 22,
+          fontSize: 20,
         ),
       ),
     );

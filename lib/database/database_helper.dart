@@ -36,6 +36,7 @@ class DatabaseHelper {
     ''';
     await db.execute(sqlCreateUsuarios);
 
+    // Inserindo 1 usuário de exemplo
     String sqlInsertUsuario = """
       INSERT INTO usuarios (
         nome, email, senha, dataNascimento, genero, altura, peso, objetivo, praticaMeditacao, condicaoSaude, recebeNotificacoes
@@ -83,5 +84,18 @@ class DatabaseHelper {
       );
     ''';
     await db.execute(sqlCreateMetas);
+
+    // Criação da tabela humor
+    String sqlCreateHumor = '''
+      CREATE TABLE humor (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        usuario_id INTEGER NOT NULL,
+        humorLabel TEXT NOT NULL,
+        humorEmoji TEXT NOT NULL,
+        data TEXT NOT NULL,
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+      );
+    ''';
+    await db.execute(sqlCreateHumor);
   }
 }
