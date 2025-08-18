@@ -97,5 +97,16 @@ class DatabaseHelper {
       );
     ''';
     await db.execute(sqlCreateHumor);
+    // Criação da tabela diário
+    String sqlCreateDiario = '''
+  CREATE TABLE diario (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id INTEGER NOT NULL,
+    data TEXT NOT NULL,
+    texto TEXT NOT NULL,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+  );
+''';
+    await db.execute(sqlCreateDiario);
   }
 }

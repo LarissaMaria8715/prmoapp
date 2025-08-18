@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../database/diario_dao.dart';
 import '../utils/colors.dart';
 
 class DiarioPage extends StatefulWidget {
@@ -11,22 +12,40 @@ class DiarioPage extends StatefulWidget {
 
 class _DiarioPageState extends State<DiarioPage> {
   final TextEditingController _textoController = TextEditingController();
-  List<Map<String, String>> entradasDiario = [];
+  final DiarioDao diarioDao = DiarioDao(); // DAO do diário
+  List<Map<String, dynamic>> entradasDiario = [];
 
-  void _salvarEntrada() {
+  @override
+  void initState() {
+    super.initState();
+    _carregarEntradas();
+  }
+
+  // Carrega todas as entradas do diário do usuário
+  Future<void> _carregarEntradas() async {
+    final dados = await diarioDao.getEntradasDiario(1); // id fixo do usuário
+    setState(() {
+      entradasDiario = dados;
+    });
+  }
+
+  // Salva uma nova entrada no diário
+  void _salvarEntrada() async {
     final texto = _textoController.text.trim();
     if (texto.isEmpty) return;
 
-    final data = DateTime.now();
-    final dataFormatada = '${data.day.toString().padLeft(2, '0')}/${data.month.toString().padLeft(2, '0')}/${data.year}';
+    final data = DateTime.now().toIso8601String();
 
-    setState(() {
-      entradasDiario.insert(0, {
-        'data': dataFormatada,
-        'texto': texto,
-      });
-      _textoController.clear();
+    final id = await diarioDao.insertDiario({
+      'usuario_id': 1, // futuramente pegar do login
+      'data': data,
+      'texto': texto,
     });
+
+    print('Entrada salva com id: $id'); // debug
+
+    _textoController.clear();
+    await _carregarEntradas();
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Entrada salva no diário!')),
@@ -93,12 +112,18 @@ class _DiarioPageState extends State<DiarioPage> {
                   icon: const Icon(Icons.save, color: Colors.white),
                   label: const Text(
                     'Salvar Entrada',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.darkRed5,
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                   ),
                 ),
               ),
@@ -137,7 +162,8 @@ class _DiarioPageState extends State<DiarioPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              entrada['data']!,
+                              entrada['data'].substring(0, 10),
+
                               style: const TextStyle(
                                 color: AppColors.darkRed5,
                                 fontSize: 14,

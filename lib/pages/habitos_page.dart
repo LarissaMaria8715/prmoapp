@@ -3,11 +3,13 @@ import '../database/habito_dao.dart';
 import '../utils/colors.dart';
 
 class HabitosPage extends StatefulWidget {
+  const HabitosPage({Key? key}) : super(key: key);
   @override
   _HabitosPageState createState() => _HabitosPageState();
 }
 
 class _HabitosPageState extends State<HabitosPage> {
+
   double aguaLitros = 0.0;
   double horasSono = 0.0;
   double nivelEstresse = 0.0;
@@ -21,6 +23,7 @@ class _HabitosPageState extends State<HabitosPage> {
   bool leuLivro = false;
   bool teveContatoSocial = false;
   bool praticouGratidao = false;
+  
   int autoAvaliacao = 3;
   final observacaoController = TextEditingController();
 
@@ -87,31 +90,43 @@ class _HabitosPageState extends State<HabitosPage> {
     );
   }
 
+  // Salvar hábitos no banco
   Future<void> _salvarHabitos() async {
-    Map<String, dynamic> habitoMap = {
-      'aguaLitros': aguaLitros,
-      'horasSono': horasSono,
-      'nivelEstresse': nivelEstresse,
-      'tempoTela': tempoTela,
-      'tempoAoArLivre': tempoAoArLivre,
-      'nivelMotivacao': nivelMotivacao,
-      'meditou': meditou ? 1 : 0,
-      'fezExercicio': fezExercicio ? 1 : 0,
-      'alimentacaoSaudavel': alimentacaoSaudavel ? 1 : 0,
-      'comeuFrutas': comeuFrutas ? 1 : 0,
-      'leuLivro': leuLivro ? 1 : 0,
-      'teveContatoSocial': teveContatoSocial ? 1 : 0,
-      'praticouGratidao': praticouGratidao ? 1 : 0,
-      'autoAvaliacao': autoAvaliacao,
-      'observacoes': observacaoController.text,
-      'data': DateTime.now().toIso8601String(),
-    };
+    try {
+      Map<String, dynamic> habitoMap = {
+        'usuario_id': 1, // futuramente usar o ID do usuário logado
+        'aguaLitros': aguaLitros,
+        'horasSono': horasSono,
+        'nivelEstresse': nivelEstresse,
+        'tempoTela': tempoTela,
+        'tempoAoArLivre': tempoAoArLivre,
+        'nivelMotivacao': nivelMotivacao,
+        'meditou': meditou ? 1 : 0,
+        'fezExercicio': fezExercicio ? 1 : 0,
+        'alimentacaoSaudavel': alimentacaoSaudavel ? 1 : 0,
+        'comeuFrutas': comeuFrutas ? 1 : 0,
+        'leuLivro': leuLivro ? 1 : 0,
+        'teveContatoSocial': teveContatoSocial ? 1 : 0,
+        'praticouGratidao': praticouGratidao ? 1 : 0,
+        'autoAvaliacao': autoAvaliacao,
+        'observacoes': observacaoController.text.trim(),
+        'data': DateTime.now().toIso8601String(),
+      };
 
-    await habitoDAO.salvarHabito(habitoMap);
-    Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Hábitos salvos com sucesso!')),
-    );
+      int id = await habitoDAO.salvarHabito(habitoMap);
+      print('Hábito inserido com ID: $id');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Hábitos salvos com sucesso!')),
+      );
+
+      Navigator.pop(context); // fecha a tela após salvar
+    } catch (e) {
+      print('Erro ao salvar hábitos: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erro ao salvar hábitos.')),
+      );
+    }
   }
 
   @override
@@ -141,53 +156,60 @@ class _HabitosPageState extends State<HabitosPage> {
           children: [
             _tituloSecao('Hábitos Quantitativos'),
             _sliderHabit(
-                title: 'Consumo de Água',
-                value: aguaLitros,
-                min: 0,
-                max: 5,
-                divisions: 15,
-                unidade: 'L',
-                onChanged: (v) => setState(() => aguaLitros = v)),
+              title: 'Consumo de Água',
+              value: aguaLitros,
+              min: 0,
+              max: 5,
+              divisions: 15,
+              unidade: 'L',
+              onChanged: (v) => setState(() => aguaLitros = v),
+            ),
             _sliderHabit(
-                title: 'Horas de Sono',
-                value: horasSono,
-                min: 0,
-                max: 15,
-                divisions: 15,
-                unidade: 'h',
-                onChanged: (v) => setState(() => horasSono = v)),
+              title: 'Horas de Sono',
+              value: horasSono,
+              min: 0,
+              max: 15,
+              divisions: 15,
+              unidade: 'h',
+              onChanged: (v) => setState(() => horasSono = v),
+            ),
             _sliderHabit(
-                title: 'Estresse (0 a 10)',
-                value: nivelEstresse,
-                min: 0,
-                max: 10,
-                divisions: 10,
-                unidade: '',
-                onChanged: (v) => setState(() => nivelEstresse = v)),
+              title: 'Estresse (0 a 10)',
+              value: nivelEstresse,
+              min: 0,
+              max: 10,
+              divisions: 10,
+              unidade: '',
+              onChanged: (v) => setState(() => nivelEstresse = v),
+            ),
             _sliderHabit(
-                title: 'Motivação (0 a 10)',
-                value: nivelMotivacao,
-                min: 0,
-                max: 10,
-                divisions: 10,
-                unidade: '',
-                onChanged: (v) => setState(() => nivelMotivacao = v)),
+              title: 'Motivação (0 a 10)',
+              value: nivelMotivacao,
+              min: 0,
+              max: 10,
+              divisions: 10,
+              unidade: '',
+              onChanged: (v) => setState(() => nivelMotivacao = v),
+            ),
             _sliderHabit(
-                title: 'Tempo de Tela',
-                value: tempoTela,
-                min: 0,
-                max: 20,
-                divisions: 20,
-                unidade: 'h',
-                onChanged: (v) => setState(() => tempoTela = v)),
+              title: 'Tempo de Tela',
+              value: tempoTela,
+              min: 0,
+              max: 20,
+              divisions: 20,
+              unidade: 'h',
+              onChanged: (v) => setState(() => tempoTela = v),
+            ),
             _sliderHabit(
-                title: 'Tempo ao Ar Livre',
-                value: tempoAoArLivre,
-                min: 0,
-                max: 20,
-                divisions: 20,
-                unidade: 'h',
-                onChanged: (v) => setState(() => tempoAoArLivre = v)),
+              title: 'Tempo ao Ar Livre',
+              value: tempoAoArLivre,
+              min: 0,
+              max: 20,
+              divisions: 20,
+              unidade: 'h',
+              onChanged: (v) => setState(() => tempoAoArLivre = v),
+            ),
+
             _tituloSecao('Hábitos Binários'),
             _card(
               child: Column(
@@ -270,7 +292,8 @@ class _HabitosPageState extends State<HabitosPage> {
                             Navigator.pop(context);
                             _salvarHabitos();
                           },
-                          child: const Text('Salvar', style: TextStyle(fontWeight: FontWeight.bold)),
+                          child: const Text('Salvar',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
                         ),
                       ],
                     ),
