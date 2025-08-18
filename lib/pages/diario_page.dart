@@ -163,6 +163,7 @@ class _DiarioPageState extends State<DiarioPage> {
                           children: [
                             Text(
                               entrada['data'].substring(0, 10),
+
                               style: const TextStyle(
                                 color: AppColors.darkRed5,
                                 fontSize: 14,
@@ -171,7 +172,7 @@ class _DiarioPageState extends State<DiarioPage> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              entrada['texto'],
+                              entrada['texto']!,
                               style: const TextStyle(color: Colors.black54),
                             ),
                           ],

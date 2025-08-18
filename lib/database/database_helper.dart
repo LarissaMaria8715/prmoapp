@@ -2,7 +2,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-
   Future<Database> initDB() async {
     String path = await getDatabasesPath();
     String dbName = 'equilibre.db';
@@ -98,7 +97,6 @@ class DatabaseHelper {
       );
     ''';
     await db.execute(sqlCreateHumor);
-
     // Criação da tabela diário
     String sqlCreateDiario = '''
   CREATE TABLE diario (

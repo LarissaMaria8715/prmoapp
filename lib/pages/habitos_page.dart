@@ -4,20 +4,18 @@ import '../utils/colors.dart';
 
 class HabitosPage extends StatefulWidget {
   const HabitosPage({Key? key}) : super(key: key);
-
   @override
   _HabitosPageState createState() => _HabitosPageState();
 }
 
 class _HabitosPageState extends State<HabitosPage> {
-  // Variáveis dos hábitos
+
   double aguaLitros = 0.0;
   double horasSono = 0.0;
   double nivelEstresse = 0.0;
   double tempoTela = 0.0;
   double tempoAoArLivre = 0.0;
   double nivelMotivacao = 5.0;
-
   bool meditou = false;
   bool fezExercicio = false;
   bool alimentacaoSaudavel = false;
@@ -25,13 +23,12 @@ class _HabitosPageState extends State<HabitosPage> {
   bool leuLivro = false;
   bool teveContatoSocial = false;
   bool praticouGratidao = false;
-
+  
   int autoAvaliacao = 3;
   final observacaoController = TextEditingController();
 
   final habitoDAO = HabitoDAO();
 
-  // Widgets auxiliares
   Widget _tituloSecao(String texto) => Padding(
     padding: const EdgeInsets.only(top: 24, bottom: 8),
     child: Text(
@@ -212,6 +209,7 @@ class _HabitosPageState extends State<HabitosPage> {
               unidade: 'h',
               onChanged: (v) => setState(() => tempoAoArLivre = v),
             ),
+
             _tituloSecao('Hábitos Binários'),
             _card(
               child: Column(
