@@ -2,9 +2,9 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class HumorDAO {
-  static const _databaseName = "equilibre.db"; // mesmo banco principal
+  static const _databaseName = "equilibre.db";
   static const _databaseVersion = 1;
-  static const table = 'humor'; // nome da tabela no DatabaseHelper
+  static const table = 'humor';
 
   Future<Database> _getDatabase() async {
     final dbPath = await getDatabasesPath();
@@ -16,7 +16,6 @@ class HumorDAO {
     );
   }
 
-  /// Inserir humor
   Future<int> insertHumor({
     required int usuarioId,
     required String humorLabel,
@@ -24,15 +23,17 @@ class HumorDAO {
     required String data,
   }) async {
     final db = await _getDatabase();
-    return await db.insert(table, {
-      'usuario_id': usuarioId,
-      'humorLabel': humorLabel,
-      'humorEmoji': humorEmoji,
-      'data': data,
-    });
+    return await db.insert(
+      table,
+      {
+        'usuario_id': usuarioId,
+        'humorLabel': humorLabel,
+        'humorEmoji': humorEmoji,
+        'data': data,
+      },
+    );
   }
 
-  /// Buscar todos os humores de um usuário
   Future<List<Map<String, dynamic>>> getHumoresByUser(int usuarioId) async {
     final db = await _getDatabase();
     return await db.query(
@@ -43,13 +44,15 @@ class HumorDAO {
     );
   }
 
-  /// Excluir um humor
   Future<int> deleteHumor(int id) async {
     final db = await _getDatabase();
-    return await db.delete(table, where: 'id = ?', whereArgs: [id]);
+    return await db.delete(
+      table,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
-  /// Atualizar um humor
   Future<int> updateHumor({
     required int id,
     required String humorLabel,

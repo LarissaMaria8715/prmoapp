@@ -15,10 +15,8 @@ class _HumorPageState extends State<HumorPage> {
   String? _selectedHumorEmoji;
   String? _selectedHumorLabel;
   DateTime? _selectedDate;
-
   final HumorDAO _dao = HumorDAO();
   final int usuarioId = 1;
-
   List<Map<String, dynamic>> _humores = [];
 
   @override
@@ -43,7 +41,7 @@ class _HumorPageState extends State<HumorPage> {
   }
 
   Future<void> _onConfirm() async {
-    if (_selectedHumorLabel == null) {
+    if (_selectedHumorLabel == null || _selectedHumorEmoji == null || _selectedDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Por favor, selecione seu humor')),
       );
@@ -99,8 +97,6 @@ class _HumorPageState extends State<HumorPage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
-
-            // GRID de opções
             GridView.count(
               crossAxisCount: 5,
               shrinkWrap: true,
@@ -120,9 +116,7 @@ class _HumorPageState extends State<HumorPage> {
                 _buildHumorOption("😬", "Nervoso"),
               ],
             ),
-
             const SizedBox(height: 20),
-
             if (_selectedHumorLabel != null)
               ElevatedButton.icon(
                 onPressed: _onConfirm,
@@ -143,7 +137,6 @@ class _HumorPageState extends State<HumorPage> {
                   ),
                 ),
               ),
-
             const SizedBox(height: 20),
             Text(
               "Histórico de humores",
@@ -154,7 +147,6 @@ class _HumorPageState extends State<HumorPage> {
               ),
             ),
             const SizedBox(height: 10),
-
             Expanded(
               child: _humores.isEmpty
                   ? Center(
@@ -232,7 +224,6 @@ class _HumorPageState extends State<HumorPage> {
                               ],
                             ),
                           );
-
                           if (confirm == true) {
                             await _dao.deleteHumor(humor['id']);
                             _loadHumores();
@@ -261,9 +252,8 @@ class _HumorPageState extends State<HumorPage> {
     return ElevatedButton(
       onPressed: () => _onSelectHumor(emoji, label),
       style: ElevatedButton.styleFrom(
-        backgroundColor: isSelected
-            ? AppColors.lightBlueDark4
-            : AppColors.darkBlueDark4,
+        backgroundColor:
+        isSelected ? AppColors.lightBlueDark4 : AppColors.darkBlueDark4,
         foregroundColor:
         isSelected ? Colors.white : AppColors.lightBlueDark4,
         elevation: 1,
@@ -303,9 +293,7 @@ class _HumorPageState extends State<HumorPage> {
       backgroundColor: AppColors.lightBlueDark4,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: AppColors.white),
-        onPressed: () {
-          Navigator.pop(context);
-        },
+        onPressed: () => Navigator.pop(context),
       ),
       title: Text(
         'Como você está se sentindo?',
