@@ -5,16 +5,18 @@ class DatabaseHelper {
   Future<Database> initDB() async {
     String path = await getDatabasesPath();
     String dbName = 'equilibre.db';
-
     String dbPath = join(path, dbName);
     print("Caminho do banco: $dbPath");
 
-    var db = await openDatabase(dbPath, version: 1, onCreate: onCreate);
+    var db = await openDatabase(
+      dbPath,
+      version: 1,
+      onCreate: onCreate,
+    );
     return db;
   }
 
   Future<void> onCreate(Database db, int version) async {
-    // Criação da tabela usuários
     String sqlCreateUsuarios = '''
       CREATE TABLE usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,7 +38,6 @@ class DatabaseHelper {
     ''';
     await db.execute(sqlCreateUsuarios);
 
-    // Inserindo 1 usuário de exemplo
     String sqlInsertUsuario = """
       INSERT INTO usuarios (
         nome, email, senha, dataNascimento, genero, altura, peso, objetivo, praticaMeditacao, condicaoSaude, recebeNotificacoes
@@ -47,7 +48,6 @@ class DatabaseHelper {
     await db.execute(sqlInsertUsuario);
     print('Usuário inserido com raw SQL!');
 
-    // Criação da tabela hábitos
     String sqlCreateHabitos = '''
       CREATE TABLE habitos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -73,7 +73,6 @@ class DatabaseHelper {
     ''';
     await db.execute(sqlCreateHabitos);
 
-    // Criação da tabela metas
     String sqlCreateMetas = '''
       CREATE TABLE metas (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -85,7 +84,6 @@ class DatabaseHelper {
     ''';
     await db.execute(sqlCreateMetas);
 
-    // Criação da tabela humor
     String sqlCreateHumor = '''
       CREATE TABLE humor (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
