@@ -95,6 +95,7 @@ class DatabaseHelper {
       );
     ''';
     await db.execute(sqlCreateHumor);
+
     // Criação da tabela diário
     String sqlCreateDiario = '''
   CREATE TABLE diario (
