@@ -1,66 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:equilibreapp/utils/colors.dart';
-import '../database/meta_dao.dart';
 
 class MetasPage extends StatefulWidget {
-  final int usuarioId;
-
-  const MetasPage({Key? key, required this.usuarioId}) : super(key: key);
+  const MetasPage({Key? key}) : super(key: key);
 
   @override
   _MetasPageState createState() => _MetasPageState();
 }
 
 class _MetasPageState extends State<MetasPage> {
-  List<Map<String, dynamic>> metas = [];
   final TextEditingController novaMetaController = TextEditingController();
+  List<String> metas = [];
 
-  @override
-  void initState() {
-    super.initState();
-    _carregarMetas();
-  }
-
-  Future<void> _carregarMetas() async {
-    List<Map<String, dynamic>> todasMetas = await MetaDAO.listarMetas();
-    // Filtrar as metas do usuário atual
-    final usuarioMetas = todasMetas.where((m) => m['usuario_id'] == widget.usuarioId).toList();
-
-    setState(() {
-      metas = usuarioMetas;
-    });
-  }
-
-  Future<void> adicionarMeta() async {
+  void adicionarMeta() {
     final texto = novaMetaController.text.trim();
-    if (texto.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Digite uma meta válida!')),
-      );
-      return;
-    }
-    if (metas.any((meta) => meta['descricao'] == texto)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Meta já cadastrada!')),
-      );
-      return;
-    }
-
-    Map<String, dynamic> novaMeta = {
-      'usuario_id': widget.usuarioId,
-      'descricao': texto,
-      'concluida': 0,
-    };
-
-    await MetaDAO.inserirMeta(novaMeta);
+    if (texto.isEmpty || metas.contains(texto)) return;
+    setState(() => metas.add(texto));
     novaMetaController.clear();
-    await _carregarMetas();
   }
 
-  Future<void> atualizarMeta(Map<String, dynamic> meta, bool concluida) async {
-    meta['concluida'] = concluida ? 1 : 0;
-    await MetaDAO.atualizarMeta(meta);
-    await _carregarMetas();
+  void atualizarMeta(int index, bool concluida) {
+    // Apenas altera a UI, sem persistência
+    setState(() {});
   }
 
   @override
@@ -78,7 +39,10 @@ class _MetasPageState extends State<MetasPage> {
         title: const Text(
           'Metas Diárias',
           style: TextStyle(
-              color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         backgroundColor: AppColors.darkYellow3,
         centerTitle: true,
@@ -116,10 +80,8 @@ class _MetasPageState extends State<MetasPage> {
                   onPressed: adicionarMeta,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.darkYellow3,
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   ),
                   child: const Icon(Icons.add, color: Colors.white),
                 ),
@@ -145,7 +107,6 @@ class _MetasPageState extends State<MetasPage> {
                 itemCount: metas.length,
                 itemBuilder: (context, index) {
                   final meta = metas[index];
-                  final concluida = meta['concluida'] == 1;
                   return Card(
                     elevation: 2,
                     margin: const EdgeInsets.symmetric(vertical: 6),
@@ -154,19 +115,13 @@ class _MetasPageState extends State<MetasPage> {
                     ),
                     child: CheckboxListTile(
                       title: Text(
-                        meta['descricao'] ?? '',
-                        style: TextStyle(
-                          fontSize: 16,
-                          decoration: concluida
-                              ? TextDecoration.lineThrough
-                              : null,
-                          color: concluida ? Colors.grey : Colors.black,
-                        ),
+                        meta,
+                        style: const TextStyle(fontSize: 16),
                       ),
-                      value: concluida,
+                      value: false,
                       onChanged: (bool? value) {
                         if (value == null) return;
-                        atualizarMeta(meta, value);
+                        atualizarMeta(index, value);
                       },
                       activeColor: AppColors.darkYellow3,
                       checkColor: Colors.white,

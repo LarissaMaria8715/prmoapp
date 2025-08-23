@@ -38,8 +38,9 @@ class _HumorPageState extends State<HumorPage> {
     _loadHumores();
   }
 
+  // Carrega histórico de humores do usuário
   Future<void> _loadHumores() async {
-    final list = await _dao.getHumoresByUser(usuarioId);
+    final list = await _dao.listarPorUsuario(usuarioId);
     setState(() => _humores = list);
   }
 
@@ -51,6 +52,7 @@ class _HumorPageState extends State<HumorPage> {
     });
   }
 
+  // Confirma e salva o humor selecionado
   Future<void> _onConfirm() async {
     if (_selectedHumorLabel == null) {
       _showSnack("Por favor, selecione seu humor");
@@ -59,12 +61,7 @@ class _HumorPageState extends State<HumorPage> {
 
     final formattedDate = DateFormat('dd/MM/yyyy').format(_selectedDate!);
 
-    await _dao.insertHumor(
-      usuarioId,
-      _selectedHumorLabel!,
-      _selectedHumorEmoji!,
-      formattedDate,
-    );
+    await _dao.salvar(usuarioId, _selectedHumorLabel!, _selectedHumorEmoji!, formattedDate);
 
     _showSnack("Humor salvo!\n$_selectedHumorLabel $_selectedHumorEmoji - $formattedDate");
 
@@ -96,7 +93,7 @@ class _HumorPageState extends State<HumorPage> {
             _buildTitle("Escolha seu humor"),
             const SizedBox(height: 12),
             GridView.count(
-              crossAxisCount: 5,
+              crossAxisCount: 4,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               mainAxisSpacing: 10,
@@ -121,7 +118,7 @@ class _HumorPageState extends State<HumorPage> {
     );
   }
 
-  Widget _buildTitle(String text, {double size = 22}) {
+  Widget _buildTitle(String text, {double size = 28}) {
     return Text(
       text,
       style: GoogleFonts.lato(
@@ -158,7 +155,7 @@ class _HumorPageState extends State<HumorPage> {
             title: Text(
               humor['humorLabel'],
               style: GoogleFonts.lato(
-                fontSize: 18,
+                fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: AppColors.lightBlueDark4,
               ),
@@ -196,7 +193,7 @@ class _HumorPageState extends State<HumorPage> {
       ),
     );
     if (confirm == true) {
-      await _dao.deleteHumor(id);
+      await _dao.deletar(id);
       _loadHumores();
       _showSnack("Humor excluído com sucesso");
     }
@@ -226,7 +223,7 @@ class _HumorPageState extends State<HumorPage> {
             label,
             textAlign: TextAlign.center,
             style: GoogleFonts.lato(
-              fontSize: 12,
+              fontSize: 14,
               fontWeight: FontWeight.w600,
               color: isSelected ? Colors.white : AppColors.lightBlueDark4,
             ),

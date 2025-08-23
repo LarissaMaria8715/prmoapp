@@ -1,15 +1,13 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
+import 'database_helper.dart';
 
 class HumorDAO {
-  Future<Database> _getDatabase() async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'equilibre.db');
 
-    return openDatabase(path, version: 1);
+  Future<Database> _getDatabase() async {
+    return await DatabaseHelper().initDB();
   }
 
-  Future<int> insertHumor(int usuarioId, String humorLabel, String humorEmoji, String data) async {
+  Future<int> salvar(int usuarioId, String humorLabel, String humorEmoji, String data) async {
     final db = await _getDatabase();
     return await db.insert(
       'humor',
@@ -22,7 +20,7 @@ class HumorDAO {
     );
   }
 
-  Future<List<Map<String, dynamic>>> getHumoresByUser(int usuarioId) async {
+  Future<List<Map<String, dynamic>>> listarPorUsuario(int usuarioId) async {
     final db = await _getDatabase();
     return await db.query(
       'humor',
@@ -32,7 +30,7 @@ class HumorDAO {
     );
   }
 
-  Future<int> deleteHumor(int id) async {
+  Future<int> deletar(int id) async {
     final db = await _getDatabase();
     return await db.delete(
       'humor',
@@ -40,4 +38,5 @@ class HumorDAO {
       whereArgs: [id],
     );
   }
+
 }

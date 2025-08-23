@@ -194,15 +194,16 @@ class _LoginPageState extends State<LoginPage> {
 
   void _handleLogin() async {
     String email = emailController.text.trim();
-    String password = passwordController.text;
+    String senha = passwordController.text;
 
-    bool isValid = await userDAO.validate(email, password);
+    UserDAO userDAO = UserDAO();
+    final usuario = await userDAO.validar(email, senha);
 
-    if (isValid) {
+    if (usuario != null) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => HomePage(email: email, senha: password),
+          builder: (_) => HomePage(email: email, senha: senha),
         ),
       );
     } else {

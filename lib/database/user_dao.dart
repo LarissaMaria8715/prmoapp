@@ -2,52 +2,44 @@ import 'package:sqflite/sqflite.dart';
 import 'database_helper.dart';
 
 class UserDAO {
-  Future<Database> _getDatabase() async {
+  Future<Database> _pegarBanco() async {
     return await DatabaseHelper().initDB();
   }
 
-  Future<int> insert(Map<String, dynamic> user) async {
-    final db = await _getDatabase();
-    return await db.insert('usuarios', user);
+  Future<int> salvar(Map<String, dynamic> usuarioJson) async {
+    final db = await _pegarBanco();
+    return await db.insert('usuarios', usuarioJson);
   }
 
-  Future<int> update(Map<String, dynamic> user) async {
-    final db = await _getDatabase();
+  Future<int> atualizar(Map<String, dynamic> usuarioJson) async {
+    final db = await _pegarBanco();
     return await db.update(
       'usuarios',
-      user,
+      usuarioJson,
       where: 'id = ?',
-      whereArgs: [user['id']],
+      whereArgs: [usuarioJson['id']],
     );
   }
 
-  Future<List<Map<String, dynamic>>> getAll() async {
-    final db = await _getDatabase();
+  Future<List<Map<String, dynamic>>> listarTodos() async {
+    final db = await _pegarBanco();
     return await db.query('usuarios');
   }
 
-  Future<Map<String, dynamic>?> getById(int id) async {
-    final db = await _getDatabase();
-    final result = await db.query(
-      'usuarios',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+  Future<Map<String, dynamic>?> buscarPorId(int id) async {
+    final db = await _pegarBanco();
+    final result = await db.query('usuarios', where: 'id = ?', whereArgs: [id]);
     return result.isNotEmpty ? result.first : null;
   }
 
-  Future<Map<String, dynamic>?> getByEmail(String email) async {
-    final db = await _getDatabase();
-    final result = await db.query(
-      'usuarios',
-      where: 'email = ?',
-      whereArgs: [email],
-    );
+  Future<Map<String, dynamic>?> buscarPorEmail(String email) async {
+    final db = await _pegarBanco();
+    final result = await db.query('usuarios', where: 'email = ?', whereArgs: [email]);
     return result.isNotEmpty ? result.first : null;
   }
 
-  Future<bool> validate(String email, String senha) async {
-    final db = await _getDatabase();
+  Future<bool> validar(String email, String senha) async {
+    final db = await _pegarBanco();
     final result = await db.query(
       'usuarios',
       where: 'email = ? AND senha = ?',
