@@ -96,7 +96,7 @@ class _HumorPageState extends State<HumorPage> {
             _buildTitle("Escolha seu humor"),
             const SizedBox(height: 12),
             GridView.count(
-              crossAxisCount: 5,
+              crossAxisCount: 4,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               mainAxisSpacing: 10,
@@ -121,7 +121,7 @@ class _HumorPageState extends State<HumorPage> {
     );
   }
 
-  Widget _buildTitle(String text, {double size = 22}) {
+  Widget _buildTitle(String text, {double size = 28}) {
     return Text(
       text,
       style: GoogleFonts.lato(
@@ -158,7 +158,7 @@ class _HumorPageState extends State<HumorPage> {
             title: Text(
               humor['humorLabel'],
               style: GoogleFonts.lato(
-                fontSize: 18,
+                fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: AppColors.lightBlueDark4,
               ),
@@ -226,7 +226,7 @@ class _HumorPageState extends State<HumorPage> {
             label,
             textAlign: TextAlign.center,
             style: GoogleFonts.lato(
-              fontSize: 12,
+              fontSize: 14,
               fontWeight: FontWeight.w600,
               color: isSelected ? Colors.white : AppColors.lightBlueDark4,
             ),
