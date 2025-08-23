@@ -201,7 +201,7 @@ class _RegisterPageState extends State<RegisterPage> {
     };
 
     try {
-      await userDAO.insert(user);
+      await userDAO.salvar(user);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Cadastro realizado com sucesso!'), backgroundColor: AppColors.green),

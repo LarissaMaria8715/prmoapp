@@ -6,7 +6,7 @@ import 'package:equilibreapp/pages/respiracao_page.dart';
 import 'package:equilibreapp/wigets/style_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../database/user_dao.dart';  // importe UserDAO
+import '../database/user_dao.dart';
 import '../utils/colors.dart';
 import 'diario_page.dart';
 import 'motivacao_page.dart';
@@ -123,14 +123,14 @@ class HomeContent extends StatelessWidget {
                 AppColors.darkYellow3,
                     () async {
                   UserDAO userDAO = UserDAO();
-                  final usuario = await userDAO.getByEmail(email);
+                  final usuario = await userDAO.buscarPorEmail(email);
 
                   if (usuario != null) {
                     final usuarioId = usuario['id'] as int;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MetasPage(usuarioId: usuarioId),
+                        builder: (context) => MetasPage(),
                       ),
                     );
                   } else {
