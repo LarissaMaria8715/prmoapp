@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  final UserDAO userDAO = UserDAO();
+  final UsuarioDAO userDAO = UsuarioDAO();
 
   bool _passwordVisible = false;
 
@@ -196,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
     String email = emailController.text.trim();
     String senha = passwordController.text;
 
-    UserDAO userDAO = UserDAO();
+    UsuarioDAO userDAO = UsuarioDAO();
     final usuario = await userDAO.validar(email, senha);
 
     if (usuario != null) {
