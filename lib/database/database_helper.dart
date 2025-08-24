@@ -17,7 +17,8 @@ class DatabaseHelper {
   }
 
   Future<void> onCreate(Database db, int version) async {
-    String sqlCreateUsuarios = '''
+    // Criação da tabela usuários
+    await db.execute('''
       CREATE TABLE usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT NOT NULL,
@@ -35,56 +36,31 @@ class DatabaseHelper {
         recebeNotificacoes INTEGER,
         condicaoSaude TEXT
       );
-    ''';
-    await db.execute(sqlCreateUsuarios);
+    ''');
 
-    String sqlInsertUsuario = """
+    // Inserção de usuário teste
+    await db.execute('''
       INSERT INTO usuarios (
         nome, email, senha, dataNascimento, genero, altura, peso, objetivo, praticaMeditacao, condicaoSaude, recebeNotificacoes
       ) VALUES (
-        'Larissa Maria', 'larissa@example.com', '123456', '1995-08-06', 'Feminino', 1.65, 60.0, 'Relaxar', 1, '', 1
+        'Usuario', 'teste@gmail.com', '123456', '1995-08-06', 'Feminino', 1.65, 60.0, 'Relaxar', 1, '', 1
       );
-    """;
-    await db.execute(sqlInsertUsuario);
-    print('Usuário inserido com raw SQL!');
+    ''');
 
-    String sqlCreateHabitos = '''
+    // Criação da tabela hábitos
+    await db.execute('''
       CREATE TABLE habitos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         usuario_id INTEGER NOT NULL,
-        aguaLitros REAL,
-        horasSono REAL,
-        nivelEstresse REAL,
-        tempoTela REAL,
-        tempoAoArLivre REAL,
-        nivelMotivacao REAL,
-        meditou INTEGER,
-        fezExercicio INTEGER,
-        alimentacaoSaudavel INTEGER,
-        comeuFrutas INTEGER,
-        leuLivro INTEGER,
-        teveContatoSocial INTEGER,
-        praticouGratidao INTEGER,
-        autoAvaliacao INTEGER,
-        observacoes TEXT,
+        nome TEXT,
+        descricao TEXT,
         data TEXT,
         FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
       );
-    ''';
-    await db.execute(sqlCreateHabitos);
+    ''');
 
-    String sqlCreateMetas = '''
-      CREATE TABLE metas (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        usuario_id INTEGER NOT NULL,
-        descricao TEXT NOT NULL,
-        concluida INTEGER NOT NULL,
-        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
-      );
-    ''';
-    await db.execute(sqlCreateMetas);
-
-    String sqlCreateHumor = '''
+    // Criação da tabela humor
+    await db.execute('''
       CREATE TABLE humor (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         usuario_id INTEGER NOT NULL,
@@ -93,19 +69,17 @@ class DatabaseHelper {
         data TEXT NOT NULL,
         FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
       );
-    ''';
-    await db.execute(sqlCreateHumor);
+    ''');
 
     // Criação da tabela diário
-    String sqlCreateDiario = '''
-  CREATE TABLE diario (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    usuario_id INTEGER NOT NULL,
-    data TEXT NOT NULL,
-    texto TEXT NOT NULL,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
-  );
-''';
-    await db.execute(sqlCreateDiario);
+    await db.execute('''
+      CREATE TABLE diario (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        usuario_id INTEGER NOT NULL,
+        data TEXT NOT NULL,
+        texto TEXT NOT NULL,
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+      );
+    ''');
   }
 }

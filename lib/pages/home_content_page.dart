@@ -122,7 +122,7 @@ class HomeContent extends StatelessWidget {
                 'Metas',
                 AppColors.darkYellow3,
                     () async {
-                  UserDAO userDAO = UserDAO();
+                  UsuarioDAO userDAO = UsuarioDAO();
                   final usuario = await userDAO.buscarPorEmail(email);
 
                   if (usuario != null) {

@@ -1,21 +1,26 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../database/habito_dao.dart';
+import '../model/habito_model.dart';
 import '../utils/colors.dart';
 
 class HabitosPage extends StatefulWidget {
   const HabitosPage({Key? key}) : super(key: key);
+
   @override
   _HabitosPageState createState() => _HabitosPageState();
 }
 
 class _HabitosPageState extends State<HabitosPage> {
-
+  // Sliders
   double aguaLitros = 0.0;
   double horasSono = 0.0;
   double nivelEstresse = 0.0;
   double tempoTela = 0.0;
   double tempoAoArLivre = 0.0;
   double nivelMotivacao = 5.0;
+
+  // Checkboxes
   bool meditou = false;
   bool fezExercicio = false;
   bool alimentacaoSaudavel = false;
@@ -23,12 +28,15 @@ class _HabitosPageState extends State<HabitosPage> {
   bool leuLivro = false;
   bool teveContatoSocial = false;
   bool praticouGratidao = false;
-  
+
+  // Autoavaliação e observação
   int autoAvaliacao = 3;
   final observacaoController = TextEditingController();
 
   final habitoDAO = HabitoDAO();
+  final int usuarioId = 1;
 
+  // Widgets auxiliares
   Widget _tituloSecao(String texto) => Padding(
     padding: const EdgeInsets.only(top: 24, bottom: 8),
     child: Text(
@@ -90,45 +98,46 @@ class _HabitosPageState extends State<HabitosPage> {
     );
   }
 
-  // Salvar hábitos no banco
+  // Salvar hábitos usando o model Habito
   Future<void> _salvarHabitos() async {
     try {
-      Map<String, dynamic> habitoMap = {
-        'usuario_id': 1, // futuramente usar o ID do usuário logado
-        'aguaLitros': aguaLitros,
-        'horasSono': horasSono,
-        'nivelEstresse': nivelEstresse,
-        'tempoTela': tempoTela,
-        'tempoAoArLivre': tempoAoArLivre,
-        'nivelMotivacao': nivelMotivacao,
-        'meditou': meditou ? 1 : 0,
-        'fezExercicio': fezExercicio ? 1 : 0,
-        'alimentacaoSaudavel': alimentacaoSaudavel ? 1 : 0,
-        'comeuFrutas': comeuFrutas ? 1 : 0,
-        'leuLivro': leuLivro ? 1 : 0,
-        'teveContatoSocial': teveContatoSocial ? 1 : 0,
-        'praticouGratidao': praticouGratidao ? 1 : 0,
-        'autoAvaliacao': autoAvaliacao,
-        'observacoes': observacaoController.text.trim(),
-        'data': DateTime.now().toIso8601String(),
-      };
+      final now = DateTime.now();
 
-      int id = await habitoDAO.salvarHabito(habitoMap);
-      print('Hábito inserido com ID: $id');
+      final habito = Habito(
+        usuarioId: usuarioId,
+        nome: 'Registro diário',
+        descricao: jsonEncode({
+          'aguaLitros': aguaLitros,
+          'horasSono': horasSono,
+          'nivelEstresse': nivelEstresse,
+          'tempoTela': tempoTela,
+          'tempoAoArLivre': tempoAoArLivre,
+          'nivelMotivacao': nivelMotivacao,
+          'meditou': meditou,
+          'fezExercicio': fezExercicio,
+          'alimentacaoSaudavel': alimentacaoSaudavel,
+          'comeuFrutas': comeuFrutas,
+          'leuLivro': leuLivro,
+          'teveContatoSocial': teveContatoSocial,
+          'praticouGratidao': praticouGratidao,
+          'autoAvaliacao': autoAvaliacao,
+        }),
+        data: now.toIso8601String(),
+      );
+
+      await habitoDAO.salvarHabito(habito);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Hábitos salvos com sucesso!')),
       );
-
-      Navigator.pop(context); // fecha a tela após salvar
+      Navigator.pop(context);
     } catch (e) {
-      print('Erro ao salvar hábitos: $e');
+      print('Erro ao salvar hábito: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erro ao salvar hábitos.')),
       );
     }
   }
-
   @override
   void dispose() {
     observacaoController.dispose();
@@ -142,9 +151,11 @@ class _HabitosPageState extends State<HabitosPage> {
       appBar: AppBar(
         backgroundColor: AppColors.purple,
         toolbarHeight: 80,
-        title: const Text('Meus Hábitos Diários',
-            style: TextStyle(
-                fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
+        title: const Text(
+          'Meus Hábitos Diários',
+          style: TextStyle(
+              fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
@@ -214,23 +225,16 @@ class _HabitosPageState extends State<HabitosPage> {
             _card(
               child: Column(
                 children: [
-                  _checkboxHabit(
-                      'Meditou hoje?', meditou, (v) => setState(() => meditou = v ?? false)),
-                  _checkboxHabit(
-                      'Fez exercícios físicos?', fezExercicio, (v) => setState(() => fezExercicio = v ?? false)),
-                  _checkboxHabit(
-                      'Alimentação saudável?', alimentacaoSaudavel, (v) => setState(() => alimentacaoSaudavel = v ?? false)),
-                  _checkboxHabit(
-                      'Comeu frutas?', comeuFrutas, (v) => setState(() => comeuFrutas = v ?? false)),
-                  _checkboxHabit(
-                      'Leu algum livro?', leuLivro, (v) => setState(() => leuLivro = v ?? false)),
-                  _checkboxHabit(
-                      'Teve contato social?', teveContatoSocial, (v) => setState(() => teveContatoSocial = v ?? false)),
-                  _checkboxHabit(
-                      'Praticou gratidão?', praticouGratidao, (v) => setState(() => praticouGratidao = v ?? false)),
+                  _checkboxHabit('Meditou hoje?', meditou, (v) => setState(() => meditou = v ?? false)),
+                  _checkboxHabit('Fez exercícios físicos?', fezExercicio, (v) => setState(() => fezExercicio = v ?? false)),
+                  _checkboxHabit('Alimentação saudável?', alimentacaoSaudavel, (v) => setState(() => alimentacaoSaudavel = v ?? false)),
+                  _checkboxHabit('Comeu frutas?', comeuFrutas, (v) => setState(() => comeuFrutas = v ?? false)),
+                  _checkboxHabit('Leu algum livro?', leuLivro, (v) => setState(() => leuLivro = v ?? false)),
+                  _checkboxHabit('Teve contato social?', teveContatoSocial, (v) => setState(() => teveContatoSocial = v ?? false)),
                 ],
               ),
             ),
+
             _tituloSecao('Autoavaliação do Dia'),
             _card(
               child: DropdownButtonFormField<int>(
@@ -243,16 +247,7 @@ class _HabitosPageState extends State<HabitosPage> {
                 onChanged: (v) => setState(() => autoAvaliacao = v!),
               ),
             ),
-            _tituloSecao('Observações'),
-            _card(
-              child: TextFormField(
-                controller: observacaoController,
-                decoration: const InputDecoration(
-                    hintText: 'Digite observações adicionais...',
-                    border: OutlineInputBorder()),
-                maxLines: 4,
-              ),
-            ),
+
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
@@ -274,33 +269,28 @@ class _HabitosPageState extends State<HabitosPage> {
                   ),
                   elevation: 0,
                 ),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Salvar hábitos'),
-                      content: const Text('Deseja salvar os hábitos de hoje?'),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('Cancelar'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            _salvarHabitos();
-                          },
-                          child: const Text('Salvar',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Salvar hábitos'),
+                    content: const Text('Deseja salvar os hábitos de hoje?'),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    actions: [
+                      TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancelar')),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _salvarHabitos();
+                        },
+                        child: const Text('Salvar', style: TextStyle(fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
+
             const SizedBox(height: 32),
           ],
         ),

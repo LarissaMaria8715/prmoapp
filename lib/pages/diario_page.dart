@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../model/diario_model.dart';
 import '../database/diario_dao.dart';
 import '../utils/colors.dart';
 
@@ -12,8 +13,10 @@ class DiarioPage extends StatefulWidget {
 
 class _DiarioPageState extends State<DiarioPage> {
   final TextEditingController _textoController = TextEditingController();
-  final DiarioDao diarioDao = DiarioDao(); // DAO do diário
-  List<Map<String, dynamic>> entradasDiario = [];
+  final DiarioDAO diarioDAO = DiarioDAO(); // DAO atualizado
+  List<Diario> entradasDiario = [];
+
+  final int usuarioId = 1; // futuramente pegar do login
 
   @override
   void initState() {
@@ -23,26 +26,26 @@ class _DiarioPageState extends State<DiarioPage> {
 
   // Carrega todas as entradas do diário do usuário
   Future<void> _carregarEntradas() async {
-    final dados = await diarioDao.getEntradasDiario(1); // id fixo do usuário
+    final dados = await diarioDAO.listarPorUsuario(usuarioId);
     setState(() {
       entradasDiario = dados;
     });
   }
 
   // Salva uma nova entrada no diário
-  void _salvarEntrada() async {
+  Future<void> _salvarEntrada() async {
     final texto = _textoController.text.trim();
     if (texto.isEmpty) return;
 
-    final data = DateTime.now().toIso8601String();
+    final novaEntrada = Diario(
+      usuarioId: usuarioId,
+      titulo: '', // opcional, pode adicionar campo de título se quiser
+      conteudo: texto,
+      data: DateTime.now().toIso8601String(),
+    );
 
-    final id = await diarioDao.insertDiario({
-      'usuario_id': 1, // futuramente pegar do login
-      'data': data,
-      'texto': texto,
-    });
-
-    print('Entrada salva com id: $id'); // debug
+    final id = await diarioDAO.salvar(novaEntrada);
+    print('Entrada salva com id: $id');
 
     _textoController.clear();
     await _carregarEntradas();
@@ -50,6 +53,12 @@ class _DiarioPageState extends State<DiarioPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Entrada salva no diário!')),
     );
+  }
+
+  @override
+  void dispose() {
+    _textoController.dispose();
+    super.dispose();
   }
 
   @override
@@ -162,8 +171,7 @@ class _DiarioPageState extends State<DiarioPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              entrada['data'].substring(0, 10),
-
+                              entrada.data.substring(0, 10),
                               style: const TextStyle(
                                 color: AppColors.darkRed5,
                                 fontSize: 14,
@@ -172,7 +180,7 @@ class _DiarioPageState extends State<DiarioPage> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              entrada['texto']!,
+                              entrada.conteudo,
                               style: const TextStyle(color: Colors.black54),
                             ),
                           ],

@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../utils/colors.dart';
 import '../database/humor_dao.dart';
+import '../model/humor_model.dart';
 
 class HumorPage extends StatefulWidget {
   const HumorPage({super.key});
@@ -14,10 +15,9 @@ class HumorPage extends StatefulWidget {
 class _HumorPageState extends State<HumorPage> {
   String? _selectedHumorEmoji;
   String? _selectedHumorLabel;
-  DateTime? _selectedDate;
   final HumorDAO _dao = HumorDAO();
   final int usuarioId = 1;
-  List<Map<String, dynamic>> _humores = [];
+  List<Humor> _humores = [];
 
   final List<Map<String, String>> _opcoesHumor = [
     {"emoji": "😄", "label": "Muito feliz"},
@@ -38,7 +38,6 @@ class _HumorPageState extends State<HumorPage> {
     _loadHumores();
   }
 
-  // Carrega histórico de humores do usuário
   Future<void> _loadHumores() async {
     final list = await _dao.listarPorUsuario(usuarioId);
     setState(() => _humores = list);
@@ -48,27 +47,32 @@ class _HumorPageState extends State<HumorPage> {
     setState(() {
       _selectedHumorEmoji = emoji;
       _selectedHumorLabel = label;
-      _selectedDate = DateTime.now();
     });
   }
 
-  // Confirma e salva o humor selecionado
   Future<void> _onConfirm() async {
     if (_selectedHumorLabel == null) {
-      _showSnack("Por favor, selecione seu humor");
+      _showSnack("⚠ Por favor, selecione seu humor antes de confirmar!");
       return;
     }
 
-    final formattedDate = DateFormat('dd/MM/yyyy').format(_selectedDate!);
+    final now = DateTime.now();
+    final formattedDate = DateFormat('dd/MM/yyyy – HH:mm').format(now);
 
-    await _dao.salvar(usuarioId, _selectedHumorLabel!, _selectedHumorEmoji!, formattedDate);
+    Humor novoHumor = Humor(
+      usuarioId: usuarioId,
+      humorLabel: _selectedHumorLabel!,
+      humorEmoji: _selectedHumorEmoji!,
+      data: formattedDate,
+    );
 
-    _showSnack("Humor salvo!\n$_selectedHumorLabel $_selectedHumorEmoji - $formattedDate");
+    await _dao.salvar(novoHumor);
+
+    _showSnack("Humor salvo! ${novoHumor.humorLabel} ${novoHumor.humorEmoji} - ${novoHumor.data}");
 
     setState(() {
       _selectedHumorEmoji = null;
       _selectedHumorLabel = null;
-      _selectedDate = null;
     });
 
     _loadHumores();
@@ -90,23 +94,23 @@ class _HumorPageState extends State<HumorPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildTitle("Escolha seu humor"),
-            const SizedBox(height: 12),
+            _buildTitle("Como você está se sentindo hoje?"),
+            const SizedBox(height: 16),
             GridView.count(
               crossAxisCount: 4,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
               children: _opcoesHumor
                   .map((op) => _buildHumorOption(op["emoji"]!, op["label"]!))
                   .toList(),
             ),
-            const SizedBox(height: 20),
-            if (_selectedHumorLabel != null) _buildConfirmButton(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
+            _buildConfirmButton(),
+            const SizedBox(height: 24),
             _buildTitle("Histórico de humores", size: 20),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             Expanded(
               child: _humores.isEmpty
                   ? _buildEmptyMessage()
@@ -148,28 +152,28 @@ class _HumorPageState extends State<HumorPage> {
           margin: const EdgeInsets.symmetric(vertical: 6),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           color: Colors.white,
-          elevation: 2,
+          elevation: 3,
           child: ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            leading: Text(humor['humorEmoji'], style: const TextStyle(fontSize: 34)),
+            leading: Text(humor.humorEmoji, style: const TextStyle(fontSize: 34)),
             title: Text(
-              humor['humorLabel'],
+              humor.humorLabel,
               style: GoogleFonts.lato(
-                fontSize: 22,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: AppColors.lightBlueDark4,
               ),
             ),
             subtitle: Row(
               children: [
-                const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                const Icon(Icons.access_time, size: 16, color: Colors.grey),
                 const SizedBox(width: 6),
-                Text(humor['data'], style: GoogleFonts.lato(fontSize: 14, color: Colors.grey[700])),
+                Text(humor.data, style: GoogleFonts.lato(fontSize: 14, color: Colors.grey[700])),
               ],
             ),
             trailing: IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed: () => _confirmDelete(humor['id']),
+              onPressed: () => _confirmDelete(humor.id!),
             ),
           ),
         );
@@ -206,7 +210,7 @@ class _HumorPageState extends State<HumorPage> {
       style: ElevatedButton.styleFrom(
         backgroundColor: isSelected ? AppColors.lightBlueDark4 : AppColors.darkBlueDark4,
         foregroundColor: isSelected ? Colors.white : AppColors.lightBlueDark4,
-        elevation: 1,
+        elevation: 2,
         minimumSize: const Size(80, 80),
         padding: const EdgeInsets.all(6),
         shape: RoundedRectangleBorder(
@@ -217,7 +221,7 @@ class _HumorPageState extends State<HumorPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(emoji, style: const TextStyle(fontSize: 26)),
+          Text(emoji, style: const TextStyle(fontSize: 28)),
           const SizedBox(height: 4),
           Text(
             label,
@@ -236,14 +240,14 @@ class _HumorPageState extends State<HumorPage> {
   Widget _buildConfirmButton() {
     return ElevatedButton.icon(
       onPressed: _onConfirm,
-      icon: const Icon(Icons.check, size: 28, color: AppColors.white),
+      icon: const Icon(Icons.check_circle, size: 28, color: AppColors.white),
       label: Text(
         "Confirmar Humor",
-        style: GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.white),
+        style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.white),
       ),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.lightBlueDark4,
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: 14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       ),
     );
@@ -259,7 +263,7 @@ class _HumorPageState extends State<HumorPage> {
         onPressed: () => Navigator.pop(context),
       ),
       title: Text(
-        'Como você está se sentindo?',
+        'Registro de Humor',
         style: GoogleFonts.lato(
           color: AppColors.white,
           fontWeight: FontWeight.w700,

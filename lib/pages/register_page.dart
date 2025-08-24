@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:equilibreapp/utils/colors.dart';
 import '../database/user_dao.dart';
+import '../model/user_model.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -11,7 +12,7 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
-  final UserDAO userDAO = UserDAO();
+  final UsuarioDAO userDAO = UsuarioDAO();
 
   // Controladores
   final nameController = TextEditingController();
@@ -23,6 +24,9 @@ class _RegisterPageState extends State<RegisterPage> {
   final weightController = TextEditingController();
   final sleepHoursController = TextEditingController();
   final healthConditionController = TextEditingController();
+  final phoneController = TextEditingController();
+  final cityController = TextEditingController();
+  final stateController = TextEditingController();
 
   // Estados
   String? selectedGender;
@@ -72,6 +76,9 @@ class _RegisterPageState extends State<RegisterPage> {
               _buildTextField(sleepHoursController, 'Horas de sono por noite', Icons.nightlight, keyboardType: TextInputType.number),
               _buildDropdownField('Objetivo Principal', ['Relaxar', 'Dormir melhor', 'Melhorar hábitos', 'Outro'], (value) => selectedGoal = value, selectedGoal),
               _buildTextField(healthConditionController, 'Condições de saúde (opcional)', Icons.health_and_safety),
+              _buildTextField(phoneController, 'Telefone (opcional)', Icons.phone, keyboardType: TextInputType.phone),
+              _buildTextField(cityController, 'Cidade (opcional)', Icons.location_city),
+              _buildTextField(stateController, 'Estado (opcional)', Icons.map),
 
               SwitchListTile(
                 value: meditate,
@@ -134,7 +141,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ? 'Mínimo 6 caracteres'
             : (label == 'Confirmar Senha' && value != passwordController.text)
             ? 'Senhas não coincidem'
-            : (label != 'Condições de saúde (opcional)' && (value == null || value.isEmpty))
+            : (label != 'Condições de saúde (opcional)' && label != 'Telefone (opcional)' && label != 'Cidade (opcional)' && label != 'Estado (opcional)' && (value == null || value.isEmpty))
             ? 'Campo obrigatório'
             : null,
       ),
@@ -182,26 +189,26 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    // Criando o mapa com os dados do usuário
-    Map<String, dynamic> user = {
-      'nome': nameController.text.trim(),
-      'email': emailController.text.trim(),
-      'senha': passwordController.text,
-      'dataNascimento': birthDateController.text,
-      'genero': selectedGender ?? '',
-      'altura': double.tryParse(heightController.text) ?? 0.0,
-      'peso': double.tryParse(weightController.text) ?? 0.0,
-      'objetivo': selectedGoal ?? '',
-      'praticaMeditacao': meditate ? 1 : 0, // armazena 1 ou 0
-      'condicaoSaude': healthConditionController.text.trim().isEmpty ? null : healthConditionController.text.trim(),
-      'recebeNotificacoes': receiveNotifications ? 1 : 0,
-      'telefone': null,
-      'cidade': null,
-      'estado': null,
-    };
+    // Criando o objeto Usuario
+    Usuario usuario = Usuario(
+      nome: nameController.text.trim(),
+      email: emailController.text.trim(),
+      senha: passwordController.text,
+      dataNascimento: birthDateController.text,
+      genero: selectedGender ?? '',
+      altura: double.tryParse(heightController.text) ?? 0.0,
+      peso: double.tryParse(weightController.text) ?? 0.0,
+      objetivo: selectedGoal ?? '',
+      praticaMeditacao: meditate ? 1 : 0,
+      recebeNotificacoes: receiveNotifications ? 1 : 0,
+      condicaoSaude: healthConditionController.text.trim(),
+      telefone: phoneController.text.trim(),
+      cidade: cityController.text.trim(),
+      estado: stateController.text.trim(),
+    );
 
     try {
-      await userDAO.salvar(user);
+      await userDAO.salvar(usuario);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Cadastro realizado com sucesso!'), backgroundColor: AppColors.green),
