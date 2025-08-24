@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../database/user_dao.dart';
 import '../utils/colors.dart';
+import 'corrida_page.dart';
 import 'diario_page.dart';
 import 'motivacao_page.dart';
 
@@ -192,7 +193,20 @@ class HomeContent extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 30),
-            const Expanded(child: SizedBox()),
+            Expanded(
+              child: _actionButton(
+                Icons.person_pin_circle_outlined,
+                'Corrida',
+                AppColors.darkTerracotta3,
+                    () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CorridaPage(),
+                  )
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ],

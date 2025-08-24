@@ -76,10 +76,12 @@ class DatabaseHelper {
       CREATE TABLE diario (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         usuario_id INTEGER NOT NULL,
+        titulo TEXT,
+        conteudo TEXT NOT NULL,
         data TEXT NOT NULL,
-        texto TEXT NOT NULL,
         FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
       );
-    ''');
+  
+      ''');
   }
 }
