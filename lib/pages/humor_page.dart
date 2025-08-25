@@ -158,11 +158,7 @@ class _HumorPageState extends State<HumorPage> {
             leading: Text(humor.humorEmoji, style: const TextStyle(fontSize: 34)),
             title: Text(
               humor.humorLabel,
-              style: GoogleFonts.lato(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: AppColors.lightBlueDark4,
-              ),
+              style: GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.lightBlueDark4,),
             ),
             subtitle: Row(
               children: [

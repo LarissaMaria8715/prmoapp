@@ -17,7 +17,6 @@ class DatabaseHelper {
   }
 
   Future<void> onCreate(Database db, int version) async {
-    // Criação da tabela usuários
     await db.execute('''
       CREATE TABLE usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -38,7 +37,6 @@ class DatabaseHelper {
       );
     ''');
 
-    // Inserção de usuário teste
     await db.execute('''
       INSERT INTO usuarios (
         nome, email, senha, dataNascimento, genero, altura, peso, objetivo, praticaMeditacao, condicaoSaude, recebeNotificacoes
@@ -47,7 +45,6 @@ class DatabaseHelper {
       );
     ''');
 
-    // Criação da tabela hábitos
     await db.execute('''
       CREATE TABLE habitos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -59,7 +56,6 @@ class DatabaseHelper {
       );
     ''');
 
-    // Criação da tabela humor
     await db.execute('''
       CREATE TABLE humor (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -71,7 +67,6 @@ class DatabaseHelper {
       );
     ''');
 
-    // Criação da tabela diário
     await db.execute('''
       CREATE TABLE diario (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -13,10 +13,10 @@ class DiarioPage extends StatefulWidget {
 
 class _DiarioPageState extends State<DiarioPage> {
   final TextEditingController _textoController = TextEditingController();
-  final DiarioDAO diarioDAO = DiarioDAO(); // DAO atualizado
+  final DiarioDAO diarioDAO = DiarioDAO();
   List<Diario> entradasDiario = [];
 
-  final int usuarioId = 1; // futuramente pegar do login
+  final int usuarioId = 1;
 
   @override
   void initState() {
@@ -24,7 +24,6 @@ class _DiarioPageState extends State<DiarioPage> {
     _carregarEntradas();
   }
 
-  // Carrega todas as entradas do diário do usuário
   Future<void> _carregarEntradas() async {
     final dados = await diarioDAO.listarPorUsuario(usuarioId);
     setState(() {
@@ -32,14 +31,14 @@ class _DiarioPageState extends State<DiarioPage> {
     });
   }
 
-  // Salva uma nova entrada no diário
+
   Future<void> _salvarEntrada() async {
     final texto = _textoController.text.trim();
     if (texto.isEmpty) return;
 
     final novaEntrada = Diario(
       usuarioId: usuarioId,
-      titulo: '', // opcional, pode adicionar campo de título se quiser
+      titulo: '',
       conteudo: texto,
       data: DateTime.now().toIso8601String(),
     );

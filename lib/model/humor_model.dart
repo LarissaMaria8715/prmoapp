@@ -1,9 +1,9 @@
 class Humor {
   int? id;
-  int usuarioId;
-  String humorLabel;
-  String humorEmoji;
-  String data;
+  late int usuarioId;
+  late String humorLabel;
+  late String humorEmoji;
+  late String data;
 
   Humor({
     this.id,
@@ -13,12 +13,13 @@ class Humor {
     required this.data,
   });
 
-  Humor.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        usuarioId = json['usuario_id'],
-        humorLabel = json['humorLabel'],
-        humorEmoji = json['humorEmoji'],
+   Humor.fromJson(Map<String, dynamic> json){
+        id = json['id'];
+        usuarioId = json['usuario_id'];
+        humorLabel = json['humorLabel'];
+        humorEmoji = json['humorEmoji'];
         data = json['data'];
+  }
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{
