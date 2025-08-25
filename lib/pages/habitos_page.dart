@@ -12,7 +12,6 @@ class HabitosPage extends StatefulWidget {
 }
 
 class _HabitosPageState extends State<HabitosPage> {
-  // Sliders
   double aguaLitros = 0.0;
   double horasSono = 0.0;
   double nivelEstresse = 0.0;
@@ -20,7 +19,6 @@ class _HabitosPageState extends State<HabitosPage> {
   double tempoAoArLivre = 0.0;
   double nivelMotivacao = 5.0;
 
-  // Checkboxes
   bool meditou = false;
   bool fezExercicio = false;
   bool alimentacaoSaudavel = false;
@@ -29,14 +27,12 @@ class _HabitosPageState extends State<HabitosPage> {
   bool teveContatoSocial = false;
   bool praticouGratidao = false;
 
-  // Autoavaliação e observação
   int autoAvaliacao = 3;
   final observacaoController = TextEditingController();
 
   final habitoDAO = HabitoDAO();
   final int usuarioId = 1;
 
-  // Widgets auxiliares
   Widget _tituloSecao(String texto) => Padding(
     padding: const EdgeInsets.only(top: 24, bottom: 8),
     child: Text(
