@@ -1,9 +1,9 @@
 class Diario {
-  int? id;
-  int usuarioId;
-  String titulo;
-  String conteudo;
-  String data;
+  late int? id;
+  late int usuarioId;
+  late String titulo;
+  late String conteudo;
+  late String data;
 
   Diario({
     this.id,
@@ -13,7 +13,6 @@ class Diario {
     required this.data,
   });
 
-  // Converter um objeto Diario para Map (para salvar no SQLite)
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{
       'usuario_id': usuarioId,
@@ -27,14 +26,11 @@ class Diario {
     return map;
   }
 
-  // Criar um objeto Diario a partir de Map (do SQLite)
-  factory Diario.fromJson(Map<String, dynamic> json) {
-    return Diario(
-      id: json['id'],
-      usuarioId: json['usuario_id'],
-      titulo: json['titulo'],
-      conteudo: json['conteudo'],
-      data: json['data'],
-    );
+   Diario.fromJson(Map<String, dynamic> json) {
+      id = json['id'];
+      usuarioId = json['usuario_id'];
+      titulo = json['titulo'];
+      conteudo = json['conteudo'];
+      data = json['data'];
   }
 }

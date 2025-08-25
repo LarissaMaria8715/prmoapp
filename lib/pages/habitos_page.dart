@@ -98,7 +98,6 @@ class _HabitosPageState extends State<HabitosPage> {
     );
   }
 
-  // Salvar hábitos usando o model Habito
   Future<void> _salvarHabitos() async {
     try {
       final now = DateTime.now();
@@ -137,11 +136,6 @@ class _HabitosPageState extends State<HabitosPage> {
         const SnackBar(content: Text('Erro ao salvar hábitos.')),
       );
     }
-  }
-  @override
-  void dispose() {
-    observacaoController.dispose();
-    super.dispose();
   }
 
   @override

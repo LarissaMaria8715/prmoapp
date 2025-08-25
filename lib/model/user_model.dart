@@ -33,7 +33,6 @@ class Usuario {
     required this.estado,
   });
 
-  // Construtor para criar objeto a partir de JSON
   Usuario.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? 0;
     nome = json['nome'];
@@ -52,7 +51,6 @@ class Usuario {
     estado = json['estado'];
   }
 
-  // Converte o objeto para JSON
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
     if (id != 0) data['id'] = id;
