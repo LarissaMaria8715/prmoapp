@@ -52,7 +52,7 @@ class _HumorPageState extends State<HumorPage> {
 
   Future<void> _onConfirm() async {
     if (_selectedHumorLabel == null) {
-      _showSnack("⚠ Por favor, selecione seu humor antes de confirmar!");
+      _showSnack("Por favor, selecione seu humor antes de confirmar!");
       return;
     }
 
@@ -82,6 +82,28 @@ class _HumorPageState extends State<HumorPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message, style: const TextStyle(fontSize: 16))),
     );
+  }
+
+  Future<void> _confirmDelete(int id) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Confirmar exclusão"),
+        content: const Text("Deseja realmente excluir este registro de humor?"),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text("Cancelar")),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text("Excluir", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+    if (confirm == true) {
+      await _dao.deletar(id);
+      _loadHumores();
+      _showSnack("Humor excluído com sucesso");
+    }
   }
 
   @override
@@ -177,27 +199,6 @@ class _HumorPageState extends State<HumorPage> {
     );
   }
 
-  Future<void> _confirmDelete(int id) async {
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Confirmar exclusão"),
-        content: const Text("Deseja realmente excluir este registro de humor?"),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text("Cancelar")),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text("Excluir", style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
-    );
-    if (confirm == true) {
-      await _dao.deletar(id);
-      _loadHumores();
-      _showSnack("Humor excluído com sucesso");
-    }
-  }
 
   Widget _buildHumorOption(String emoji, String label) {
     final isSelected = _selectedHumorLabel == label;
