@@ -56,14 +56,14 @@ class _HumorPageState extends State<HumorPage> {
       return;
     }
 
-    final now = DateTime.now();
-    final formattedDate = DateFormat('dd/MM/yyyy – HH:mm').format(now);
+    final data = DateTime.now();
+    final String DataFormat = DateFormat('dd/MM/yyyy – HH:mm').format(data);
 
     Humor novoHumor = Humor(
       usuarioId: usuarioId,
       humorLabel: _selectedHumorLabel!,
       humorEmoji: _selectedHumorEmoji!,
-      data: formattedDate,
+      data: DataFormat,
     );
 
     await _dao.salvar(novoHumor);

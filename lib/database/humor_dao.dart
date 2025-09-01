@@ -25,6 +25,10 @@ class HumorDAO {
 
   Future<int> deletar(int id) async {
     final db = await _getDatabase();
-    return await db.delete('humor', where: 'id = ?', whereArgs: [id]);
+    return await db.delete(
+        'humor',
+        where: 'id = ?',
+        whereArgs: [id]
+    );
   }
 }
