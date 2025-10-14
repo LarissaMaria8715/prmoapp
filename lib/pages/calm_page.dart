@@ -2,6 +2,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../database/imagem_dao.dart';
 import '../model/imagem_model.dart';
+import '../utils/colors.dart';
+import '../wigets/imagem_com_moldura.dart'; // arquivo onde está sua paleta de cores
 
 class CalmaPage extends StatefulWidget {
   const CalmaPage({Key? key}) : super(key: key);
@@ -56,53 +58,67 @@ class _CalmaPageState extends State<CalmaPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        body: carregando
-            ? const Center(child: CircularProgressIndicator(color: Colors.white))
+    return Scaffold(
+      backgroundColor: AppColors.darkWine2,
+      appBar: AppBar(
+        title: const Text(
+          "Momento de Calma",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: AppColors.wine,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        elevation: 0,
+      ),
+      body: SafeArea(
+        child: carregando
+            ? const Center(
+          child: CircularProgressIndicator(color: Colors.white),
+        )
             : imagemAtual == null
-            ? const Center(child: Text("Nenhuma imagem carregada", style: TextStyle(color: Colors.white)))
+            ? const Center(
+          child: Text(
+            "Nenhuma imagem carregada",
+            style: TextStyle(color: Colors.white),
+          ),
+        )
             : Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
-              child: Image.network(
-                imagemAtual!.downloadUrl,
-                fit: BoxFit.cover,
-                width: double.infinity,
-                loadingBuilder: (context, child, progress) {
-                  if (progress == null) return child;
-                  return const Center(
-                    child: CircularProgressIndicator(color: Colors.white),
-                  );
-                },
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ImagemComMoldura(imagemUrl: imagemAtual!.downloadUrl),
               ),
             ),
             const SizedBox(height: 20),
-            Text(
-              fraseAtual,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontStyle: FontStyle.italic,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                fraseAtual,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontStyle: FontStyle.italic,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 30),
-            ElevatedButton(
+            ElevatedButton.icon(
               onPressed: novaImagem,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
+                backgroundColor: AppColors.lightWine3,
+                foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                child: Text("Nova imagem"),
-              ),
+              icon: const Icon(Icons.refresh),
+              label: const Text("Solicitar nova foto"),
             ),
             const SizedBox(height: 40),
           ],

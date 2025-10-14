@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../database/user_dao.dart';
 import '../utils/colors.dart';
+import 'calm_page.dart';
 import 'diario_page.dart';
 import 'motivacao_page.dart';
 import 'livro_page.dart';
@@ -196,8 +197,8 @@ class HomeContent extends StatelessWidget {
             const SizedBox(width: 30),
             Expanded(
               child: _actionButton(
-                Icons.backup_table_rounded,
-                'Noticias',
+                Icons.book_outlined,
+                'Livros',
                 AppColors.darkTerracotta3,
                     () {
                   Navigator.push(
@@ -210,8 +211,6 @@ class HomeContent extends StatelessWidget {
             ),
           ],
         ),
-
-
         const SizedBox(height: 30),
         Row(
           children: [
@@ -231,13 +230,13 @@ class HomeContent extends StatelessWidget {
             const SizedBox(width: 30),
             Expanded(
               child: _actionButton(
-                Icons.backup_table_rounded,
-                'Noticias',
-                AppColors.darkTerracotta3,
+                Icons.image_outlined,
+                'Imagens',
+                AppColors.darkWine1,
                     () {
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LivrosPage(),
+                      MaterialPageRoute(builder: (context) => CalmaPage(),
                       )
                   );
                 },
