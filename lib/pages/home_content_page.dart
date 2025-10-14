@@ -2,6 +2,7 @@ import 'package:equilibreapp/pages/agenda_page.dart';
 import 'package:equilibreapp/pages/habitos_page.dart';
 import 'package:equilibreapp/pages/humor_page.dart';
 import 'package:equilibreapp/pages/metas_page.dart';
+import 'package:equilibreapp/pages/music_page.dart';
 import 'package:equilibreapp/pages/respiracao_page.dart';
 import 'package:equilibreapp/wigets/style_button.dart';
 import 'package:flutter/material.dart';
@@ -210,6 +211,40 @@ class HomeContent extends StatelessWidget {
           ],
         ),
 
+
+        const SizedBox(height: 30),
+        Row(
+          children: [
+            Expanded(
+              child: _actionButton(
+                Icons.music_note_outlined,
+                'Música',
+                AppColors.darkGray3,
+                    () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MusicPage()),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(width: 30),
+            Expanded(
+              child: _actionButton(
+                Icons.backup_table_rounded,
+                'Noticias',
+                AppColors.darkTerracotta3,
+                    () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LivrosPage(),
+                      )
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }

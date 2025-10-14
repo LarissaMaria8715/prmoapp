@@ -17,7 +17,6 @@ class DiarioApi {
         listaDiario.add(diario);
       }
     }
-
     return listaDiario;
   }
 }

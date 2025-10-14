@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../database/database_helper.dart';
 import '../database/user_dao.dart';
 import 'package:equilibreapp/utils/colors.dart';
-
+import '../utils/shared_prefs.dart';
 import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -16,13 +16,12 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final DatabaseHelper db = DatabaseHelper();
-
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
   final UsuarioDAO userDAO = UsuarioDAO();
-
   bool _passwordVisible = false;
+  final SharedPrefs _prefs = SharedPrefs();
+
 
   @override
   Widget build(BuildContext context) {
@@ -200,6 +199,7 @@ class _LoginPageState extends State<LoginPage> {
     final usuario = await userDAO.validar(email, senha);
 
     if (usuario != null) {
+     // await _prefs.setUserStatus(true);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

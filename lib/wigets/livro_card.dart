@@ -1,7 +1,5 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../model/livro_model.dart';
 
 /// Widget separado para exibir o card de cada livro

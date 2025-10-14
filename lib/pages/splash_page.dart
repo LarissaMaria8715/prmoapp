@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../database/shared_prefs.dart';
+import '../utils/shared_prefs.dart';
 import 'home_page.dart';
 import 'login_page.dart';
 
