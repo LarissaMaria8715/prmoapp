@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../utils/colors.dart';
 import '../database/humor_dao.dart';
 import '../model/humor_model.dart';
+import '../api/humor_api.dart';
 
 class HumorPage extends StatefulWidget {
   const HumorPage({super.key});
@@ -18,6 +19,17 @@ class _HumorPageState extends State<HumorPage> {
   final HumorDAO _dao = HumorDAO();
   final int usuarioId = 1;
   List<Humor> _humores = [];
+  final HumorApi _api = HumorApi();
+
+
+  Future<void> _loadHumoresFromApi() async {
+    try {
+      final list = await _api.findAll();
+      setState(() => _humores = list);
+    } catch (e) {
+      _showSnack("Erro ao carregar humores da API: $e");
+    }
+  }
 
   final List<Map<String, String>> _opcoesHumor = [
     {"emoji": "😄", "label": "Muito feliz"},
@@ -35,7 +47,7 @@ class _HumorPageState extends State<HumorPage> {
   @override
   void initState() {
     super.initState();
-    _loadHumores();
+    _loadHumoresFromApi();
   }
 
   Future<void> _loadHumores() async {

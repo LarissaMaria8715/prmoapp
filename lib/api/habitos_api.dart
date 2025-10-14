@@ -17,7 +17,6 @@ class HabitosApi {
         listaHabitos.add(habito);
       }
     }
-
     return listaHabitos;
   }
 }

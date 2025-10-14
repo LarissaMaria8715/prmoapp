@@ -111,7 +111,7 @@ class AppColors {
   static const darkGray1 = Color(0xFF757575);
   static const darkGray2 = Color(0xFF616161);
   static const darkGray3 = Color(0xFF424242);
-  static const darkGray4 = Color(0xFF212121);
+  static const darkGray4 = Color(0xFF353131);
 
   // MARROM
   static const lightBrown1 = Color(0xFFD7CCC8);
