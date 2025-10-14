@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../api/diario_api.dart';
 import '../model/diario_model.dart';
 import '../database/diario_dao.dart';
 import '../utils/colors.dart';
 
+
 class DiarioPage extends StatefulWidget {
-  const DiarioPage({Key? key}) : super(key: key);
+  const DiarioPage({super.key});
 
   @override
   State<DiarioPage> createState() => _DiarioPageState();
@@ -14,8 +16,10 @@ class DiarioPage extends StatefulWidget {
 class _DiarioPageState extends State<DiarioPage> {
   final TextEditingController _textoController = TextEditingController();
   final DiarioDAO diarioDAO = DiarioDAO();
-  List<Diario> entradasDiario = [];
+  final DiarioApi _api = DiarioApi();
 
+  List<Diario> entradasDiario = [];
+  bool _isLoading = false; //  indicador de carregamento
   final int usuarioId = 1;
 
   @override
@@ -25,12 +29,24 @@ class _DiarioPageState extends State<DiarioPage> {
   }
 
   Future<void> _carregarEntradas() async {
-    final dados = await diarioDAO.listarPorUsuario(usuarioId);
-    setState(() {
-      entradasDiario = dados;
-    });
-  }
+    setState(() => _isLoading = true); // inicia o loading
+    try {
+      final dadosLocais = await diarioDAO.listarPorUsuario(usuarioId);
+      final dadosApi = await _api.findAll();
 
+      setState(() {
+        print('Dados liquidos da API: ${dadosApi}');
+        entradasDiario = [...dadosApi, ...dadosLocais, ...dadosLocais];
+      });
+    } catch (e) {
+      print('Erro ao carregar entradas: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erro ao carregar entradas.')),
+      );
+    } finally {
+      setState(() => _isLoading = false); // encerra o loading
+    }
+  }
 
   Future<void> _salvarEntrada() async {
     final texto = _textoController.text.trim();
@@ -43,15 +59,20 @@ class _DiarioPageState extends State<DiarioPage> {
       data: DateTime.now().toIso8601String(),
     );
 
-    final id = await diarioDAO.salvar(novaEntrada);
-    print('Entrada salva com id: $id');
+    try {
+      await diarioDAO.salvar(novaEntrada);
+      _textoController.clear();
+      await _carregarEntradas();
 
-    _textoController.clear();
-    await _carregarEntradas();
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Entrada salva no diário!')),
-    );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Entrada salva no diário!')),
+      );
+    } catch (e) {
+      print('Erro ao salvar entrada: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erro ao salvar entrada.')),
+      );
+    }
   }
 
   @override
@@ -83,7 +104,15 @@ class _DiarioPageState extends State<DiarioPage> {
             onPressed: () => Navigator.pop(context),
           ),
         ),
-        body: Padding(
+        body: _isLoading
+            ? const Center(
+          // ✅ símbolo de carregando
+          child: CircularProgressIndicator(
+            color: AppColors.darkRed5,
+            strokeWidth: 4,
+          ),
+        )
+            : Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,7 +132,7 @@ class _DiarioPageState extends State<DiarioPage> {
                 style: const TextStyle(color: AppColors.darkRed5),
                 decoration: InputDecoration(
                   hintText: 'Escreva aqui...',
-                  hintStyle: TextStyle(color: AppColors.darkRed5),
+                  hintStyle: const TextStyle(color: AppColors.darkRed5),
                   filled: true,
                   fillColor: AppColors.lightRed4.withOpacity(0.2),
                   border: OutlineInputBorder(
@@ -167,7 +196,8 @@ class _DiarioPageState extends State<DiarioPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment:
+                          CrossAxisAlignment.start,
                           children: [
                             Text(
                               entrada.data.substring(0, 10),
@@ -180,7 +210,9 @@ class _DiarioPageState extends State<DiarioPage> {
                             const SizedBox(height: 8),
                             Text(
                               entrada.conteudo,
-                              style: const TextStyle(color: Colors.black54),
+                              style: const TextStyle(
+                                color: Colors.black54,
+                              ),
                             ),
                           ],
                         ),
