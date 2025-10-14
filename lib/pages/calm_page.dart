@@ -117,6 +117,7 @@ class _CalmaPageState extends State<CalmaPage> {
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
+
               icon: const Icon(Icons.refresh),
               label: const Text("Solicitar nova foto"),
             ),

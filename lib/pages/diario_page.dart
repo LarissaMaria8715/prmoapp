@@ -18,7 +18,7 @@ class _DiarioPageState extends State<DiarioPage> {
   final DiarioApi _api = DiarioApi();
 
   List<Diario> entradasDiario = [];
-  bool _isLoading = false; // ✅ indicador de carregamento
+  bool _isLoading = false; //  indicador de carregamento
   final int usuarioId = 1;
 
   @override

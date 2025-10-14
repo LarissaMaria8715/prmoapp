@@ -37,7 +37,6 @@ class DiarioApi {
       print('Erro ao buscar dados da API: $e');
       print(stack);
     }
-
     return listaDiario;
   }
 }
