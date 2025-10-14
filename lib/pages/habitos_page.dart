@@ -345,6 +345,7 @@ class _HabitosPageState extends State<HabitosPage> {
           ),
         ),
 
+
         // Overlay de carregamento
         if (_carregando || _salvando)
           Container(
