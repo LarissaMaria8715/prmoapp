@@ -315,6 +315,7 @@ class _HabitosPageState extends State<HabitosPage> {
               ),
             ),
 
+
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
