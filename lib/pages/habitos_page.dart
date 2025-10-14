@@ -17,7 +17,6 @@ class HabitosPage extends StatefulWidget {
 }
 
 class _HabitosPageState extends State<HabitosPage> {
-  // Variáveis de estado
   double aguaLitros = 0.0;
   double horasSono = 0.0;
   double nivelEstresse = 0.0;
@@ -35,6 +34,7 @@ class _HabitosPageState extends State<HabitosPage> {
   final habitoDAO = HabitoDAO();
   final int usuarioId = 1;
   bool _carregando = true;
+  bool _salvando = false;
   List<Habito> _habitosUsuario = [];
 
   @override
@@ -49,6 +49,7 @@ class _HabitosPageState extends State<HabitosPage> {
       final habitos = await habitoDAO.listarHabitos();
       final habitosUsuario =
       habitos.where((h) => h.usuarioId == usuarioId).toList();
+      await Future.delayed(const Duration(seconds: 1));
 
       if (habitosUsuario.isNotEmpty) {
         final ultimoHabito = habitosUsuario.first;
@@ -71,9 +72,7 @@ class _HabitosPageState extends State<HabitosPage> {
         });
       }
 
-      setState(() {
-        _habitosUsuario = habitosUsuario;
-      });
+      setState(() => _habitosUsuario = habitosUsuario);
     } catch (e) {
       debugPrint('Erro ao carregar hábitos: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -84,16 +83,10 @@ class _HabitosPageState extends State<HabitosPage> {
     }
   }
 
-  bool _salvando = false; // variável de controle no seu State
-
   Future<void> _salvarHabito() async {
-    setState(() {
-      _salvando = true; // ativa o indicador
-    });
-
+    setState(() => _salvando = true);
     try {
       final now = DateTime.now();
-
       final habito = Habito(
         usuarioId: usuarioId,
         nome: 'Registro diário',
@@ -116,27 +109,20 @@ class _HabitosPageState extends State<HabitosPage> {
       );
 
       await habitoDAO.salvarHabito(habito);
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Hábito salvo com sucesso!')),
       );
-
-      _carregarHabitos(); // atualiza lista
+      _carregarHabitos();
     } catch (e) {
       debugPrint('Erro ao salvar hábito: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erro ao salvar hábito.')),
       );
     } finally {
-      setState(() {
-        _salvando = false; // desativa o indicador
-      });
+      setState(() => _salvando = false);
     }
   }
 
-
-  // === Interface ===
-  @override
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -159,18 +145,13 @@ class _HabitosPageState extends State<HabitosPage> {
               onPressed: () => Navigator.pop(context),
             ),
           ),
-          body: _carregando
-              ? const Center(
-            child: CircularProgressIndicator(color: AppColors.purple),
-          )
-              : Padding(
-            padding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: ListView(
               children: [
                 const TituloSecao('Editar Último Hábito'),
 
-                // === Sliders ===
+                // Sliders
                 SliderHabit(
                   title: 'Consumo de Água',
                   value: aguaLitros,
@@ -226,48 +207,46 @@ class _HabitosPageState extends State<HabitosPage> {
                   onChanged: (v) => setState(() => tempoAoArLivre = v),
                 ),
 
-                // === Checkboxes ===
+                // Checkboxes
                 const TituloSecao('Hábitos Binários'),
                 CardContainer(
                   child: Column(
                     children: [
                       CheckboxHabit(
-                          texto: 'Meditou hoje?',
-                          valor: meditou,
-                          onChanged: (v) =>
-                              setState(() => meditou = v ?? false)),
+                        texto: 'Meditou hoje?',
+                        valor: meditou,
+                        onChanged: (v) => setState(() => meditou = v ?? false),
+                      ),
                       CheckboxHabit(
-                          texto: 'Fez exercícios físicos?',
-                          valor: fezExercicio,
-                          onChanged: (v) =>
-                              setState(() => fezExercicio = v ?? false)),
+                        texto: 'Fez exercícios físicos?',
+                        valor: fezExercicio,
+                        onChanged: (v) => setState(() => fezExercicio = v ?? false),
+                      ),
                       CheckboxHabit(
-                          texto: 'Alimentação saudável?',
-                          valor: alimentacaoSaudavel,
-                          onChanged: (v) =>
-                              setState(
-                                      () => alimentacaoSaudavel = v ?? false)),
+                        texto: 'Alimentação saudável?',
+                        valor: alimentacaoSaudavel,
+                        onChanged: (v) => setState(() => alimentacaoSaudavel = v ?? false),
+                      ),
                       CheckboxHabit(
-                          texto: 'Comeu frutas?',
-                          valor: comeuFrutas,
-                          onChanged: (v) =>
-                              setState(() => comeuFrutas = v ?? false)),
+                        texto: 'Comeu frutas?',
+                        valor: comeuFrutas,
+                        onChanged: (v) => setState(() => comeuFrutas = v ?? false),
+                      ),
                       CheckboxHabit(
-                          texto: 'Leu algum livro?',
-                          valor: leuLivro,
-                          onChanged: (v) =>
-                              setState(() => leuLivro = v ?? false)),
+                        texto: 'Leu algum livro?',
+                        valor: leuLivro,
+                        onChanged: (v) => setState(() => leuLivro = v ?? false),
+                      ),
                       CheckboxHabit(
-                          texto: 'Teve contato social?',
-                          valor: teveContatoSocial,
-                          onChanged: (v) =>
-                              setState(
-                                      () => teveContatoSocial = v ?? false)),
+                        texto: 'Teve contato social?',
+                        valor: teveContatoSocial,
+                        onChanged: (v) => setState(() => teveContatoSocial = v ?? false),
+                      ),
                     ],
                   ),
                 ),
 
-                // === Autoavaliação ===
+                // Autoavaliação
                 const TituloSecao('Autoavaliação do Dia'),
                 DropdownAutoavaliacao(
                   valor: autoAvaliacao,
@@ -276,12 +255,11 @@ class _HabitosPageState extends State<HabitosPage> {
 
                 const SizedBox(height: 24),
 
-                // === Botão Salvar ===
+                // Botão Salvar
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    icon: const Icon(Icons.save_alt,
-                        color: AppColors.lightPurple1),
+                    icon: const Icon(Icons.save_alt, color: AppColors.lightPurple1),
                     label: const Text(
                       'Salvar Hábito',
                       style: TextStyle(
@@ -298,38 +276,38 @@ class _HabitosPageState extends State<HabitosPage> {
                       ),
                       elevation: 0,
                     ),
-                    onPressed: () =>
-                        showDialog(
-                          context: context,
-                          builder: (context) =>
-                              AlertDialog(
-                                title: const Text('Salvar hábitos'),
-                                content:
-                                const Text('Deseja salvar os hábitos de hoje?'),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)),
-                                actions: [
-                                  TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: const Text('Cancelar')),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      _salvarHabito();
-                                    },
-                                    child: const Text('Salvar',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                  ),
-                                ],
-                              ),
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Salvar hábitos'),
+                        content: const Text('Deseja salvar os hábitos de hoje?'),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Cancelar'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              _salvarHabito();
+                            },
+                            child: const Text(
+                              'Salvar',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
 
                 const SizedBox(height: 32),
 
-                // === Lista de Hábitos Salvos ===
+                // Lista de hábitos salvos
                 const TituloSecao('Hábitos Salvos'),
                 ..._habitosUsuario.map((habito) {
                   final dados = jsonDecode(habito.descricao);
@@ -337,9 +315,13 @@ class _HabitosPageState extends State<HabitosPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Data: ${habito.data.split('T')[0]}',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16)),
+                        Text(
+                          'Data: ${habito.data.split('T')[0]}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
                         const SizedBox(height: 8),
                         Text('Água: ${dados['aguaLitros']} L'),
                         Text('Sono: ${dados['horasSono']} h'),
@@ -348,22 +330,11 @@ class _HabitosPageState extends State<HabitosPage> {
                         Text('Tela: ${dados['tempoTela']} h'),
                         Text('Ar Livre: ${dados['tempoAoArLivre']} h'),
                         Text('Meditou: ${dados['meditou'] ? "Sim" : "Não"}'),
-                        Text(
-                            'Exercício: ${dados['fezExercicio']
-                                ? "Sim"
-                                : "Não"}'),
-                        Text(
-                            'Alimentação: ${dados['alimentacaoSaudavel']
-                                ? "Sim"
-                                : "Não"}'),
-                        Text(
-                            'Frutas: ${dados['comeuFrutas'] ? "Sim" : "Não"}'),
-                        Text(
-                            'Leu Livro: ${dados['leuLivro'] ? "Sim" : "Não"}'),
-                        Text(
-                            'Contato Social: ${dados['teveContatoSocial']
-                                ? "Sim"
-                                : "Não"}'),
+                        Text('Exercício: ${dados['fezExercicio'] ? "Sim" : "Não"}'),
+                        Text('Alimentação: ${dados['alimentacaoSaudavel'] ? "Sim" : "Não"}'),
+                        Text('Frutas: ${dados['comeuFrutas'] ? "Sim" : "Não"}'),
+                        Text('Leu Livro: ${dados['leuLivro'] ? "Sim" : "Não"}'),
+                        Text('Contato Social: ${dados['teveContatoSocial'] ? "Sim" : "Não"}'),
                         Text('Autoavaliação: ${dados['autoAvaliacao']}'),
                       ],
                     ),
@@ -374,13 +345,14 @@ class _HabitosPageState extends State<HabitosPage> {
           ),
         ),
 
-        // === Overlay de carregamento global (ao carregar ou salvar) ===
+
+        // Overlay de carregamento
         if (_carregando || _salvando)
           Container(
-            color: Colors.black54,
+            color: Colors.white, // fundo branco
             child: const Center(
               child: CircularProgressIndicator(
-                color: Colors.white,
+                color: AppColors.purple,
                 strokeWidth: 4,
               ),
             ),

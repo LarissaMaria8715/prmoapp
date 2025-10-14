@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../model/music_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../utils/colors.dart';
+
 class MusicCard extends StatelessWidget {
   final Music music;
 
@@ -28,7 +30,7 @@ class MusicCard extends StatelessWidget {
         title: Text(music.trackName, style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Text(music.artistName),
         trailing: IconButton(
-          icon: const Icon(Icons.play_circle_fill, color: Colors.blueAccent, size: 32),
+          icon: const Icon(Icons.play_circle_fill, color: AppColors.darkGray1, size: 32),
           onPressed: _openPreview,
         ),
       ),

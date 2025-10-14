@@ -29,13 +29,13 @@ class StyleButton extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: Colors.white, size: 40),
+          Icon(icon, color: Colors.white, size: 35),
           const SizedBox(height: 5),
           Text(
             label,
             style: GoogleFonts.poppins(
               color: Colors.white,
-              fontSize: 15,
+              fontSize: 13,
               fontWeight: FontWeight.w600,
             ),
           ),

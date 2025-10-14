@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../utils/colors.dart';
+import '../database/humor_dao.dart';
 import '../model/humor_model.dart';
 import '../api/humor_api.dart';
 
@@ -19,6 +20,7 @@ class _HumorPageState extends State<HumorPage> {
   final int usuarioId = 1;
   List<Humor> _humores = [];
   final HumorApi _api = HumorApi();
+  final HumorDAO _dao = HumorDAO();
   bool _loading = true;
 
   final List<Map<String, String>> _opcoesHumor = [
@@ -37,22 +39,32 @@ class _HumorPageState extends State<HumorPage> {
   @override
   void initState() {
     super.initState();
-    _loadHumoresFromApi();
+    _loadHumores();
   }
 
-  Future<void> _loadHumoresFromApi() async {
+  Future<void> _loadHumores() async {
     setState(() => _loading = true);
+
     try {
-      final list = await _api.findAll();
+      // Carrega humores do DAO (local)
+      final daoHumores = await _dao.listarPorUsuario(usuarioId);
+
+      // Carrega humores da API
+      final apiHumores = await _api.findAll();
+
       // Simula atraso de 4 segundos
       await Future.delayed(const Duration(seconds: 4));
+
+      // Combina ambos e remove duplicados se houver (baseado em data + emoji)
+      final combinedHumores = [...daoHumores, ...apiHumores];
+
       setState(() {
-        _humores = list;
+        _humores = combinedHumores;
         _loading = false;
       });
     } catch (e) {
       setState(() => _loading = false);
-      _showSnack("Erro ao carregar humores da API: $e");
+      _showSnack("Erro ao carregar humores: $e");
     }
   }
 
@@ -61,6 +73,33 @@ class _HumorPageState extends State<HumorPage> {
       _selectedHumorEmoji = emoji;
       _selectedHumorLabel = label;
     });
+  }
+
+  Future<void> _onConfirm() async {
+    if (_selectedHumorLabel == null || _selectedHumorEmoji == null) {
+      _showSnack("Por favor, selecione seu humor antes de confirmar!");
+      return;
+    }
+
+    final data = DateTime.now();
+    final String dataFormat = DateFormat('dd/MM/yyyy – HH:mm').format(data);
+
+    final novoHumor = Humor(
+      usuarioId: usuarioId,
+      humorLabel: _selectedHumorLabel!,
+      humorEmoji: _selectedHumorEmoji!,
+      data: dataFormat,
+    );
+
+    await _dao.salvar(novoHumor);
+    _showSnack("Humor salvo! ${novoHumor.humorLabel} ${novoHumor.humorEmoji} - ${novoHumor.data}");
+
+    setState(() {
+      _selectedHumorEmoji = null;
+      _selectedHumorLabel = null;
+    });
+
+    _loadHumores();
   }
 
   void _showSnack(String message) {
@@ -200,9 +239,7 @@ class _HumorPageState extends State<HumorPage> {
 
   Widget _buildConfirmButton() {
     return ElevatedButton.icon(
-      onPressed: () {
-        _showSnack("Função de salvar humor ainda não implementada com a API.");
-      },
+      onPressed: _onConfirm,
       icon: const Icon(Icons.check_circle, size: 28, color: AppColors.white),
       label: Text(
         "Confirmar Humor",
