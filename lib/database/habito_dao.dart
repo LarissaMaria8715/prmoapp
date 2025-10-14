@@ -11,15 +11,22 @@ class HabitoDAO {
 
   Future<int> salvarHabito(Habito habito) async {
     final db = await _getDatabase();
-    return await db.insert('habitos', habito.toJson());
+    // se já tiver id, faz update, senão insert
+    if (habito.id != null) {
+      return await db.update(
+        'habitos',
+        habito.toJson(),
+        where: 'id = ?',
+        whereArgs: [habito.id],
+      );
+    } else {
+      return await db.insert('habitos', habito.toJson());
+    }
   }
 
   Future<List<Habito>> listarHabitos() async {
     final db = await _getDatabase();
-    final result = await db.query(
-      'habitos',
-      orderBy: 'data DESC',
-    );
+    final result = await db.query('habitos', orderBy: 'data DESC');
     return result.map((json) => Habito.fromJson(json)).toList();
   }
 

@@ -1,9 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import '../api/habitos_api.dart';
 import '../database/habito_dao.dart';
 import '../model/habito_model.dart';
 import '../utils/colors.dart';
+import '../wigets/card_container.dart';
+import '../wigets/checkbox_habit.dart';
+import '../wigets/dropdown_autoavaliacao.dart';
+import '../wigets/slider_habit_widget.dart';
+import '../wigets/titulo_secao_widget.dart';
 
 class HabitosPage extends StatefulWidget {
   const HabitosPage({Key? key}) : super(key: key);
@@ -13,26 +17,23 @@ class HabitosPage extends StatefulWidget {
 }
 
 class _HabitosPageState extends State<HabitosPage> {
+  // Variáveis de estado
   double aguaLitros = 0.0;
   double horasSono = 0.0;
   double nivelEstresse = 0.0;
   double tempoTela = 0.0;
   double tempoAoArLivre = 0.0;
   double nivelMotivacao = 0.0;
-
   bool meditou = false;
   bool fezExercicio = false;
   bool alimentacaoSaudavel = false;
   bool comeuFrutas = false;
   bool leuLivro = false;
   bool teveContatoSocial = false;
-
   int autoAvaliacao = 3;
 
-  final habitosApi = HabitosApi();
   final habitoDAO = HabitoDAO();
   final int usuarioId = 1;
-
   bool _carregando = true;
   List<Habito> _habitosUsuario = [];
 
@@ -45,11 +46,12 @@ class _HabitosPageState extends State<HabitosPage> {
   Future<void> _carregarHabitos() async {
     setState(() => _carregando = true);
     try {
-      final habitos = await habitosApi.findAll();
-      final habitosUsuario = habitos.where((h) => h.usuarioId == usuarioId).toList();
+      final habitos = await habitoDAO.listarHabitos();
+      final habitosUsuario =
+      habitos.where((h) => h.usuarioId == usuarioId).toList();
 
       if (habitosUsuario.isNotEmpty) {
-        final ultimoHabito = habitosUsuario.last;
+        final ultimoHabito = habitosUsuario.first;
         final dados = jsonDecode(ultimoHabito.descricao);
 
         setState(() {
@@ -59,25 +61,23 @@ class _HabitosPageState extends State<HabitosPage> {
           tempoTela = (dados['tempoTela'] ?? 0.0).toDouble();
           tempoAoArLivre = (dados['tempoAoArLivre'] ?? 0.0).toDouble();
           nivelMotivacao = (dados['nivelMotivacao'] ?? 5.0).toDouble();
-
           meditou = dados['meditou'] ?? false;
           fezExercicio = dados['fezExercicio'] ?? false;
           alimentacaoSaudavel = dados['alimentacaoSaudavel'] ?? false;
           comeuFrutas = dados['comeuFrutas'] ?? false;
           leuLivro = dados['leuLivro'] ?? false;
           teveContatoSocial = dados['teveContatoSocial'] ?? false;
-
           autoAvaliacao = dados['autoAvaliacao'] ?? 3;
         });
       }
 
       setState(() {
-        _habitosUsuario = habitosUsuario.reversed.toList();
+        _habitosUsuario = habitosUsuario;
       });
     } catch (e) {
-      print('Erro ao carregar hábitos da API: $e');
+      debugPrint('Erro ao carregar hábitos: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Erro ao carregar hábitos.')),
+        const SnackBar(content: Text('Erro ao carregar hábitos locais.')),
       );
     } finally {
       setState(() => _carregando = false);
@@ -115,75 +115,16 @@ class _HabitosPageState extends State<HabitosPage> {
         const SnackBar(content: Text('Hábito salvo com sucesso!')),
       );
 
-      // Recarrega os hábitos para atualizar a lista
-      _carregarHabitos();
+      _carregarHabitos(); // atualiza lista
     } catch (e) {
-      print('Erro ao salvar hábito: $e');
+      debugPrint('Erro ao salvar hábito: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erro ao salvar hábito.')),
       );
     }
   }
 
-  Widget _tituloSecao(String texto) => Padding(
-    padding: const EdgeInsets.only(top: 24, bottom: 8),
-    child: Text(
-      texto,
-      style: const TextStyle(
-          fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.purple),
-    ),
-  );
-
-  Widget _card({required Widget child}) => Container(
-    margin: const EdgeInsets.symmetric(vertical: 8),
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: AppColors.white,
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: Colors.grey, width: 1.2),
-    ),
-    child: child,
-  );
-
-  Widget _sliderHabit({
-    required String title,
-    required double value,
-    required double min,
-    required double max,
-    required int divisions,
-    required String unidade,
-    required Function(double) onChanged,
-  }) =>
-      _card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title,
-                style:
-                const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-            Slider(
-              value: value,
-              min: min,
-              max: max,
-              divisions: divisions,
-              label: '${value.toStringAsFixed(1)} $unidade',
-              activeColor: AppColors.purple,
-              onChanged: onChanged,
-            ),
-          ],
-        ),
-      );
-
-  Widget _checkboxHabit(String texto, bool valor, Function(bool?) onChanged) =>
-      CheckboxListTile(
-        title: Text(texto, style: const TextStyle(fontSize: 16)),
-        value: valor,
-        onChanged: onChanged,
-        contentPadding: EdgeInsets.zero,
-        controlAffinity: ListTileControlAffinity.leading,
-        activeColor: AppColors.purple,
-      );
-
+  // === Interface ===
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -194,7 +135,10 @@ class _HabitosPageState extends State<HabitosPage> {
         title: const Text(
           'Meus Hábitos Diários',
           style: TextStyle(
-              fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -207,116 +151,108 @@ class _HabitosPageState extends State<HabitosPage> {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: ListView(
           children: [
-            _tituloSecao('Últimos Hábitos Registrados'),
-            ..._habitosUsuario.map((habito) {
-              final dados = jsonDecode(habito.descricao);
-              return _card(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Data: ${habito.data.split('T')[0]}',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16)),
-                    const SizedBox(height: 8),
-                    Text('Água: ${dados['aguaLitros'] ?? 0} L'),
-                    Text('Horas de Sono: ${dados['horasSono'] ?? 0} h'),
-                    Text('Estresse: ${dados['nivelEstresse'] ?? 0}'),
-                    Text('Motivação: ${dados['nivelMotivacao'] ?? 0}'),
-                    Text('Tempo de Tela: ${dados['tempoTela'] ?? 0} h'),
-                    Text('Tempo ao Ar Livre: ${dados['tempoAoArLivre'] ?? 0} h'),
-                    Text('Meditou: ${dados['meditou'] == true ? "Sim" : "Não"}'),
-                    Text('Fez Exercício: ${dados['fezExercicio'] == true ? "Sim" : "Não"}'),
-                    Text('Alimentação Saudável: ${dados['alimentacaoSaudavel'] == true ? "Sim" : "Não"}'),
-                    Text('Comeu Frutas: ${dados['comeuFrutas'] == true ? "Sim" : "Não"}'),
-                    Text('Leu Livro: ${dados['leuLivro'] == true ? "Sim" : "Não"}'),
-                    Text('Teve Contato Social: ${dados['teveContatoSocial'] == true ? "Sim" : "Não"}'),
-                    Text('Autoavaliação: ${dados['autoAvaliacao'] ?? 0}'),
-                  ],
-                ),
-              );
-            }).toList(),
+            const TituloSecao('Editar Último Hábito'),
 
-            const SizedBox(height: 24),
-            _tituloSecao('Editar Último Hábito'),
+            // Sliders
+            SliderHabit(
+              title: 'Consumo de Água',
+              value: aguaLitros,
+              min: 0,
+              max: 5,
+              divisions: 15,
+              unidade: 'L',
+              onChanged: (v) => setState(() => aguaLitros = v),
+            ),
+            SliderHabit(
+              title: 'Horas de Sono',
+              value: horasSono,
+              min: 0,
+              max: 15,
+              divisions: 15,
+              unidade: 'h',
+              onChanged: (v) => setState(() => horasSono = v),
+            ),
+            SliderHabit(
+              title: 'Estresse (0 a 10)',
+              value: nivelEstresse,
+              min: 0,
+              max: 10,
+              divisions: 10,
+              unidade: '',
+              onChanged: (v) => setState(() => nivelEstresse = v),
+            ),
+            SliderHabit(
+              title: 'Motivação (0 a 10)',
+              value: nivelMotivacao,
+              min: 0,
+              max: 10,
+              divisions: 10,
+              unidade: '',
+              onChanged: (v) => setState(() => nivelMotivacao = v),
+            ),
+            SliderHabit(
+              title: 'Tempo de Tela',
+              value: tempoTela,
+              min: 0,
+              max: 20,
+              divisions: 20,
+              unidade: 'h',
+              onChanged: (v) => setState(() => tempoTela = v),
+            ),
+            SliderHabit(
+              title: 'Tempo ao Ar Livre',
+              value: tempoAoArLivre,
+              min: 0,
+              max: 20,
+              divisions: 20,
+              unidade: 'h',
+              onChanged: (v) => setState(() => tempoAoArLivre = v),
+            ),
 
-            _sliderHabit(
-                title: 'Consumo de Água',
-                value: aguaLitros,
-                min: 0,
-                max: 5,
-                divisions: 15,
-                unidade: 'L',
-                onChanged: (v) => setState(() => aguaLitros = v)),
-            _sliderHabit(
-                title: 'Horas de Sono',
-                value: horasSono,
-                min: 0,
-                max: 15,
-                divisions: 15,
-                unidade: 'h',
-                onChanged: (v) => setState(() => horasSono = v)),
-            _sliderHabit(
-                title: 'Estresse (0 a 10)',
-                value: nivelEstresse,
-                min: 0,
-                max: 10,
-                divisions: 10,
-                unidade: '',
-                onChanged: (v) => setState(() => nivelEstresse = v)),
-            _sliderHabit(
-                title: 'Motivação (0 a 10)',
-                value: nivelMotivacao,
-                min: 0,
-                max: 10,
-                divisions: 10,
-                unidade: '',
-                onChanged: (v) => setState(() => nivelMotivacao = v)),
-            _sliderHabit(
-                title: 'Tempo de Tela',
-                value: tempoTela,
-                min: 0,
-                max: 20,
-                divisions: 20,
-                unidade: 'h',
-                onChanged: (v) => setState(() => tempoTela = v)),
-            _sliderHabit(
-                title: 'Tempo ao Ar Livre',
-                value: tempoAoArLivre,
-                min: 0,
-                max: 20,
-                divisions: 20,
-                unidade: 'h',
-                onChanged: (v) => setState(() => tempoAoArLivre = v)),
-
-            _tituloSecao('Hábitos Binários'),
-            _card(
+            // Checkboxes
+            const TituloSecao('Hábitos Binários'),
+            CardContainer(
               child: Column(
                 children: [
-                  _checkboxHabit('Meditou hoje?', meditou, (v) => setState(() => meditou = v ?? false)),
-                  _checkboxHabit('Fez exercícios físicos?', fezExercicio, (v) => setState(() => fezExercicio = v ?? false)),
-                  _checkboxHabit('Alimentação saudável?', alimentacaoSaudavel, (v) => setState(() => alimentacaoSaudavel = v ?? false)),
-                  _checkboxHabit('Comeu frutas?', comeuFrutas, (v) => setState(() => comeuFrutas = v ?? false)),
-                  _checkboxHabit('Leu algum livro?', leuLivro, (v) => setState(() => leuLivro = v ?? false)),
-                  _checkboxHabit('Teve contato social?', teveContatoSocial, (v) => setState(() => teveContatoSocial = v ?? false)),
+                  CheckboxHabit(
+                      texto: 'Meditou hoje?',
+                      valor: meditou,
+                      onChanged: (v) => setState(() => meditou = v ?? false)),
+                  CheckboxHabit(
+                      texto: 'Fez exercícios físicos?',
+                      valor: fezExercicio,
+                      onChanged: (v) => setState(() => fezExercicio = v ?? false)),
+                  CheckboxHabit(
+                      texto: 'Alimentação saudável?',
+                      valor: alimentacaoSaudavel,
+                      onChanged: (v) =>
+                          setState(() => alimentacaoSaudavel = v ?? false)),
+                  CheckboxHabit(
+                      texto: 'Comeu frutas?',
+                      valor: comeuFrutas,
+                      onChanged: (v) => setState(() => comeuFrutas = v ?? false)),
+                  CheckboxHabit(
+                      texto: 'Leu algum livro?',
+                      valor: leuLivro,
+                      onChanged: (v) => setState(() => leuLivro = v ?? false)),
+                  CheckboxHabit(
+                      texto: 'Teve contato social?',
+                      valor: teveContatoSocial,
+                      onChanged: (v) =>
+                          setState(() => teveContatoSocial = v ?? false)),
                 ],
               ),
             ),
 
-            _tituloSecao('Autoavaliação do Dia'),
-            _card(
-              child: DropdownButtonFormField<int>(
-                value: autoAvaliacao,
-                decoration: const InputDecoration(border: OutlineInputBorder()),
-                items: List.generate(5, (i) {
-                  final label = ['Péssimo', 'Ruim', 'Regular', 'Bom', 'Excelente'][i];
-                  return DropdownMenuItem(value: i + 1, child: Text('${i + 1} - $label'));
-                }),
-                onChanged: (v) => setState(() => autoAvaliacao = v!),
-              ),
+            const TituloSecao('Autoavaliação do Dia'),
+            DropdownAutoavaliacao(
+              valor: autoAvaliacao,
+              onChanged: (v) => setState(() => autoAvaliacao = v!),
             ),
 
-
             const SizedBox(height: 24),
+
+            // Botão salvar
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
@@ -361,7 +297,38 @@ class _HabitosPageState extends State<HabitosPage> {
                 ),
               ),
             ),
+
             const SizedBox(height: 32),
+
+            // Lista de hábitos salvos
+            const TituloSecao('Hábitos Salvos'),
+            ..._habitosUsuario.map((habito) {
+              final dados = jsonDecode(habito.descricao);
+              return CardContainer(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Data: ${habito.data.split('T')[0]}',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16)),
+                    const SizedBox(height: 8),
+                    Text('Água: ${dados['aguaLitros']} L'),
+                    Text('Sono: ${dados['horasSono']} h'),
+                    Text('Estresse: ${dados['nivelEstresse']}'),
+                    Text('Motivação: ${dados['nivelMotivacao']}'),
+                    Text('Tela: ${dados['tempoTela']} h'),
+                    Text('Ar Livre: ${dados['tempoAoArLivre']} h'),
+                    Text('Meditou: ${dados['meditou'] ? "Sim" : "Não"}'),
+                    Text('Exercício: ${dados['fezExercicio'] ? "Sim" : "Não"}'),
+                    Text('Alimentação: ${dados['alimentacaoSaudavel'] ? "Sim" : "Não"}'),
+                    Text('Frutas: ${dados['comeuFrutas'] ? "Sim" : "Não"}'),
+                    Text('Leu Livro: ${dados['leuLivro'] ? "Sim" : "Não"}'),
+                    Text('Contato Social: ${dados['teveContatoSocial'] ? "Sim" : "Não"}'),
+                    Text('Autoavaliação: ${dados['autoAvaliacao']}'),
+                  ],
+                ),
+              );
+            }).toList(),
           ],
         ),
       ),
