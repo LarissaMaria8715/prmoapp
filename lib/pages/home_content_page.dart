@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../database/user_dao.dart';
 import '../utils/colors.dart';
-import 'corrida_page.dart';
 import 'diario_page.dart';
 import 'motivacao_page.dart';
+import 'livro_page.dart';
 
 class HomeContent extends StatelessWidget {
   final String email;
@@ -24,11 +24,11 @@ class HomeContent extends StatelessWidget {
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Container(
-          constraints: const BoxConstraints(maxWidth: 420),
+          constraints: const BoxConstraints(maxWidth: 450),
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(28),
+            borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.25),
@@ -195,13 +195,13 @@ class HomeContent extends StatelessWidget {
             const SizedBox(width: 30),
             Expanded(
               child: _actionButton(
-                Icons.person_pin_circle_outlined,
-                'Corrida',
+                Icons.backup_table_rounded,
+                'Noticias',
                 AppColors.darkTerracotta3,
                     () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CorridaPage(),
+                    MaterialPageRoute(builder: (context) => LivrosPage(),
                   )
                   );
                 },
@@ -209,6 +209,7 @@ class HomeContent extends StatelessWidget {
             ),
           ],
         ),
+
       ],
     );
   }
