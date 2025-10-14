@@ -46,15 +46,15 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-      CREATE TABLE habitos (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        usuario_id INTEGER NOT NULL,
-        nome TEXT,
-        descricao TEXT,
-        data TEXT,
-        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
-      );
-    ''');
+  CREATE TABLE habitos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id INTEGER NOT NULL,
+    nome TEXT NOT NULL,
+    descricao TEXT NOT NULL,
+    data TEXT NOT NULL
+  )
+''');
+
 
     await db.execute('''
       CREATE TABLE humor (

@@ -1,9 +1,9 @@
 class Habito {
-  late int? id;
-  late int usuarioId;
-  late String nome;
-  late String descricao;
-  late String data;
+  int? id;
+  int usuarioId;
+  String nome;
+  String descricao;
+  String data;
 
   Habito({
     this.id,
@@ -14,21 +14,22 @@ class Habito {
   });
 
   Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{
+    return {
+      if (id != null) 'id': id,
       'usuario_id': usuarioId,
       'nome': nome,
       'descricao': descricao,
       'data': data,
     };
-    if (id != null) map['id'] = id;
-    return map;
   }
 
-   Habito.fromJson(Map<String, dynamic> json) {
-      id =  json['id'];
-      usuarioId = json['usuario_id'];
-      nome = json['nome'];
-      descricao = json['descricao'];
-      data = json['data'];
+  factory Habito.fromJson(Map<String, dynamic> json) {
+    return Habito(
+      id: json['id'],
+      usuarioId: json['usuario_id'],
+      nome: json['nome'],
+      descricao: json['descricao'],
+      data: json['data'],
+    );
   }
 }
