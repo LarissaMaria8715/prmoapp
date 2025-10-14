@@ -22,7 +22,7 @@ class DiarioApi {
             listaDiario.add(Diario.fromJson(json));
           }
         }
-        // Se já for lista diretamente
+        // Se já for lista diretamente.
         else if (body is List) {
           for (var json in body) {
             listaDiario.add(Diario.fromJson(json));

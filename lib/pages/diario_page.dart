@@ -5,6 +5,7 @@ import '../model/diario_model.dart';
 import '../database/diario_dao.dart';
 import '../utils/colors.dart';
 
+
 class DiarioPage extends StatefulWidget {
   const DiarioPage({super.key});
 

@@ -15,4 +15,5 @@ class calmApi {
       throw Exception('Falha ao carregar imagens');
     }
   }
+
 }
