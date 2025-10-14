@@ -59,7 +59,7 @@ class _CalmaPageState extends State<CalmaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkWine2,
+      backgroundColor: AppColors.lightWine1,
       appBar: AppBar(
         title: const Text(
           "Momento de Calma",
@@ -99,7 +99,7 @@ class _CalmaPageState extends State<CalmaPage> {
               child: Text(
                 fraseAtual,
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: AppColors.wine,
                   fontSize: 20,
                   fontStyle: FontStyle.italic,
                 ),
