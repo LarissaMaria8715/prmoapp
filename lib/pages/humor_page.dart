@@ -1,8 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../utils/colors.dart';
-import '../database/humor_dao.dart';
 import '../model/humor_model.dart';
 import '../api/humor_api.dart';
 
@@ -16,20 +16,10 @@ class HumorPage extends StatefulWidget {
 class _HumorPageState extends State<HumorPage> {
   String? _selectedHumorEmoji;
   String? _selectedHumorLabel;
-  final HumorDAO _dao = HumorDAO();
   final int usuarioId = 1;
   List<Humor> _humores = [];
   final HumorApi _api = HumorApi();
-
-
-  Future<void> _loadHumoresFromApi() async {
-    try {
-      final list = await _api.findAll();
-      setState(() => _humores = list);
-    } catch (e) {
-      _showSnack("Erro ao carregar humores da API: $e");
-    }
-  }
+  bool _loading = true;
 
   final List<Map<String, String>> _opcoesHumor = [
     {"emoji": "😄", "label": "Muito feliz"},
@@ -50,9 +40,20 @@ class _HumorPageState extends State<HumorPage> {
     _loadHumoresFromApi();
   }
 
-  Future<void> _loadHumores() async {
-    final list = await _dao.listarPorUsuario(usuarioId);
-    setState(() => _humores = list);
+  Future<void> _loadHumoresFromApi() async {
+    setState(() => _loading = true);
+    try {
+      final list = await _api.findAll();
+      // Simula atraso de 4 segundos
+      await Future.delayed(const Duration(seconds: 4));
+      setState(() {
+        _humores = list;
+        _loading = false;
+      });
+    } catch (e) {
+      setState(() => _loading = false);
+      _showSnack("Erro ao carregar humores da API: $e");
+    }
   }
 
   void _onSelectHumor(String emoji, String label) {
@@ -62,60 +63,10 @@ class _HumorPageState extends State<HumorPage> {
     });
   }
 
-  Future<void> _onConfirm() async {
-    if (_selectedHumorLabel == null) {
-      _showSnack("Por favor, selecione seu humor antes de confirmar!");
-      return;
-    }
-
-    final data = DateTime.now();
-    final String DataFormat = DateFormat('dd/MM/yyyy – HH:mm').format(data);
-
-    Humor novoHumor = Humor(
-      usuarioId: usuarioId,
-      humorLabel: _selectedHumorLabel!,
-      humorEmoji: _selectedHumorEmoji!,
-      data: DataFormat,
-    );
-
-    await _dao.salvar(novoHumor);
-
-    _showSnack("Humor salvo! ${novoHumor.humorLabel} ${novoHumor.humorEmoji} - ${novoHumor.data}");
-
-    setState(() {
-      _selectedHumorEmoji = null;
-      _selectedHumorLabel = null;
-    });
-
-    _loadHumores();
-  }
-
   void _showSnack(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message, style: const TextStyle(fontSize: 16))),
     );
-  }
-
-  Future<void> _confirmDelete(int id) async {
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Confirmar exclusão"),
-        content: const Text("Deseja realmente excluir este registro de humor?"),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text("Cancelar")),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text("Excluir", style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
-    );
-    if (confirm == true) {
-      await _dao.deletar(id);
-      _loadHumores();
-      _showSnack("Humor excluído com sucesso");
-    }
   }
 
   @override
@@ -125,7 +76,9 @@ class _HumorPageState extends State<HumorPage> {
       appBar: _buildAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
+        child: _loading
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _buildTitle("Como você está se sentindo hoje?"),
@@ -192,7 +145,11 @@ class _HumorPageState extends State<HumorPage> {
             leading: Text(humor.humorEmoji, style: const TextStyle(fontSize: 34)),
             title: Text(
               humor.humorLabel,
-              style: GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.lightBlueDark4,),
+              style: GoogleFonts.lato(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppColors.lightBlueDark4,
+              ),
             ),
             subtitle: Row(
               children: [
@@ -201,16 +158,11 @@ class _HumorPageState extends State<HumorPage> {
                 Text(humor.data, style: GoogleFonts.lato(fontSize: 14, color: Colors.grey[700])),
               ],
             ),
-            trailing: IconButton(
-              icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed: () => _confirmDelete(humor.id!),
-            ),
           ),
         );
       },
     );
   }
-
 
   Widget _buildHumorOption(String emoji, String label) {
     final isSelected = _selectedHumorLabel == label;
@@ -248,7 +200,9 @@ class _HumorPageState extends State<HumorPage> {
 
   Widget _buildConfirmButton() {
     return ElevatedButton.icon(
-      onPressed: _onConfirm,
+      onPressed: () {
+        _showSnack("Função de salvar humor ainda não implementada com a API.");
+      },
       icon: const Icon(Icons.check_circle, size: 28, color: AppColors.white),
       label: Text(
         "Confirmar Humor",
