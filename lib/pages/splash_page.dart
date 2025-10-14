@@ -45,7 +45,9 @@ class _SplashPageState extends State<SplashPage> {
           Spacer(),
           Image.asset('assets/images/equilibre.jpg'),
           Spacer(),
-          CircularProgressIndicator(backgroundColor: Colors.white),
+          CircularProgressIndicator(
+            backgroundColor: Color(0xFF183D31)
+          ),
           SizedBox(height: 64),
         ],
       ),

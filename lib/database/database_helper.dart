@@ -76,7 +76,6 @@ class DatabaseHelper {
         data TEXT NOT NULL,
         FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
       );
-  
       ''');
   }
 }
