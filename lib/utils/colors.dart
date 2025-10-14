@@ -17,18 +17,6 @@ class AppColors {
   static const darkBlue4 = Color(0xFF01579B);
   static const darkBlue5 = Color(0xFF003157);
 
-  // AZUL ESCURO (HUMOR-PAGE)
-  static const lightBlueDark1 = Color(0xFFBBDEFB);
-  static const lightBlueDark2 = Color(0xFF90CAF9);
-  static const lightBlueDark3 = Color(0xFF64B5F6);
-  static const lightBlueDark4 = Color(0xFF42A5F5);
-  static const blueDark = Color(0xFF2196F3);
-  static const darkBlueDark1 = Color(0xFF1E88E5);
-  static const darkBlueDark2 = Color(0xFF1976D2);
-  static const darkBlueDark3 = Color(0xFF1565C0);
-  static const darkBlueDark4 = Color(0xFF0D47A1);
-  static const darkBlueDark5 = Color(0xFF002E74);
-
   // ROSA
   static const lightPink1 = Color(0xFFF8BBD0);
   static const lightPink2 = Color(0xFFF48FB1);
@@ -40,6 +28,31 @@ class AppColors {
   static const darkPink3 = Color(0xFFAD1457);
   static const darkPink4 = Color(0xFF880E4F);
   static const darkPink5 = Color(0xFF54002D);
+
+  // VINHO -
+  static const lightWine0 = Color(0xFFFCF7F8);
+  static const lightWine1 = Color(0xFFF8E6E8);
+  static const lightWine2 = Color(0xFFE9BFC4);
+  static const lightWine3 = Color(0xFFD9949C);
+  static const lightWine4 = Color(0xFFC86A74);
+  static const wine       = Color(0xFF8B1430); // tom principal vinho
+  static const darkWine1  = Color(0xFF7A122B);
+  static const darkWine2  = Color(0xFF661026);
+
+
+
+
+  // AZUL ESCURO (HUMOR-PAGE)
+  static const lightBlueDark1 = Color(0xFFBBDEFB);
+  static const lightBlueDark2 = Color(0xFF90CAF9);
+  static const lightBlueDark3 = Color(0xFF64B5F6);
+  static const lightBlueDark4 = Color(0xFF42A5F5);
+  static const blueDark = Color(0xFF2196F3);
+  static const darkBlueDark1 = Color(0xFF1E88E5);
+  static const darkBlueDark2 = Color(0xFF1976D2);
+  static const darkBlueDark3 = Color(0xFF1565C0);
+  static const darkBlueDark4 = Color(0xFF0D47A1);
+  static const darkBlueDark5 = Color(0xFF002E74);
 
   // VERMELHO (DIÁRIO-PAGE)
   static const lightRed1 = Color(0xFFFAEEEF);
@@ -102,7 +115,7 @@ class AppColors {
   static const darkYellow3 = Color(0xFFF9A825);
   static const darkYellow4 = Color(0xFFF57F17);
 
-  // CINZA (LOGIN/REGISTER-PAGE)
+  // CINZA (MUSICA-PAGE)
   static const lightGray1 = Color(0xFFF5F5F5);
   static const lightGray2 = Color(0xFFEEEEEE);
   static const lightGray3 = Color(0xFFE0E0E0);
@@ -113,7 +126,7 @@ class AppColors {
   static const darkGray3 = Color(0xFF424242);
   static const darkGray4 = Color(0xFF353131);
 
-  // MARROM
+  // MARROM (LIVROS-PAGE)
   static const lightBrown1 = Color(0xFFD7CCC8);
   static const lightBrown2 = Color(0xFFBCAAA4);
   static const lightBrown3 = Color(0xFFA1887F);
@@ -123,19 +136,6 @@ class AppColors {
   static const darkBrown2 = Color(0xFF5D4037);
   static const darkBrown3 = Color(0xFF4E342E);
   static const darkBrown4 = Color(0xFF3E2723);
-
-  // VINHO (PERFIL-PAGE)
-  static const lightWine0 = Color(0xFFFCF7FD);
-  static const lightWine1 = Color(0xFFF3E5F5);
-  static const lightWine2 = Color(0xFFE1BEE7);
-  static const lightWine3 = Color(0xFFCE93D8);
-  static const lightWine4 = Color(0xFFBA68C8);
-  static const wine = Color(0xFF9C27B0);
-  static const darkWine1 = Color(0xFF8E24AA);
-  static const darkWine2 = Color(0xFF7B1FA2);
-  static const darkWine3 = Color(0xFF6A1B9A);
-  static const darkWine4 = Color(0xFF4A148C);
-  static const darkWine5 = Color(0xFF280656);
 
   // BORDÔ (AGENDA-PAGE)
   static const lightBordeaux0 = Color(0xFFFBF1F4);
@@ -148,7 +148,6 @@ class AppColors {
   static const darkBordeaux2 = Color(0xFFC2185B);
   static const darkBordeaux3 = Color(0xFFAD1457);
   static const darkBordeaux4 = Color(0xFF880E4F);
-
 
   // TERRACOTA (PERFIL-PAGE)
   static const lightTerracotta1 = Color(0xFFFBE9E7);   // Fundo pêssego
