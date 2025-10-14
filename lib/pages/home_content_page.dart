@@ -69,187 +69,70 @@ class HomeContent extends StatelessWidget {
   }
 
   Widget _actionButtonsGrid(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: _actionButton(
-                Icons.sentiment_satisfied_alt,
-                'Humor',
-                AppColors.lightBlueDark4,
-                    () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HumorPage()),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(width: 30),
-            Expanded(
-              child: _actionButton(
-                Icons.water_drop,
-                'Hábitos',
-                AppColors.purple,
-                    () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HabitosPage()),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 30),
-        Row(
-          children: [
-            Expanded(
-              child: _actionButton(
-                Icons.self_improvement,
-                'Respiração',
-                AppColors.darkGreen3,
-                    () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RespiracaoPage()),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(width: 30),
-            Expanded(
-              child: _actionButton(
-                Icons.track_changes,
-                'Metas',
-                AppColors.darkYellow3,
-                    () async {
-                  UsuarioDAO userDAO = UsuarioDAO();
-                  final usuario = await userDAO.buscarPorEmail(email);
+    final buttons = [
+      _actionButton(Icons.sentiment_satisfied_alt, 'Humor', AppColors.lightBlueDark4, () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => HumorPage()));
+      }),
+      _actionButton(Icons.water_drop, 'Hábitos', AppColors.purple, () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => HabitosPage()));
+      }),
+      _actionButton(Icons.self_improvement, 'Respiração', AppColors.darkGreen3, () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => RespiracaoPage()));
+      }),
+      _actionButton(Icons.track_changes, 'Metas', AppColors.darkYellow3, () async {
+        UsuarioDAO userDAO = UsuarioDAO();
+        final usuario = await userDAO.buscarPorEmail(email);
+        if (usuario != null) {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => MetasPage()));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Erro: usuário não encontrado.')),
+          );
+        }
+      }),
+      _actionButton(Icons.menu_book, 'Diário', AppColors.darkRed3, () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => DiarioPage()));
+      }),
+      _actionButton(Icons.rocket_launch, 'Motivação', AppColors.darkOrange2, () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => MotivacaoPage()));
+      }),
+      _actionButton(Icons.calendar_month_outlined, 'Agenda', AppColors.darkBordeaux3, () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => AgendaPage()));
+      }),
+      _actionButton(Icons.book_outlined, 'Livros', AppColors.darkTerracotta3, () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => LivrosPage()));
+      }),
+      _actionButton(Icons.music_note_outlined, 'Música', AppColors.darkGray3, () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => MusicPage()));
+      }),
+      _actionButton(Icons.image_outlined, 'Imagens', AppColors.darkWine1, () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => CalmaPage()));
+      }),
+    ];
 
-                  if (usuario != null) {
-                    final usuarioId = usuario['id'] as int;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MetasPage(),
-                      ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Erro: usuário não encontrado.')),
-                    );
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 30),
-        Row(
-          children: [
-            Expanded(
-              child: _actionButton(
-                Icons.menu_book,
-                'Diário',
-                AppColors.darkRed3,
-                    () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => DiarioPage()),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(width: 30),
-            Expanded(
-              child: _actionButton(
-                Icons.rocket_launch,
-                'Motivação',
-                AppColors.darkOrange2,
-                    () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MotivacaoPage()),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 30),
-        Row(
-          children: [
-            Expanded(
-              child: _actionButton(
-                Icons.calendar_month_outlined,
-                'Agenda',
-                AppColors.darkBordeaux3,
-                    () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AgendaPage()),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(width: 30),
-            Expanded(
-              child: _actionButton(
-                Icons.book_outlined,
-                'Livros',
-                AppColors.darkTerracotta3,
-                    () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LivrosPage(),
-                  )
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 30),
-        Row(
-          children: [
-            Expanded(
-              child: _actionButton(
-                Icons.music_note_outlined,
-                'Música',
-                AppColors.darkGray3,
-                    () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MusicPage()),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(width: 30),
-            Expanded(
-              child: _actionButton(
-                Icons.image_outlined,
-                'Imagens',
-                AppColors.darkWine1,
-                    () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => CalmaPage(),
-                      )
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double spacing = 20;
+        int itemsPerRow = 3;
+        double totalSpacing = spacing * (itemsPerRow - 1);
+        double itemWidth = (constraints.maxWidth - totalSpacing) / itemsPerRow;
+
+        return Wrap(
+          spacing: spacing,
+          runSpacing: 30,
+          alignment: WrapAlignment.center,
+          children: buttons
+              .map((button) => SizedBox(
+            width: itemWidth,
+            child: button,
+          ))
+              .toList(),
+        );
+      },
     );
   }
 
-  Widget _actionButton(
-      IconData icon, String label, Color backgroundColor, VoidCallback onPressed) {
+  Widget _actionButton(IconData icon, String label, Color backgroundColor, VoidCallback onPressed) {
     return StyleButton(
       icon: icon,
       label: label,

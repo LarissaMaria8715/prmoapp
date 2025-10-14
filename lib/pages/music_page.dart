@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../database/music_dao.dart';
 import '../model/music_model.dart';
+import '../utils/colors.dart';
 import '../wigets/music_card.dart';
 
 class MusicPage extends StatefulWidget {
@@ -36,7 +37,7 @@ class _MusicPageState extends State<MusicPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Todas as Músicas '),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: AppColors.darkGray2,
       ),
       body: loading
           ? const Center(child: CircularProgressIndicator())
