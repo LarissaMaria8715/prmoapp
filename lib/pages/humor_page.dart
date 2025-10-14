@@ -6,7 +6,6 @@ import '../database/humor_dao.dart';
 import '../model/humor_model.dart';
 import '../api/humor_api.dart';
 
-
 class HumorPage extends StatefulWidget {
   const HumorPage({super.key});
 
