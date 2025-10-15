@@ -5,7 +5,6 @@ import '../model/diario_model.dart';
 import '../database/diario_dao.dart';
 import '../utils/colors.dart';
 
-
 class DiarioPage extends StatefulWidget {
   const DiarioPage({super.key});
 
@@ -19,7 +18,7 @@ class _DiarioPageState extends State<DiarioPage> {
   final DiarioApi _api = DiarioApi();
 
   List<Diario> entradasDiario = [];
-  bool _isLoading = false; //  indicador de carregamento
+  bool _isLoading = false;
   final int usuarioId = 1;
 
   @override
@@ -29,22 +28,25 @@ class _DiarioPageState extends State<DiarioPage> {
   }
 
   Future<void> _carregarEntradas() async {
-    setState(() => _isLoading = true); // inicia o loading
+    setState(() => _isLoading = true);
     try {
       final dadosLocais = await diarioDAO.listarPorUsuario(usuarioId);
       final dadosApi = await _api.findAll();
 
+      print('📦 Dados da API: $dadosApi');
+      print('💾 Dados locais: $dadosLocais');
+
+      // Junta os dados da API e do banco local.
       setState(() {
-        print('Dados liquidos da API: ${dadosApi}');
-        entradasDiario = [...dadosApi, ...dadosLocais, ...dadosLocais];
+        entradasDiario = [...dadosApi, ...dadosLocais];
       });
     } catch (e) {
-      print('Erro ao carregar entradas: $e');
+      print('❌ Erro ao carregar entradas: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erro ao carregar entradas.')),
       );
     } finally {
-      setState(() => _isLoading = false); // encerra o loading
+      setState(() => _isLoading = false);
     }
   }
 
@@ -54,7 +56,7 @@ class _DiarioPageState extends State<DiarioPage> {
 
     final novaEntrada = Diario(
       usuarioId: usuarioId,
-      titulo: '',
+      titulo: 'Reflexão do Dia',
       conteudo: texto,
       data: DateTime.now().toIso8601String(),
     );
@@ -68,7 +70,7 @@ class _DiarioPageState extends State<DiarioPage> {
         const SnackBar(content: Text('Entrada salva no diário!')),
       );
     } catch (e) {
-      print('Erro ao salvar entrada: $e');
+      print('❌ Erro ao salvar entrada: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erro ao salvar entrada.')),
       );
@@ -106,7 +108,6 @@ class _DiarioPageState extends State<DiarioPage> {
         ),
         body: _isLoading
             ? const Center(
-          // ✅ símbolo de carregando
           child: CircularProgressIndicator(
             color: AppColors.darkRed5,
             strokeWidth: 4,
@@ -132,7 +133,8 @@ class _DiarioPageState extends State<DiarioPage> {
                 style: const TextStyle(color: AppColors.darkRed5),
                 decoration: InputDecoration(
                   hintText: 'Escreva aqui...',
-                  hintStyle: const TextStyle(color: AppColors.darkRed5),
+                  hintStyle:
+                  const TextStyle(color: AppColors.darkRed5),
                   filled: true,
                   fillColor: AppColors.lightRed4.withOpacity(0.2),
                   border: OutlineInputBorder(
@@ -179,17 +181,25 @@ class _DiarioPageState extends State<DiarioPage> {
                     ? const Center(
                   child: Text(
                     'Nenhuma entrada ainda.',
-                    style: TextStyle(color: AppColors.darkRed5),
+                    style: TextStyle(
+                      color: AppColors.darkRed5,
+                    ),
                   ),
                 )
                     : ListView.builder(
                   itemCount: entradasDiario.length,
                   itemBuilder: (context, index) {
                     final entrada = entradasDiario[index];
+                    final data = entrada.data.length >= 10
+                        ? entrada.data.substring(0, 10)
+                        : 'Data indisponível';
+
                     return Card(
-                      color: AppColors.lightRed2.withOpacity(0.3),
+                      color:
+                      AppColors.lightRed2.withOpacity(0.3),
                       elevation: 2,
-                      margin: const EdgeInsets.only(bottom: 10),
+                      margin:
+                      const EdgeInsets.only(bottom: 10),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -200,7 +210,7 @@ class _DiarioPageState extends State<DiarioPage> {
                           CrossAxisAlignment.start,
                           children: [
                             Text(
-                              entrada.data.substring(0, 10),
+                              data,
                               style: const TextStyle(
                                 color: AppColors.darkRed5,
                                 fontSize: 14,
@@ -208,10 +218,21 @@ class _DiarioPageState extends State<DiarioPage> {
                               ),
                             ),
                             const SizedBox(height: 8),
+                            if (entrada.titulo.isNotEmpty)
+                              Text(
+                                entrada.titulo,
+                                style: const TextStyle(
+                                  color: AppColors.darkRed5,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            const SizedBox(height: 6),
                             Text(
                               entrada.conteudo,
                               style: const TextStyle(
-                                color: Colors.black54,
+                                color: Colors.black87,
+                                fontSize: 15,
                               ),
                             ),
                           ],
