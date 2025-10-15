@@ -9,7 +9,7 @@ class DiarioDAO {
     return await _dbHelper.initDB();
   }
 
-  // Salvar nova entrada
+  // Salvar nova entrada.
   Future<int> salvar(Diario diario) async {
     final db = await _getDatabase();
     return await db.insert(

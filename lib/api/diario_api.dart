@@ -17,7 +17,7 @@ class DiarioApi {
       if (response.statusCode == 200) {
         var listResult = response.data;
 
-        // Se a resposta for uma lista (como o esperado)
+        // Se a resposta for uma lista (como o esperado).
         if (listResult is List) {
           for (var json in listResult) {
             Diario diario = Diario.fromJson(json);

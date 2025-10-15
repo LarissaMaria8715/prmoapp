@@ -34,7 +34,7 @@ class Diario {
   }
 
   Map<String, dynamic> toJsonForApi() {
-    // usado caso queira enviar para API
+    // usado caso queira enviar para API.
     return {
       'usuarioId': usuarioId,
       'titulo': titulo,

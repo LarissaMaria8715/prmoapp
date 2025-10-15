@@ -36,7 +36,7 @@ class _DiarioPageState extends State<DiarioPage> {
       print('📦 Dados da API: $dadosApi');
       print('💾 Dados locais: $dadosLocais');
 
-      // Junta os dados da API e do banco local
+      // Junta os dados da API e do banco local.
       setState(() {
         entradasDiario = [...dadosApi, ...dadosLocais];
       });
