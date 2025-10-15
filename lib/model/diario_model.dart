@@ -1,9 +1,9 @@
 class Diario {
-  late int? id;
-  late int usuarioId;
-  late String titulo;
-  late String conteudo;
-  late String data;
+  final int? id;
+  final int usuarioId;
+  final String titulo;
+  final String conteudo;
+  final String data;
 
   Diario({
     this.id,
@@ -13,24 +13,33 @@ class Diario {
     required this.data,
   });
 
+  factory Diario.fromJson(Map<String, dynamic> json) {
+    return Diario(
+      id: json['id'],
+      usuarioId: json['usuarioId'] ?? json['usuario_id'] ?? 1, // compatível com API e DB
+      titulo: json['titulo'] ?? '',
+      conteudo: json['conteudo'] ?? json['texto'] ?? '', // API = texto, DB = conteudo
+      data: json['data'] ?? DateTime.now().toIso8601String(),
+    );
+  }
+
   Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{
-      'usuario_id': usuarioId,
+    // usado para salvar no banco local (SQLite)
+    return {
+      'usuario_id': usuarioId, // agora corresponde ao banco
       'titulo': titulo,
       'conteudo': conteudo,
       'data': data,
     };
-    if (id != null) {
-      map['id'] = id;
-    }
-    return map;
   }
 
-   Diario.fromJson(Map<String, dynamic> json) {
-      id = json['id'];
-      usuarioId = json['usuario_id'];
-      titulo = json['titulo'];
-      conteudo = json['conteudo'];
-      data = json['data'];
+  Map<String, dynamic> toJsonForApi() {
+    // usado caso queira enviar para API
+    return {
+      'usuarioId': usuarioId,
+      'titulo': titulo,
+      'texto': conteudo,
+      'data': data,
+    };
   }
 }
