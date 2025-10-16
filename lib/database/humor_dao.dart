@@ -6,12 +6,10 @@ class HumorDAO {
   Future<Database> _getDatabase() async {
     return await DatabaseHelper().initDB();
   }
-
   Future<int> salvar(Humor humor) async {
     final db = await _getDatabase();
     return await db.insert('humor', humor.toJson());
   }
-
   Future<List<Humor>> listarPorUsuario(int usuarioId) async {
     final db = await _getDatabase();
     final result = await db.query(
@@ -22,7 +20,6 @@ class HumorDAO {
     );
     return result.map((json) => Humor.fromJson(json)).toList();
   }
-
   Future<int> deletar(int id) async {
     final db = await _getDatabase();
     return await db.delete(
@@ -32,3 +29,6 @@ class HumorDAO {
     );
   }
 }
+
+
+

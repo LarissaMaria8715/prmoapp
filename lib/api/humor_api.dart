@@ -17,7 +17,6 @@ class HumorApi {
         listaHumor.add(humor);
       }
     }
-
     return listaHumor;
   }
 }
