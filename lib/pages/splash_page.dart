@@ -18,13 +18,10 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   checkUserLogin() async {
-    // Usa apenas o método já existente em SharedPrefs
     bool status = await SharedPrefs().getUserStatus();
 
-    // Espera 3 segundos para exibir a splash
     await Future.delayed(const Duration(seconds: 3));
 
-    // Redireciona conforme o status salvo
     if (status) {
       Navigator.pushReplacement(
         context,
@@ -48,7 +45,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: Color(0xFF183D31),
+      backgroundColor: Color(0xFF153E2E),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -58,7 +55,8 @@ class _SplashPageState extends State<SplashPage> {
           ),
           Spacer(),
           CircularProgressIndicator(
-            backgroundColor: Color(0xFF183D31),
+            backgroundColor: Color(0xFF153E2E),
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
           ),
           SizedBox(height: 64),
         ],
