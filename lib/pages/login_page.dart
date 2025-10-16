@@ -19,12 +19,47 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final UsuarioDAO userDAO = UsuarioDAO();
-  bool _passwordVisible = false;
   final SharedPrefs _prefs = SharedPrefs();
+  bool _passwordVisible = false;
+  bool _isLoading = true;
 
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  // 🔹 Verifica se o usuário já está logado (apenas com getUserStatus)
+  Future<void> _checkLoginStatus() async {
+    final isLoggedIn = await _prefs.getUserStatus();
+
+    if (isLoggedIn) {
+      // Se já estiver logado, vai direto pra HomePage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const HomePage(
+            email: '',
+            senha: '',
+          ),
+        ),
+      );
+    } else {
+      setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        backgroundColor: AppColors.darkGreen5,
+        body: Center(
+          child: CircularProgressIndicator(color: Colors.white),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.lightGreen1,
       body: Center(
@@ -191,15 +226,16 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // 🔹 Validação e salvamento do login (usando apenas setUserStatus)
   void _handleLogin() async {
     String email = emailController.text.trim();
     String senha = passwordController.text;
 
-    UsuarioDAO userDAO = UsuarioDAO();
     final usuario = await userDAO.validar(email, senha);
 
     if (usuario != null) {
-     // await _prefs.setUserStatus(true);
+       _prefs.setUserStatus(true);
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -212,11 +248,9 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
   }
-
 }
 
-// Botão glassmorphism customizado
-
+// 🔸 Botão Glassmorphism (sem alterações)
 class _GlassButton extends StatefulWidget {
   final String label;
   final IconData? icon;
@@ -261,7 +295,9 @@ class _GlassButtonState extends State<_GlassButton> {
         decoration: BoxDecoration(
           color: _isPressed ? bgColor.withOpacity(0.8) : bgColor,
           borderRadius: BorderRadius.circular(18),
-          border: widget.outlined ? Border.all(color: borderColor, width: 1.5) : null,
+          border: widget.outlined
+              ? Border.all(color: borderColor, width: 1.5)
+              : null,
           boxShadow: _isPressed
               ? [
             BoxShadow(

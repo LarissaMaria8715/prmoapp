@@ -42,22 +42,23 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       backgroundColor: AppColors.lightGreen1,
       appBar: AppBar(
-        toolbarHeight: 80,
+        toolbarHeight: 70,
         backgroundColor: AppColors.darkBlueDark4,
         foregroundColor: AppColors.white,
         title: const Text('Criar Conta'),
+        elevation: 0,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               const Text(
-                'Preencha seu perfil completo para personalizar sua experiência',
+                'Complete seu perfil para uma experiência personalizada',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: AppColors.darkBlueDark5,
                 ),
@@ -65,6 +66,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(height: 24),
 
+              // Campos de texto
               _buildTextField(nameController, 'Nome', Icons.person),
               _buildTextField(emailController, 'E-mail', Icons.email, keyboardType: TextInputType.emailAddress),
               _buildTextField(passwordController, 'Senha', Icons.lock, obscureText: !_showPassword, suffixIcon: _passwordToggle(true)),
@@ -80,21 +82,30 @@ class _RegisterPageState extends State<RegisterPage> {
               _buildTextField(cityController, 'Cidade (opcional)', Icons.location_city),
               _buildTextField(stateController, 'Estado (opcional)', Icons.map),
 
+              const SizedBox(height: 12),
+
+              // Switches
               SwitchListTile(
                 value: meditate,
                 onChanged: (v) => setState(() => meditate = v),
                 title: const Text('Você pratica meditação?'),
+                activeColor: AppColors.darkBlueDark5,
+                contentPadding: EdgeInsets.zero,
               ),
               SwitchListTile(
                 value: receiveNotifications,
                 onChanged: (v) => setState(() => receiveNotifications = v),
-                title: const Text('Deseja receber notificações diárias?'),
+                title: const Text('Receber notificações diárias?'),
+                activeColor: AppColors.darkBlueDark5,
+                contentPadding: EdgeInsets.zero,
               ),
+
               Row(
                 children: [
                   Checkbox(
                     value: _acceptedTerms,
                     onChanged: (value) => setState(() => _acceptedTerms = value ?? false),
+                    activeColor: AppColors.darkBlueDark5,
                   ),
                   const Expanded(
                     child: Text('Li e aceito os termos de uso e política de privacidade'),
@@ -102,15 +113,24 @@ class _RegisterPageState extends State<RegisterPage> {
                 ],
               ),
               const SizedBox(height: 20),
-              ElevatedButton.icon(
+
+              // Botão principal
+              ElevatedButton(
                 onPressed: _handleRegister,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.darkBlueDark5,
-                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  elevation: 4,
                 ),
-                icon: const Icon(Icons.check, color: AppColors.white),
-                label: const Text('Cadastrar', style: TextStyle(color: AppColors.white)),
-              )
+                child: const Center(
+                  child: Text(
+                    'Cadastrar',
+                    style: TextStyle(color: AppColors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
             ],
           ),
         ),
@@ -124,18 +144,19 @@ class _RegisterPageState extends State<RegisterPage> {
     TextInputType keyboardType = TextInputType.text,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,
         keyboardType: keyboardType,
         decoration: InputDecoration(
           labelText: label,
-          prefixIcon: Icon(icon),
+          prefixIcon: Icon(icon, color: AppColors.darkBlueDark5),
           suffixIcon: suffixIcon,
           filled: true,
-          fillColor: AppColors.white,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          fillColor: Colors.white.withOpacity(0.95),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: AppColors.darkBlueDark5, width: 2)),
         ),
         validator: (value) => (label.contains('Senha') && value != null && value.length < 6)
             ? 'Mínimo 6 caracteres'
@@ -150,14 +171,15 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _buildDropdownField(String label, List<String> options, Function(String?) onChanged, String? selectedValue) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: DropdownButtonFormField<String>(
         value: selectedValue,
         decoration: InputDecoration(
           labelText: label,
           filled: true,
-          fillColor: AppColors.white,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          fillColor: Colors.white.withOpacity(0.95),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: AppColors.darkBlueDark5, width: 2)),
         ),
         onChanged: (value) => setState(() => onChanged(value)),
         items: options
@@ -189,7 +211,6 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    // Criando o objeto Usuario
     Usuario usuario = Usuario(
       nome: nameController.text.trim(),
       email: emailController.text.trim(),

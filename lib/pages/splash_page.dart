@@ -18,35 +18,47 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   checkUserLogin() async {
+    // Usa apenas o método já existente em SharedPrefs
     bool status = await SharedPrefs().getUserStatus();
-    await Future.delayed(Duration(seconds: 3));
+
+    // Espera 3 segundos para exibir a splash
+    await Future.delayed(const Duration(seconds: 3));
+
+    // Redireciona conforme o status salvo
     if (status) {
-      Navigator.pushReplacement(context, MaterialPageRoute(
-        builder: (context) {
-          return HomePage(email: '', senha: '',);
-        },
-      ));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomePage(
+            email: '',
+            senha: '',
+          ),
+        ),
+      );
     } else {
-      Navigator.pushReplacement(context, MaterialPageRoute(
-        builder: (context) {
-          return LoginPage();
-        },
-      ));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const LoginPage(),
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Color(0xFF183D31),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Spacer(),
-          Image.asset('assets/images/equilibre.jpg'),
+          Image(
+            image: AssetImage('assets/images/equilibre.jpg'),
+          ),
           Spacer(),
           CircularProgressIndicator(
-            backgroundColor: Color(0xFF183D31)
+            backgroundColor: Color(0xFF183D31),
           ),
           SizedBox(height: 64),
         ],
