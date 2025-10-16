@@ -35,7 +35,7 @@ class StyleButton extends StatelessWidget {
             label,
             style: GoogleFonts.poppins(
               color: Colors.white,
-              fontSize: 13,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
           ),

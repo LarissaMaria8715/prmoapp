@@ -79,17 +79,6 @@ class HomeContent extends StatelessWidget {
       _actionButton(Icons.self_improvement, 'Respiração', AppColors.darkGreen3, () {
         Navigator.push(context, MaterialPageRoute(builder: (_) => RespiracaoPage()));
       }),
-      _actionButton(Icons.track_changes, 'Metas', AppColors.darkYellow3, () async {
-        UsuarioDAO userDAO = UsuarioDAO();
-        final usuario = await userDAO.buscarPorEmail(email);
-        if (usuario != null) {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => MetasPage()));
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Erro: usuário não encontrado.')),
-          );
-        }
-      }),
       _actionButton(Icons.menu_book, 'Diário', AppColors.darkRed3, () {
         Navigator.push(context, MaterialPageRoute(builder: (_) => DiarioPage()));
       }),
@@ -112,7 +101,7 @@ class HomeContent extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        double spacing = 20;
+        double spacing = 30;
         int itemsPerRow = 3;
         double totalSpacing = spacing * (itemsPerRow - 1);
         double itemWidth = (constraints.maxWidth - totalSpacing) / itemsPerRow;

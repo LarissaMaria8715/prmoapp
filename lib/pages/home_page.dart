@@ -1,8 +1,9 @@
 import 'package:equilibreapp/pages/perfil_page.dart';
-import 'package:equilibreapp/pages/resumo_page.dart';
 import 'package:flutter/material.dart';
 import '../utils/colors.dart';
 import 'home_content_page.dart';
+import 'login_page.dart';
+import 'notificacoes_page.dart';
 
 class HomePage extends StatefulWidget {
   final String email;
@@ -24,7 +25,6 @@ class _HomePageState extends State<HomePage> {
     _pages = [
       HomeContent(email: widget.email, senha: widget.senha),
       PerfilPage(),
-      ResumoPage(),
     ];
   }
 
@@ -45,19 +45,40 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: AppColors.darkGreen5,
       centerTitle: true,
       elevation: 0,
-      leading: Builder(
-        builder: (context) => IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white, size: 32),
-          onPressed: () => Scaffold.of(context).openDrawer(),
-          tooltip: 'Menu',
-        ),
+      leading: IconButton(
+        icon: const Icon(Icons.logout, color: Colors.white, size: 32),
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Confirmação'),
+              content: const Text('Deseja realmente sair da sua conta?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(), // fecha o diálogo
+                  child: const Text('Cancelar'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                          (route) => false,
+                    );
+                  },
+                  child: const Text('Sair'),
+                ),
+              ],
+            ),
+          );
+        },
+        tooltip: 'Sair',
       ),
       actions: [
         IconButton(
           icon: const Icon(Icons.notifications_active, color: Colors.white, size: 32),
           onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Notificações ainda não implementadas')),
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => NotificacoesPage()),
             );
           },
         ),
@@ -77,7 +98,6 @@ class _HomePageState extends State<HomePage> {
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
-        BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Resumo'),
       ],
     );
   }
