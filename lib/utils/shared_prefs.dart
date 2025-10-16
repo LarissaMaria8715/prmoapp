@@ -5,6 +5,7 @@ class SharedPrefs {
     SharedPreferences instance = await SharedPreferences.getInstance();
     instance.setBool('LOGIN', status);
   }
+
   Future<bool> getUserStatus() async {
     SharedPreferences instance = await SharedPreferences.getInstance();
     bool? status = instance.getBool('LOGIN');
