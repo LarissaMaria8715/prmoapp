@@ -7,7 +7,6 @@ class HumorApi {
 
   Future<List<Humor>> findAll() async {
     List<Humor> listaHumor = [];
-
     final response = await dio.get('$baseUrl/humor');
 
     if (response.statusCode == 200) {
@@ -17,12 +16,6 @@ class HumorApi {
         listaHumor.add(humor);
       }
     }
-
     return listaHumor;
   }
 }
-
-
-
-
-

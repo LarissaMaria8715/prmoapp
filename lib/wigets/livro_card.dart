@@ -1,13 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../model/livro_model.dart';
-
-/// Widget separado para exibir o card de cada livro
 class LivroCard extends StatelessWidget {
   final Livro livro;
-
   const LivroCard({super.key, required this.livro});
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -27,11 +23,7 @@ class LivroCard extends StatelessWidget {
               height: 300,
               width: double.infinity,
               fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) => Image.network(
-                'https://via.placeholder.com/200x300.png?text=Sem+Capa',
-                height: 300,
-                width: double.infinity,
-                fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) => Image.network('https://via.placeholder.com/200x300.png?text=Sem+Capa', height: 300, width: double.infinity, fit: BoxFit.contain,
               ),
             ),
           ),
@@ -50,10 +42,7 @@ class LivroCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   livro.autor,
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.brown[600]),
+                  style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic, color: Colors.brown[600]),
                 ),
               ],
             ),
