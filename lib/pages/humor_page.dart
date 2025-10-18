@@ -44,20 +44,11 @@ class _HumorPageState extends State<HumorPage> {
 
   Future<void> _loadHumores() async {
     setState(() => _loading = true);
-
     try {
-      // Carrega humores do DAO (local)
       final daoHumores = await _dao.listarPorUsuario(usuarioId);
-
-      // Carrega humores da API
       final apiHumores = await _api.findAll();
-
-      // Simula atraso de 4 segundos
       await Future.delayed(const Duration(seconds: 4));
-
-      // Combina ambos e remove duplicados se houver (baseado em data + emoji)
       final combinedHumores = [...daoHumores, ...apiHumores];
-
       setState(() {
         _humores = combinedHumores;
         _loading = false;
@@ -74,31 +65,25 @@ class _HumorPageState extends State<HumorPage> {
       _selectedHumorLabel = label;
     });
   }
-
   Future<void> _onConfirm() async {
     if (_selectedHumorLabel == null || _selectedHumorEmoji == null) {
       _showSnack("Por favor, selecione seu humor antes de confirmar!");
       return;
     }
-
     final data = DateTime.now();
     final String dataFormat = DateFormat('dd/MM/yyyy – HH:mm').format(data);
-
     final novoHumor = Humor(
       usuarioId: usuarioId,
       humorLabel: _selectedHumorLabel!,
       humorEmoji: _selectedHumorEmoji!,
       data: dataFormat,
     );
-
     await _dao.salvar(novoHumor);
     _showSnack("Humor salvo! ${novoHumor.humorLabel} ${novoHumor.humorEmoji} - ${novoHumor.data}");
-
     setState(() {
       _selectedHumorEmoji = null;
       _selectedHumorLabel = null;
     });
-
     _loadHumores();
   }
 
@@ -106,6 +91,28 @@ class _HumorPageState extends State<HumorPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message, style: const TextStyle(fontSize: 16))),
     );
+  }
+
+  Future<void> _confirmDelete(int id) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Confirmar exclusão"),
+        content: const Text("Deseja realmente excluir este registro de humor?"),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text("Cancelar")),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text("Excluir", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+    if (confirm == true) {
+      await _dao.deletar(id);
+      _loadHumores();
+      _showSnack("Humor excluído com sucesso");
+    }
   }
 
   @override
@@ -184,11 +191,7 @@ class _HumorPageState extends State<HumorPage> {
             leading: Text(humor.humorEmoji, style: const TextStyle(fontSize: 34)),
             title: Text(
               humor.humorLabel,
-              style: GoogleFonts.lato(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: AppColors.lightBlueDark4,
-              ),
+              style: GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.lightBlueDark4,),
             ),
             subtitle: Row(
               children: [
@@ -197,12 +200,15 @@ class _HumorPageState extends State<HumorPage> {
                 Text(humor.data, style: GoogleFonts.lato(fontSize: 14, color: Colors.grey[700])),
               ],
             ),
+            trailing: IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red),
+              onPressed: () => _confirmDelete(humor.id!),
+            ),
           ),
         );
       },
     );
   }
-
   Widget _buildHumorOption(String emoji, String label) {
     final isSelected = _selectedHumorLabel == label;
     return ElevatedButton(

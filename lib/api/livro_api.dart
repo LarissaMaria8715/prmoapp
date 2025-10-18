@@ -1,9 +1,9 @@
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class LivrosApi {
-  static const String baseUrl =
-      'https://openlibrary.org/search.json?q=*&language=por&fields=title,author_name,cover_i';
+  static const String baseUrl = 'https://openlibrary.org/search.json?q=*&language=por&fields=title,author_name,cover_i';
 
   static Future<Map<String, dynamic>> fetchLivrosRaw() async {
     final response = await http.get(Uri.parse(baseUrl));
@@ -13,3 +13,4 @@ class LivrosApi {
     return json.decode(response.body);
   }
 }
+

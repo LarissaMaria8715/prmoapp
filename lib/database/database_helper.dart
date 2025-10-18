@@ -55,7 +55,6 @@ class DatabaseHelper {
   )
 ''');
 
-
     await db.execute('''
       CREATE TABLE humor (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
