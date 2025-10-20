@@ -8,11 +8,7 @@ class DatabaseHelper {
     String dbPath = join(path, dbName);
     print("Caminho do banco: $dbPath");
 
-    var db = await openDatabase(
-      dbPath,
-      version: 1,
-      onCreate: onCreate,
-    );
+    var db = await openDatabase(dbPath, version: 1, onCreate: onCreate);
     return db;
   }
 
@@ -48,10 +44,11 @@ class DatabaseHelper {
     await db.execute('''
   CREATE TABLE habitos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    usuario_id INTEGER NOT NULL,
+    usuarioId INTEGER NOT NULL,
     nome TEXT NOT NULL,
     descricao TEXT NOT NULL,
-    data TEXT NOT NULL
+    data TEXT NOT NULL,
+    frequencia TEXT
   )
 ''');
 
