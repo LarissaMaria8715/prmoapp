@@ -3,35 +3,65 @@ import '../model/habito_model.dart';
 import 'database_helper.dart';
 
 class HabitoDAO {
-  final DatabaseHelper _dbHelper = DatabaseHelper();
-
   Future<Database> _getDatabase() async {
-    return await _dbHelper.initDB();
+    return await DatabaseHelper().initDB();
   }
 
-  Future<int> salvarHabito(Habito habito) async {
+  Future<int> inserirHabito(Habito habito) async {
     final db = await _getDatabase();
-    // se já tiver id, faz update, senão insert
-    if (habito.id != null) {
-      return await db.update(
-        'habitos',
-        habito.toJson(),
-        where: 'id = ?',
-        whereArgs: [habito.id],
-      );
-    } else {
-      return await db.insert('habitos', habito.toJson());
+    return await db.insert('habitos', habito.toJson());
+  }
+
+  Future<List<Habito>> listarHabitos(int usuarioId) async {
+    final db = await _getDatabase();
+    final resultado = await db.query(
+      'habitos',
+      where: 'usuarioId = ?',
+      whereArgs: [usuarioId],
+      orderBy: 'id DESC',
+    );
+    return resultado.map((json) => Habito.fromJson(json)).toList();
+  }
+
+  Future<Habito?> buscarPorId(int id) async {
+    final db = await _getDatabase();
+    final resultado = await db.query(
+      'habitos',
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+    if (resultado.isNotEmpty) {
+      return Habito.fromJson(resultado.first);
     }
+    return null;
   }
 
-  Future<List<Habito>> listarHabitos() async {
+  Future<int> atualizarHabito(Habito habito) async {
     final db = await _getDatabase();
-    final result = await db.query('habitos', orderBy: 'data DESC');
-    return result.map((json) => Habito.fromJson(json)).toList();
+    return await db.update(
+      'habitos',
+      habito.toJson(),
+      where: 'id = ?',
+      whereArgs: [habito.id],
+    );
   }
 
-  Future<int> deletar(int id) async {
+  Future<int> excluirHabito(int id) async {
     final db = await _getDatabase();
-    return await db.delete('habitos', where: 'id = ?', whereArgs: [id]);
+    return await db.delete(
+      'habitos',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<int> excluirTodosDoUsuario(int usuarioId) async {
+    final db = await _getDatabase();
+    return await db.delete(
+      'habitos',
+      where: 'usuarioId = ?',
+      whereArgs: [usuarioId],
+    );
   }
 }

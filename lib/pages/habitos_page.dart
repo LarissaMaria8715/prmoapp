@@ -8,6 +8,7 @@ import '../wigets/checkbox_habit.dart';
 import '../wigets/dropdown_autoavaliacao.dart';
 import '../wigets/slider_habit_widget.dart';
 import '../wigets/titulo_secao_widget.dart';
+import '../api/habitos_api.dart'; // 👈 Import da API
 
 class HabitosPage extends StatefulWidget {
   const HabitosPage({Key? key}) : super(key: key);
@@ -43,16 +44,28 @@ class _HabitosPageState extends State<HabitosPage> {
     _carregarHabitos();
   }
 
+  /// 🔹 Carrega hábitos do banco local e da API fake
   Future<void> _carregarHabitos() async {
     setState(() => _carregando = true);
     try {
-      final habitos = await habitoDAO.listarHabitos();
-      final habitosUsuario =
-      habitos.where((h) => h.usuarioId == usuarioId).toList();
-      await Future.delayed(const Duration(seconds: 1));
+      // ✅ Buscar hábitos locais do usuário específico
+      final habitosUsuario = await habitoDAO.listarHabitos(usuarioId);
 
-      if (habitosUsuario.isNotEmpty) {
-        final ultimoHabito = habitosUsuario.first;
+      // ✅ Buscar hábitos da API
+      final api = HabitosApi();
+      final habitosApi = await api.findAll();
+
+      // ✅ Combinar listas (evita duplicação)
+      final todosHabitos = [
+        ...habitosUsuario,
+        ...habitosApi.where(
+              (hApi) => !habitosUsuario.any((hLocal) => hLocal.id == hApi.id),
+        ),
+      ];
+
+      // ✅ Atualizar campos com o último hábito salvo (local ou API)
+      if (todosHabitos.isNotEmpty) {
+        final ultimoHabito = todosHabitos.first;
         final dados = jsonDecode(ultimoHabito.descricao);
 
         setState(() {
@@ -72,17 +85,19 @@ class _HabitosPageState extends State<HabitosPage> {
         });
       }
 
-      setState(() => _habitosUsuario = habitosUsuario);
+      // ✅ Atualizar lista geral de hábitos
+      setState(() => _habitosUsuario = todosHabitos);
     } catch (e) {
       debugPrint('Erro ao carregar hábitos: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Erro ao carregar hábitos locais.')),
+        const SnackBar(content: Text('Erro ao carregar hábitos.')),
       );
     } finally {
       setState(() => _carregando = false);
     }
   }
 
+  /// 🔹 Salva um novo hábito localmente
   Future<void> _salvarHabito() async {
     setState(() => _salvando = true);
     try {
@@ -108,7 +123,7 @@ class _HabitosPageState extends State<HabitosPage> {
         data: now.toIso8601String(),
       );
 
-      await habitoDAO.salvarHabito(habito);
+      await habitoDAO.inserirHabito(habito);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Hábito salvo com sucesso!')),
       );
@@ -311,6 +326,10 @@ class _HabitosPageState extends State<HabitosPage> {
                 const TituloSecao('Hábitos Salvos'),
                 ..._habitosUsuario.map((habito) {
                   final dados = jsonDecode(habito.descricao);
+
+                  // 👇 Correção principal: evita erro de tipo nulo
+                  bool boolOrFalse(dynamic valor) => valor == true;
+
                   return CardContainer(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,19 +342,19 @@ class _HabitosPageState extends State<HabitosPage> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Text('Água: ${dados['aguaLitros']} L'),
-                        Text('Sono: ${dados['horasSono']} h'),
-                        Text('Estresse: ${dados['nivelEstresse']}'),
-                        Text('Motivação: ${dados['nivelMotivacao']}'),
-                        Text('Tela: ${dados['tempoTela']} h'),
-                        Text('Ar Livre: ${dados['tempoAoArLivre']} h'),
-                        Text('Meditou: ${dados['meditou'] ? "Sim" : "Não"}'),
-                        Text('Exercício: ${dados['fezExercicio'] ? "Sim" : "Não"}'),
-                        Text('Alimentação: ${dados['alimentacaoSaudavel'] ? "Sim" : "Não"}'),
-                        Text('Frutas: ${dados['comeuFrutas'] ? "Sim" : "Não"}'),
-                        Text('Leu Livro: ${dados['leuLivro'] ? "Sim" : "Não"}'),
-                        Text('Contato Social: ${dados['teveContatoSocial'] ? "Sim" : "Não"}'),
-                        Text('Autoavaliação: ${dados['autoAvaliacao']}'),
+                        Text('Água: ${dados['aguaLitros'] ?? 0} L'),
+                        Text('Sono: ${dados['horasSono'] ?? 0} h'),
+                        Text('Estresse: ${dados['nivelEstresse'] ?? 0}'),
+                        Text('Motivação: ${dados['nivelMotivacao'] ?? 0}'),
+                        Text('Tela: ${dados['tempoTela'] ?? 0} h'),
+                        Text('Ar Livre: ${dados['tempoAoArLivre'] ?? 0} h'),
+                        Text('Meditou: ${boolOrFalse(dados['meditou']) ? "Sim" : "Não"}'),
+                        Text('Exercício: ${boolOrFalse(dados['fezExercicio']) ? "Sim" : "Não"}'),
+                        Text('Alimentação: ${boolOrFalse(dados['alimentacaoSaudavel']) ? "Sim" : "Não"}'),
+                        Text('Frutas: ${boolOrFalse(dados['comeuFrutas']) ? "Sim" : "Não"}'),
+                        Text('Leu Livro: ${boolOrFalse(dados['leuLivro']) ? "Sim" : "Não"}'),
+                        Text('Contato Social: ${boolOrFalse(dados['teveContatoSocial']) ? "Sim" : "Não"}'),
+                        Text('Autoavaliação: ${dados['autoAvaliacao'] ?? 0}'),
                       ],
                     ),
                   );
@@ -345,11 +364,10 @@ class _HabitosPageState extends State<HabitosPage> {
           ),
         ),
 
-
         // Overlay de carregamento
         if (_carregando || _salvando)
           Container(
-            color: Colors.white, // fundo branco
+            color: Colors.white,
             child: const Center(
               child: CircularProgressIndicator(
                 color: AppColors.purple,

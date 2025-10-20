@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../model/livro_model.dart';
+
 class LivroCard extends StatelessWidget {
   final Livro livro;
   const LivroCard({super.key, required this.livro});
