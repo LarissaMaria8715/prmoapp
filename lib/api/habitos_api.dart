@@ -6,17 +6,18 @@ class HabitosApi {
   final String baseUrl = 'https://my-json-server.typicode.com/LarissaMaria8715/equilibre-api';
 
   Future<List<Habito>> findAll() async {
-    List<Habito> listaHabitos = [];
+    try {
+      final response = await dio.get('$baseUrl/habitos');
 
-    final response = await dio.get('$baseUrl/habitos');
-
-    if (response.statusCode == 200) {
-      var listResult = response.data;
-      for (var json in listResult) {
-        Habito habito = Habito.fromJson(json);
-        listaHabitos.add(habito);
+      if (response.statusCode == 200) {
+        final list = response.data as List;
+        return list.map((json) => Habito.fromJson(json)).toList();
+      } else {
+        return [];
       }
+    } catch (e) {
+      print('❌ Erro ao buscar hábitos da API: $e');
+      return [];
     }
-    return listaHabitos;
   }
 }
