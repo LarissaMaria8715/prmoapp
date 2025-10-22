@@ -8,7 +8,7 @@ import '../wigets/checkbox_habit.dart';
 import '../wigets/dropdown_autoavaliacao.dart';
 import '../wigets/slider_habit_widget.dart';
 import '../wigets/titulo_secao_widget.dart';
-import '../api/habitos_api.dart'; // 👈 Import da API
+import '../api/habitos_api.dart';
 
 class HabitosPage extends StatefulWidget {
   const HabitosPage({Key? key}) : super(key: key);
@@ -34,6 +34,7 @@ class _HabitosPageState extends State<HabitosPage> {
 
   final habitoDAO = HabitoDAO();
   final int usuarioId = 1;
+
   bool _carregando = true;
   bool _salvando = false;
   List<Habito> _habitosUsuario = [];
@@ -43,65 +44,48 @@ class _HabitosPageState extends State<HabitosPage> {
     super.initState();
     _carregarHabitos();
   }
-
-  /// 🔹 Carrega hábitos do banco local e da API fake
   Future<void> _carregarHabitos() async {
     setState(() => _carregando = true);
+
     try {
-      // ✅ Buscar hábitos locais do usuário específico
-      final habitosUsuario = await habitoDAO.listarHabitos(usuarioId);
-
-      // ✅ Buscar hábitos da API
       final api = HabitosApi();
+
+      // 1️⃣ Buscar do banco local
+      final habitosLocal = await habitoDAO.listarHabitos(usuarioId);
+
+      // 2️⃣ Buscar da API
       final habitosApi = await api.findAll();
+      final habitosDoUsuarioApi =
+      habitosApi.where((h) => h.usuarioId == usuarioId).toList();
 
-      // ✅ Combinar listas (evita duplicação)
-      final todosHabitos = [
-        ...habitosUsuario,
-        ...habitosApi.where(
-              (hApi) => !habitosUsuario.any((hLocal) => hLocal.id == hApi.id),
-        ),
-      ];
-
-      // ✅ Atualizar campos com o último hábito salvo (local ou API)
-      if (todosHabitos.isNotEmpty) {
-        final ultimoHabito = todosHabitos.first;
-        final dados = jsonDecode(ultimoHabito.descricao);
-
-        setState(() {
-          aguaLitros = (dados['aguaLitros'] ?? 0.0).toDouble();
-          horasSono = (dados['horasSono'] ?? 0.0).toDouble();
-          nivelEstresse = (dados['nivelEstresse'] ?? 0.0).toDouble();
-          tempoTela = (dados['tempoTela'] ?? 0.0).toDouble();
-          tempoAoArLivre = (dados['tempoAoArLivre'] ?? 0.0).toDouble();
-          nivelMotivacao = (dados['nivelMotivacao'] ?? 5.0).toDouble();
-          meditou = dados['meditou'] ?? false;
-          fezExercicio = dados['fezExercicio'] ?? false;
-          alimentacaoSaudavel = dados['alimentacaoSaudavel'] ?? false;
-          comeuFrutas = dados['comeuFrutas'] ?? false;
-          leuLivro = dados['leuLivro'] ?? false;
-          teveContatoSocial = dados['teveContatoSocial'] ?? false;
-          autoAvaliacao = dados['autoAvaliacao'] ?? 3;
-        });
+      // 3️⃣ Sincronizar: salvar no local apenas os que ainda não estão lá
+      for (final habitoApi in habitosDoUsuarioApi) {
+        final existe = await habitoDAO.existeHabitoComId(habitoApi.id ?? -1);
+        if (!existe) {
+          await habitoDAO.inserirHabito(habitoApi);
+        }
       }
 
-      // ✅ Atualizar lista geral de hábitos
-      setState(() => _habitosUsuario = todosHabitos);
+      // 4️⃣ Buscar tudo novamente do banco (atualizado)
+      final todos = await habitoDAO.listarHabitos(usuarioId);
+
+      // 5️⃣ Ordenar por data (mais recente primeiro)
+      todos.sort((a, b) => b.data.compareTo(a.data));
+
+      setState(() => _habitosUsuario = todos);
     } catch (e) {
-      debugPrint('Erro ao carregar hábitos: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Erro ao carregar hábitos.')),
-      );
+      print('❌ Erro ao carregar hábitos: $e');
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Erro ao carregar hábitos.')));
     } finally {
       setState(() => _carregando = false);
     }
   }
 
-  /// 🔹 Salva um novo hábito localmente
   Future<void> _salvarHabito() async {
     setState(() => _salvando = true);
+
     try {
-      final now = DateTime.now();
       final habito = Habito(
         usuarioId: usuarioId,
         nome: 'Registro diário',
@@ -120,26 +104,31 @@ class _HabitosPageState extends State<HabitosPage> {
           'teveContatoSocial': teveContatoSocial,
           'autoAvaliacao': autoAvaliacao,
         }),
-        data: now.toIso8601String(),
+        data: DateTime.now().toIso8601String(),
       );
 
       await habitoDAO.inserirHabito(habito);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Hábito salvo com sucesso!')),
-      );
-      _carregarHabitos();
+
+      setState(() {
+        _habitosUsuario.insert(0, habito);
+      });
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('✅ Hábito salvo!')));
     } catch (e) {
-      debugPrint('Erro ao salvar hábito: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Erro ao salvar hábito.')),
-      );
+      print('❌ Erro ao salvar hábito: $e');
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Erro ao salvar hábito.')));
     } finally {
       setState(() => _salvando = false);
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
+    bool boolOrFalse(dynamic valor) => valor == true;
+
     return Stack(
       children: [
         Scaffold(
@@ -261,7 +250,6 @@ class _HabitosPageState extends State<HabitosPage> {
                   ),
                 ),
 
-                // Autoavaliação
                 const TituloSecao('Autoavaliação do Dia'),
                 DropdownAutoavaliacao(
                   valor: autoAvaliacao,
@@ -270,52 +258,46 @@ class _HabitosPageState extends State<HabitosPage> {
 
                 const SizedBox(height: 24),
 
-                // Botão Salvar
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.save_alt, color: AppColors.lightPurple1),
-                    label: const Text(
-                      'Salvar Hábito',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.lightPurple1,
-                      ),
+                // Botão salvar
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.save_alt, color: AppColors.lightPurple1),
+                  label: const Text(
+                    'Salvar Hábito',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.lightPurple1,
                     ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.purple,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      elevation: 0,
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.purple,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
                     ),
-                    onPressed: () => showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('Salvar hábitos'),
-                        content: const Text('Deseja salvar os hábitos de hoje?'),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                    elevation: 0,
+                  ),
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: const Text('Salvar hábitos'),
+                      content: const Text('Deseja salvar os hábitos de hoje?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Cancelar'),
                         ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text('Cancelar'),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            _salvarHabito();
+                          },
+                          child: const Text(
+                            'Salvar',
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              _salvarHabito();
-                            },
-                            child: const Text(
-                              'Salvar',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -326,53 +308,45 @@ class _HabitosPageState extends State<HabitosPage> {
                 const TituloSecao('Hábitos Salvos'),
                 ..._habitosUsuario.map((habito) {
                   final dados = jsonDecode(habito.descricao);
-
-                  // 👇 Correção principal: evita erro de tipo nulo
-                  bool boolOrFalse(dynamic valor) => valor == true;
-
                   return CardContainer(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Data: ${habito.data.split('T')[0]}',
+                          '📅 Data: ${habito.data.split("T")[0]}',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Text('Água: ${dados['aguaLitros'] ?? 0} L'),
-                        Text('Sono: ${dados['horasSono'] ?? 0} h'),
-                        Text('Estresse: ${dados['nivelEstresse'] ?? 0}'),
-                        Text('Motivação: ${dados['nivelMotivacao'] ?? 0}'),
-                        Text('Tela: ${dados['tempoTela'] ?? 0} h'),
-                        Text('Ar Livre: ${dados['tempoAoArLivre'] ?? 0} h'),
-                        Text('Meditou: ${boolOrFalse(dados['meditou']) ? "Sim" : "Não"}'),
-                        Text('Exercício: ${boolOrFalse(dados['fezExercicio']) ? "Sim" : "Não"}'),
-                        Text('Alimentação: ${boolOrFalse(dados['alimentacaoSaudavel']) ? "Sim" : "Não"}'),
-                        Text('Frutas: ${boolOrFalse(dados['comeuFrutas']) ? "Sim" : "Não"}'),
-                        Text('Leu Livro: ${boolOrFalse(dados['leuLivro']) ? "Sim" : "Não"}'),
-                        Text('Contato Social: ${boolOrFalse(dados['teveContatoSocial']) ? "Sim" : "Não"}'),
-                        Text('Autoavaliação: ${dados['autoAvaliacao'] ?? 0}'),
+                        Text('💧 Água: ${dados['aguaLitros'] ?? 0} L'),
+                        Text('😴 Sono: ${dados['horasSono'] ?? 0} h'),
+                        Text('⚡ Estresse: ${dados['nivelEstresse'] ?? 0}'),
+                        Text('🔥 Motivação: ${dados['nivelMotivacao'] ?? 0}'),
+                        Text('📱 Tela: ${dados['tempoTela'] ?? 0} h'),
+                        Text('🌳 Ar Livre: ${dados['tempoAoArLivre'] ?? 0} h'),
+                        Text('🧘 Meditou: ${boolOrFalse(dados['meditou']) ? "Sim" : "Não"}'),
+                        Text('🏃 Exercício: ${boolOrFalse(dados['fezExercicio']) ? "Sim" : "Não"}'),
+                        Text('🥗 Alimentação: ${boolOrFalse(dados['alimentacaoSaudavel']) ? "Sim" : "Não"}'),
+                        Text('🍎 Frutas: ${boolOrFalse(dados['comeuFrutas']) ? "Sim" : "Não"}'),
+                        Text('📖 Leu Livro: ${boolOrFalse(dados['leuLivro']) ? "Sim" : "Não"}'),
+                        Text('💬 Contato Social: ${boolOrFalse(dados['teveContatoSocial']) ? "Sim" : "Não"}'),
+                        Text('⭐ Autoavaliação: ${dados['autoAvaliacao'] ?? 0}'),
                       ],
                     ),
                   );
-                }).toList(),
+                }),
               ],
             ),
           ),
         ),
 
-        // Overlay de carregamento
         if (_carregando || _salvando)
           Container(
-            color: Colors.white,
+            color: Colors.white.withOpacity(0.7),
             child: const Center(
-              child: CircularProgressIndicator(
-                color: AppColors.purple,
-                strokeWidth: 4,
-              ),
+              child: CircularProgressIndicator(color: AppColors.purple),
             ),
           ),
       ],
