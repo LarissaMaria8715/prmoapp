@@ -16,7 +16,7 @@ class HabitosApi {
         return [];
       }
     } catch (e) {
-      print('❌ Erro ao buscar hábitos da API: $e');
+      print('Erro ao buscar hábitos da API: $e');
       return [];
     }
   }

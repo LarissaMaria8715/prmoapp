@@ -50,15 +50,12 @@ class _HabitosPageState extends State<HabitosPage> {
     try {
       final api = HabitosApi();
 
-      // 1️⃣ Buscar do banco local
       final habitosLocal = await habitoDAO.listarHabitos(usuarioId);
 
-      // 2️⃣ Buscar da API
       final habitosApi = await api.findAll();
       final habitosDoUsuarioApi =
       habitosApi.where((h) => h.usuarioId == usuarioId).toList();
 
-      // 3️⃣ Sincronizar: salvar no local apenas os que ainda não estão lá
       for (final habitoApi in habitosDoUsuarioApi) {
         final existe = await habitoDAO.existeHabitoComId(habitoApi.id ?? -1);
         if (!existe) {
@@ -66,15 +63,13 @@ class _HabitosPageState extends State<HabitosPage> {
         }
       }
 
-      // 4️⃣ Buscar tudo novamente do banco (atualizado)
       final todos = await habitoDAO.listarHabitos(usuarioId);
 
-      // 5️⃣ Ordenar por data (mais recente primeiro)
       todos.sort((a, b) => b.data.compareTo(a.data));
 
       setState(() => _habitosUsuario = todos);
     } catch (e) {
-      print('❌ Erro ao carregar hábitos: $e');
+      print(' Erro ao carregar hábitos: $e');
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Erro ao carregar hábitos.')));
     } finally {
@@ -114,9 +109,9 @@ class _HabitosPageState extends State<HabitosPage> {
       });
 
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('✅ Hábito salvo!')));
+          .showSnackBar(const SnackBar(content: Text(' Hábito salvo!')));
     } catch (e) {
-      print('❌ Erro ao salvar hábito: $e');
+      print(' Erro ao salvar hábito: $e');
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Erro ao salvar hábito.')));
     } finally {
@@ -320,19 +315,19 @@ class _HabitosPageState extends State<HabitosPage> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Text('💧 Água: ${dados['aguaLitros'] ?? 0} L'),
-                        Text('😴 Sono: ${dados['horasSono'] ?? 0} h'),
-                        Text('⚡ Estresse: ${dados['nivelEstresse'] ?? 0}'),
-                        Text('🔥 Motivação: ${dados['nivelMotivacao'] ?? 0}'),
-                        Text('📱 Tela: ${dados['tempoTela'] ?? 0} h'),
-                        Text('🌳 Ar Livre: ${dados['tempoAoArLivre'] ?? 0} h'),
-                        Text('🧘 Meditou: ${boolOrFalse(dados['meditou']) ? "Sim" : "Não"}'),
-                        Text('🏃 Exercício: ${boolOrFalse(dados['fezExercicio']) ? "Sim" : "Não"}'),
-                        Text('🥗 Alimentação: ${boolOrFalse(dados['alimentacaoSaudavel']) ? "Sim" : "Não"}'),
-                        Text('🍎 Frutas: ${boolOrFalse(dados['comeuFrutas']) ? "Sim" : "Não"}'),
-                        Text('📖 Leu Livro: ${boolOrFalse(dados['leuLivro']) ? "Sim" : "Não"}'),
-                        Text('💬 Contato Social: ${boolOrFalse(dados['teveContatoSocial']) ? "Sim" : "Não"}'),
-                        Text('⭐ Autoavaliação: ${dados['autoAvaliacao'] ?? 0}'),
+                        Text('Água: ${dados['aguaLitros'] ?? 0} L'),
+                        Text('Sono: ${dados['horasSono'] ?? 0} h'),
+                        Text('Estresse: ${dados['nivelEstresse'] ?? 0}'),
+                        Text('Motivação: ${dados['nivelMotivacao'] ?? 0}'),
+                        Text('Tela: ${dados['tempoTela'] ?? 0} h'),
+                        Text('Ar Livre: ${dados['tempoAoArLivre'] ?? 0} h'),
+                        Text('Meditou: ${boolOrFalse(dados['meditou']) ? "Sim" : "Não"}'),
+                        Text('Exercício: ${boolOrFalse(dados['fezExercicio']) ? "Sim" : "Não"}'),
+                        Text('Alimentação: ${boolOrFalse(dados['alimentacaoSaudavel']) ? "Sim" : "Não"}'),
+                        Text('Frutas: ${boolOrFalse(dados['comeuFrutas']) ? "Sim" : "Não"}'),
+                        Text('Leu Livro: ${boolOrFalse(dados['leuLivro']) ? "Sim" : "Não"}'),
+                        Text('Contato Social: ${boolOrFalse(dados['teveContatoSocial']) ? "Sim" : "Não"}'),
+                        Text('Autoavaliação: ${dados['autoAvaliacao'] ?? 0}'),
                       ],
                     ),
                   );
