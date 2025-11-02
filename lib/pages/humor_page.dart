@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -18,10 +17,9 @@ class _HumorPageState extends State<HumorPage> {
   String? _selectedHumorEmoji;
   String? _selectedHumorLabel;
   final int usuarioId = 1;
-  List<Humor> _humores = [];
-  final HumorApi _api = HumorApi();
   final HumorDAO _dao = HumorDAO();
-  bool _loading = true;
+  final HumorApi _api = HumorApi();
+  late Future<List<Humor>> futureHumores;
 
   final List<Map<String, String>> _opcoesHumor = [
     {"emoji": "😄", "label": "Muito feliz"},
@@ -39,23 +37,16 @@ class _HumorPageState extends State<HumorPage> {
   @override
   void initState() {
     super.initState();
-    _loadHumores();
+    futureHumores = _loadHumoresFromApi();
   }
 
-  Future<void> _loadHumores() async {
-    setState(() => _loading = true);
+  Future<List<Humor>> _loadHumoresFromApi() async {
     try {
-      final daoHumores = await _dao.listarPorUsuario(usuarioId);
       final apiHumores = await _api.findAll();
-      await Future.delayed(const Duration(seconds: 4));
-      final combinedHumores = [...daoHumores, ...apiHumores];
-      setState(() {
-        _humores = combinedHumores;
-        _loading = false;
-      });
+      return apiHumores.where((h) => h.usuarioId == usuarioId).toList();
     } catch (e) {
-      setState(() => _loading = false);
-      _showSnack("Erro ao carregar humores: $e");
+      final daoHumores = await _dao.listarPorUsuario(usuarioId);
+      return daoHumores;
     }
   }
 
@@ -65,26 +56,33 @@ class _HumorPageState extends State<HumorPage> {
       _selectedHumorLabel = label;
     });
   }
+
   Future<void> _onConfirm() async {
     if (_selectedHumorLabel == null || _selectedHumorEmoji == null) {
       _showSnack("Por favor, selecione seu humor antes de confirmar!");
       return;
     }
+
     final data = DateTime.now();
     final String dataFormat = DateFormat('dd/MM/yyyy – HH:mm').format(data);
+
     final novoHumor = Humor(
       usuarioId: usuarioId,
       humorLabel: _selectedHumorLabel!,
       humorEmoji: _selectedHumorEmoji!,
       data: dataFormat,
     );
+
     await _dao.salvar(novoHumor);
-    _showSnack("Humor salvo! ${novoHumor.humorLabel} ${novoHumor.humorEmoji} - ${novoHumor.data}");
+
+    _showSnack(
+        "Humor salvo! ${novoHumor.humorLabel} ${novoHumor.humorEmoji} - ${novoHumor.data}");
+
     setState(() {
       _selectedHumorEmoji = null;
       _selectedHumorLabel = null;
+      futureHumores = _loadHumoresFromApi();
     });
-    _loadHumores();
   }
 
   void _showSnack(String message) {
@@ -100,7 +98,9 @@ class _HumorPageState extends State<HumorPage> {
         title: const Text("Confirmar exclusão"),
         content: const Text("Deseja realmente excluir este registro de humor?"),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text("Cancelar")),
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text("Cancelar")),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             child: const Text("Excluir", style: TextStyle(color: Colors.red)),
@@ -108,9 +108,10 @@ class _HumorPageState extends State<HumorPage> {
         ],
       ),
     );
+
     if (confirm == true) {
       await _dao.deletar(id);
-      _loadHumores();
+      setState(() => futureHumores = _loadHumoresFromApi());
       _showSnack("Humor excluído com sucesso");
     }
   }
@@ -122,38 +123,61 @@ class _HumorPageState extends State<HumorPage> {
       appBar: _buildAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: _loading
-            ? const Center(child: CircularProgressIndicator())
-            : Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildTitle("Como você está se sentindo hoje?"),
-            const SizedBox(height: 16),
-            GridView.count(
-              crossAxisCount: 4,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              children: _opcoesHumor
-                  .map((op) => _buildHumorOption(op["emoji"]!, op["label"]!))
-                  .toList(),
-            ),
-            const SizedBox(height: 16),
-            _buildConfirmButton(),
-            const SizedBox(height: 24),
-            _buildTitle("Histórico de humores", size: 20),
-            const SizedBox(height: 12),
-            Expanded(
-              child: _humores.isEmpty
-                  ? _buildEmptyMessage()
-                  : _buildHumoresList(),
-            ),
-          ],
+        child: FutureBuilder<List<Humor>>(
+          future: futureHumores,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.lightBlueDark4,
+                  ));
+            }
+
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  "Erro ao carregar humores: ${snapshot.error}",
+                  style: GoogleFonts.lato(fontSize: 16, color: Colors.red),
+                  textAlign: TextAlign.center,
+                ),
+              );
+            }
+
+            final humores = snapshot.data ?? [];
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildTitle("Como você está se sentindo hoje?"),
+                const SizedBox(height: 16),
+                GridView.count(
+                  crossAxisCount: 4,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  children: _opcoesHumor
+                      .map((op) => _buildHumorOption(op["emoji"]!, op["label"]!))
+                      .toList(),
+                ),
+                const SizedBox(height: 16),
+                _buildConfirmButton(),
+                const SizedBox(height: 24),
+                _buildTitle("Histórico de humores", size: 20),
+                const SizedBox(height: 12),
+                Expanded(
+                  child: humores.isEmpty
+                      ? _buildEmptyMessage()
+                      : _buildHumoresList(humores),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
   }
+
 
   Widget _buildTitle(String text, {double size = 28}) {
     return Text(
@@ -176,28 +200,35 @@ class _HumorPageState extends State<HumorPage> {
     );
   }
 
-  Widget _buildHumoresList() {
+  Widget _buildHumoresList(List<Humor> humores) {
     return ListView.builder(
-      itemCount: _humores.length,
+      itemCount: humores.length,
       itemBuilder: (context, index) {
-        final humor = _humores[index];
+        final humor = humores[index];
         return Card(
           margin: const EdgeInsets.symmetric(vertical: 6),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           color: Colors.white,
           elevation: 3,
           child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             leading: Text(humor.humorEmoji, style: const TextStyle(fontSize: 34)),
             title: Text(
               humor.humorLabel,
-              style: GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.lightBlueDark4,),
+              style: GoogleFonts.lato(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppColors.lightBlueDark4,
+              ),
             ),
             subtitle: Row(
               children: [
                 const Icon(Icons.access_time, size: 16, color: Colors.grey),
                 const SizedBox(width: 6),
-                Text(humor.data, style: GoogleFonts.lato(fontSize: 14, color: Colors.grey[700])),
+                Text(humor.data,
+                    style:
+                    GoogleFonts.lato(fontSize: 14, color: Colors.grey[700])),
               ],
             ),
             trailing: IconButton(
@@ -209,19 +240,23 @@ class _HumorPageState extends State<HumorPage> {
       },
     );
   }
+
   Widget _buildHumorOption(String emoji, String label) {
     final isSelected = _selectedHumorLabel == label;
     return ElevatedButton(
       onPressed: () => _onSelectHumor(emoji, label),
       style: ElevatedButton.styleFrom(
-        backgroundColor: isSelected ? AppColors.lightBlueDark4 : AppColors.darkBlueDark4,
+        backgroundColor:
+        isSelected ? AppColors.lightBlueDark4 : AppColors.darkBlueDark4,
         foregroundColor: isSelected ? Colors.white : AppColors.lightBlueDark4,
         elevation: 2,
         minimumSize: const Size(80, 80),
         padding: const EdgeInsets.all(6),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
-          side: BorderSide(color: isSelected ? Colors.white : AppColors.lightBlueDark4, width: 1.5),
+          side: BorderSide(
+              color: isSelected ? Colors.white : AppColors.lightBlueDark4,
+              width: 1.5),
         ),
       ),
       child: Column(
@@ -249,7 +284,8 @@ class _HumorPageState extends State<HumorPage> {
       icon: const Icon(Icons.check_circle, size: 28, color: AppColors.white),
       label: Text(
         "Confirmar Humor",
-        style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.white),
+        style: GoogleFonts.lato(
+            fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.white),
       ),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.lightBlueDark4,

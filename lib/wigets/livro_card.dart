@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../model/livro_model.dart';
+import '../utils/colors.dart';
 
 class LivroCard extends StatelessWidget {
   final Livro livro;
@@ -8,6 +9,7 @@ class LivroCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: AppColors.lightBrown4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
@@ -19,12 +21,8 @@ class LivroCard extends StatelessWidget {
           ClipRRect(
             borderRadius:
             const BorderRadius.vertical(top: Radius.circular(20)),
-            child: Image.network(
-              livro.capaUrl,
-              height: 300,
-              width: double.infinity,
-              fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) => Image.network('https://via.placeholder.com/200x300.png?text=Sem+Capa', height: 300, width: double.infinity, fit: BoxFit.contain,
+            child: Image.network(livro.capaUrl, height: 300, width: double.infinity, fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) => Image.network('https://slgembalagens.com.br/wp-content/uploads/woocommerce-placeholder-300x300.png', height: 300, width: double.infinity, fit: BoxFit.contain,
               ),
             ),
           ),
@@ -36,18 +34,24 @@ class LivroCard extends StatelessWidget {
                 Text(
                   livro.titulo,
                   style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.brown[800]),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.lightBrown1,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   livro.autor,
-                  style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic, color: Colors.brown[600]),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontStyle: FontStyle.italic,
+                    color: Colors.white70,
+                  ),
                 ),
               ],
             ),
           ),
+
         ],
       ),
     );

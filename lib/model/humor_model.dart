@@ -14,22 +14,21 @@ class Humor {
   });
 
   Humor.fromJson(Map<String, dynamic> json) {
-    id = json['id'] != null ? (json['id'] as num).toInt() : null;
-    usuarioId = json['usuarioId'] != null ? (json['usuarioId'] as num).toInt() : 1;
-    humorLabel = json['humorLabel'] ?? '';
-    humorEmoji = json['humorEmoji'] ?? '';
-    data = json['data'] ?? '';
+    id = json['id'];
+    usuarioId = json['usuario_id'];
+    humorLabel = json['humorLabel'];
+    humorEmoji = json['humorEmoji'];
+    data = json['data'];
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'usuarioId': usuarioId,
+    final map = <String, dynamic>{
+      'usuario_id': usuarioId,
       'humorLabel': humorLabel,
       'humorEmoji': humorEmoji,
       'data': data,
     };
+    if (id != null) map['id'] = id;
+    return map;
   }
-
-
 }
