@@ -37,17 +37,16 @@ class _HumorPageState extends State<HumorPage> {
   @override
   void initState() {
     super.initState();
-    futureHumores = _loadHumoresFromApi();
+    futureHumores = _loadHumores();
   }
 
-  Future<List<Humor>> _loadHumoresFromApi() async {
-    try {
-      final apiHumores = await _api.findAll();
-      return apiHumores.where((h) => h.usuarioId == usuarioId).toList();
-    } catch (e) {
-      final daoHumores = await _dao.listarPorUsuario(usuarioId);
-      return daoHumores;
-    }
+  Future<List<Humor>> _loadHumores() async {
+    final apiHumores = await _api.findAll();
+    final apiFiltrados = apiHumores.where((h) => h.usuarioId == usuarioId).toList();
+    final localHumores = await _dao.listarPorUsuario(usuarioId);
+    final todosHumores = [...apiFiltrados, ...localHumores];
+
+    return todosHumores;
   }
 
   void _onSelectHumor(String emoji, String label) {
@@ -81,7 +80,7 @@ class _HumorPageState extends State<HumorPage> {
     setState(() {
       _selectedHumorEmoji = null;
       _selectedHumorLabel = null;
-      futureHumores = _loadHumoresFromApi();
+      futureHumores = _loadHumores();
     });
   }
 
@@ -111,7 +110,7 @@ class _HumorPageState extends State<HumorPage> {
 
     if (confirm == true) {
       await _dao.deletar(id);
-      setState(() => futureHumores = _loadHumoresFromApi());
+      setState(() => futureHumores = _loadHumores());
       _showSnack("Humor excluído com sucesso");
     }
   }
@@ -122,62 +121,50 @@ class _HumorPageState extends State<HumorPage> {
       backgroundColor: AppColors.lightBlue1,
       appBar: _buildAppBar(),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: FutureBuilder<List<Humor>>(
           future: futureHumores,
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.lightBlueDark4,
-                  ));
-            }
-
-            if (snapshot.hasError) {
-              return Center(
-                child: Text(
-                  "Erro ao carregar humores: ${snapshot.error}",
-                  style: GoogleFonts.lato(fontSize: 16, color: Colors.red),
-                  textAlign: TextAlign.center,
-                ),
+            if (snapshot.hasData) {
+              final humores = snapshot.requireData;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildTitle("Como você está se sentindo hoje?"),
+                  const SizedBox(height: 16),
+                  GridView.count(
+                    crossAxisCount: 4,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    children: _opcoesHumor
+                        .map((op) => _buildHumorOption(op["emoji"]!, op["label"]!))
+                        .toList(),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildConfirmButton(),
+                  const SizedBox(height: 24),
+                  _buildTitle("Histórico de humores", size: 20),
+                  const SizedBox(height: 12),
+                  Expanded(
+                    child: humores.isEmpty
+                        ? _buildEmptyMessage()
+                        : _buildHumoresList(humores),
+                  ),
+                ],
               );
             }
-
-            final humores = snapshot.data ?? [];
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildTitle("Como você está se sentindo hoje?"),
-                const SizedBox(height: 16),
-                GridView.count(
-                  crossAxisCount: 4,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  children: _opcoesHumor
-                      .map((op) => _buildHumorOption(op["emoji"]!, op["label"]!))
-                      .toList(),
-                ),
-                const SizedBox(height: 16),
-                _buildConfirmButton(),
-                const SizedBox(height: 24),
-                _buildTitle("Histórico de humores", size: 20),
-                const SizedBox(height: 12),
-                Expanded(
-                  child: humores.isEmpty
-                      ? _buildEmptyMessage()
-                      : _buildHumoresList(humores),
-                ),
-              ],
+            return const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.lightBlueDark4,
+              ),
             );
           },
         ),
       ),
     );
   }
-
 
   Widget _buildTitle(String text, {double size = 28}) {
     return Text(

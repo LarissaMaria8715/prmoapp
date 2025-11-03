@@ -34,14 +34,6 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-      INSERT INTO usuarios (
-        nome, email, senha, dataNascimento, genero, altura, peso, objetivo, praticaMeditacao, condicaoSaude, recebeNotificacoes
-      ) VALUES (
-        'Usuario', 'teste@gmail.com', '123456', '1995-08-06', 'Feminino', 1.65, 60.0, 'Relaxar', 1, '', 1
-      );
-    ''');
-
-    await db.execute('''
   CREATE TABLE habitos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     usuarioId INTEGER NOT NULL,

@@ -1,22 +1,26 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import '../model/humor_model.dart';
 
 class HumorApi {
-  final String baseUrl = 'https://my-json-server.typicode.com/LarissaMaria8715/equilibre-api/db';
+  final dio = Dio();
+  final String baseUrl =
+      'https://my-json-server.typicode.com/LarissaMaria8715/equilibre-api';
 
   Future<List<Humor>> findAll() async {
-    final response = await http.get(Uri.parse(baseUrl));
+    List<Humor> listaHumores = [];
+
+    final response = await dio.get('$baseUrl/db');
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final humoresJson = data['humor'] as List;
-      return humoresJson.map((h) => Humor.fromJson(h)).toList();
-    } else {
-      throw Exception('Falha ao carregar humores da API');
+      var listResult = response.data['humor'];
+      for (var json in listResult) {
+        Humor humor = Humor.fromJson(json);
+        listaHumores.add(humor);
+      }
     }
+
+    await Future.delayed(const Duration(seconds: 3));
+
+    return listaHumores;
   }
 }
-
-
-
