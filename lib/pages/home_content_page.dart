@@ -97,6 +97,9 @@ class HomeContent extends StatelessWidget {
       _actionButton(Icons.image_outlined, 'Imagens', AppColors.darkWine1, () {
         Navigator.push(context, MaterialPageRoute(builder: (_) => CalmaPage()));
       }),
+      _actionButton(Icons.image_outlined, 'Lugares', AppColors.darkWine1, () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => CalmaPage()));
+      }),
     ];
 
     return LayoutBuilder(

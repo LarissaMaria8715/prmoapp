@@ -4,19 +4,7 @@ class AppColors {
   static const white = Color(0xFFFFFFFF);
   static const black = Color(0xFF000000);
 
-  // AZUL CLARO
-  static const lightBlue1 = Color(0xFFE1F5FE);
-  static const lightBlue2 = Color(0xFFB3E5FC);
-  static const lightBlue3 = Color(0xFF81D4FA);
-  static const lightBlue4 = Color(0xFF4FC3F7);
-  static const blue = Color(0xFF03A9F4);
-  static const darkBlue1 = Color(0xFF039BE5);
-  static const darkBlue2 = Color(0xFF0288D1);
-  static const darkBlue3 = Color(0xFF0277BD);
-  static const darkBlue4 = Color(0xFF01579B);
-  static const darkBlue5 = Color(0xFF003157);
-
-  // ROSA
+  // ROSA (LUGARES)
   static const lightPink1 = Color(0xFFF8BBD0);
   static const lightPink2 = Color(0xFFF48FB1);
   static const lightPink3 = Color(0xFFF06292);
@@ -28,17 +16,64 @@ class AppColors {
   static const darkPink4 = Color(0xFF880E4F);
   static const darkPink5 = Color(0xFF54002D);
 
-  // VINHO -
+
+// HOSPITAIS - AZUL TURQUESA
+  static const lightTurquoise1 = Color(0xFFE0F7FA);
+  static const lightTurquoise2 = Color(0xFFB2EBF2);
+  static const lightTurquoise3 = Color(0xFF80DEEA);
+  static const lightTurquoise4 = Color(0xFF4DD0E1);
+  static const turquoise        = Color(0xFF00BCD4);
+  static const darkTurquoise1   = Color(0xFF00ACC1);
+  static const darkTurquoise2   = Color(0xFF0097A7);
+  static const darkTurquoise3   = Color(0xFF00838F);
+  static const darkTurquoise4   = Color(0xFF006064);
+
+
+  // PARQUES - VERDE FOLHA
+  static const lightLeaf1 = Color(0xFFE8F5E9);
+  static const lightLeaf2 = Color(0xFFC8E6C9);
+  static const lightLeaf3 = Color(0xFFA5D6A7);
+  static const lightLeaf4 = Color(0xFF81C784);
+  static const leaf        = Color(0xFF4CAF50);
+  static const darkLeaf1   = Color(0xFF43A047);
+  static const darkLeaf2   = Color(0xFF388E3C);
+  static const darkLeaf3   = Color(0xFF2E7D32);
+  static const darkLeaf4   = Color(0xFF1B5E20);
+
+
+  // RESTAURANTES - LARANJA AVERMELHADO
+  static const lightCoral1 = Color(0xFFFFF3E0);
+  static const lightCoral2 = Color(0xFFFFE0B2);
+  static const lightCoral3 = Color(0xFFFFCC80);
+  static const lightCoral4 = Color(0xFFFFB74D);
+  static const coral       = Color(0xFFFF7043);
+  static const darkCoral1  = Color(0xFFFB8C00);
+  static const darkCoral2  = Color(0xFFF57C00);
+  static const darkCoral3  = Color(0xFFEF6C00);
+  static const darkCoral4  = Color(0xFFE65100);
+
+
+  /// REDES DE APOIO - LAVANDA ROSADO
+  static const lightLavender1 = Color(0xFFF8F4FC);
+  static const lightLavender2 = Color(0xFFEEDCF9);
+  static const lightLavender3 = Color(0xFFDAB6F2);
+  static const lightLavender4 = Color(0xFFC48AE8);
+  static const lavender       = Color(0xFFAB47BC);
+  static const darkLavender1  = Color(0xFF9B3CAB);
+  static const darkLavender2  = Color(0xFF843096);
+  static const darkLavender3  = Color(0xFF6A257D);
+  static const darkLavender4  = Color(0xFF4A155A);
+
+
+  // VINHO - (IMAGEM PAGE)
   static const lightWine0 = Color(0xFFFCF7F8);
   static const lightWine1 = Color(0xFFF8E6E8);
   static const lightWine2 = Color(0xFFE9BFC4);
   static const lightWine3 = Color(0xFFD9949C);
   static const lightWine4 = Color(0xFFC86A74);
-  static const wine       = Color(0xFF8B1430); // tom principal vinho
+  static const wine       = Color(0xFF8B1430);
   static const darkWine1  = Color(0xFF7A122B);
   static const darkWine2  = Color(0xFF661026);
-
-
 
 
   // AZUL ESCURO (HUMOR-PAGE)
@@ -52,6 +87,16 @@ class AppColors {
   static const darkBlueDark3 = Color(0xFF1565C0);
   static const darkBlueDark4 = Color(0xFF0D47A1);
   static const darkBlueDark5 = Color(0xFF002E74);
+  static const lightBlue1 = Color(0xFFE1F5FE);
+  static const lightBlue2 = Color(0xFFB3E5FC);
+  static const lightBlue3 = Color(0xFF81D4FA);
+  static const lightBlue4 = Color(0xFF4FC3F7);
+  static const blue = Color(0xFF03A9F4);
+  static const darkBlue1 = Color(0xFF039BE5);
+  static const darkBlue2 = Color(0xFF0288D1);
+  static const darkBlue3 = Color(0xFF0277BD);
+  static const darkBlue4 = Color(0xFF01579B);
+  static const darkBlue5 = Color(0xFF003157);
 
   // VERMELHO (DIÁRIO-PAGE)
   static const lightRed1 = Color(0xFFFAEEEF);
@@ -149,11 +194,11 @@ class AppColors {
   static const darkBordeaux4 = Color(0xFF880E4F);
 
   // TERRACOTA (PERFIL-PAGE)
-  static const lightTerracotta1 = Color(0xFFFBE9E7);   // Fundo pêssego
+  static const lightTerracotta1 = Color(0xFFFBE9E7);
   static const lightTerracotta2 = Color(0xFFFFCCBC);
-  static const lightTerracotta3 = Color(0xFF8F6054);   // Terracota suave
-  static const terracotta = Color(0xFFDD6E42);         // Tom principal
-  static const darkTerracotta1 = Color(0xFFBF4A19);    // Forte
-  static const darkTerracotta2 = Color(0xFF873100);    // Profundo
+  static const lightTerracotta3 = Color(0xFF8F6054);
+  static const terracotta = Color(0xFFDD6E42);
+  static const darkTerracotta1 = Color(0xFFBF4A19);
+  static const darkTerracotta2 = Color(0xFF873100);
   static const darkTerracotta3 = Color(0xFF4D1A00);
 }
