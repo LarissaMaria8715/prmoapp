@@ -15,4 +15,3 @@ class LivrosApi {
     return livrosJson.map((json) => Livro.fromJson(json)).toList();
   }
 }
-

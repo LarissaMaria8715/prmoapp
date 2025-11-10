@@ -1,9 +1,9 @@
 import 'package:equilibreapp/pages/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../database/database_helper.dart';
-import '../database/user_dao.dart';
-import 'package:equilibreapp/utils/colors.dart';
+import '../api/usuarios_api.dart';
+import '../utils/colors.dart';
+import '../model/user_model.dart';
 import '../utils/shared_prefs.dart';
 import 'home_page.dart';
 
@@ -15,156 +15,198 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final DatabaseHelper db = DatabaseHelper();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final UsuarioDAO userDAO = UsuarioDAO();
   final SharedPrefs _prefs = SharedPrefs();
+
   bool _passwordVisible = false;
-  bool _isLoading = true;
+  late Future<Usuario?> _loginFuture;
 
   @override
   void initState() {
     super.initState();
-    _checkLoginStatus();
+    _loginFuture = _checkLoginStatus();
   }
 
-  // 🔹 Verifica se o usuário já está logado (apenas com getUserStatus)
-  Future<void> _checkLoginStatus() async {
+  Future<Usuario?> _checkLoginStatus() async {
     final isLoggedIn = await _prefs.getUserStatus();
-
     if (isLoggedIn) {
-      // Se já estiver logado, vai direto pra HomePage
+      // Se já está logado, redireciona direto para HomePage
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (_) => const HomePage(
-            email: '',
-            senha: '',
-          ),
+        MaterialPageRoute(builder: (_) => const HomePage(email: '', senha: '')),
+      );
+    }
+    return null;
+  }
+
+  Future<Usuario?> _login(String email, String senha) async {
+    try {
+      final api = UsuariosApi();
+      final usuarios = await api.findAll();
+
+      final usuarioEncontrado = usuarios.firstWhere(
+            (u) => u.email == email && u.senha == senha,
+        orElse: () => Usuario(
+          id: 0,
+          nome: '',
+          email: '',
+          senha: '',
+          dataNascimento: '',
+          genero: '',
+          altura: 0.0,
+          peso: 0.0,
+          objetivo: '',
+          praticaMeditacao: 0,
+          recebeNotificacoes: 0,
+          condicaoSaude: '',
+          telefone: '',
+          cidade: '',
+          estado: '',
         ),
       );
-    } else {
-      setState(() => _isLoading = false);
+
+      if (usuarioEncontrado.id != 0) {
+        await _prefs.setUserStatus(true);
+        return usuarioEncontrado;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erro ao conectar à API.')),
+      );
+      return null;
     }
+  }
+
+  void _onLoginPressed() {
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Preencha todos os campos!')),
+      );
+      return;
+    }
+
+    setState(() {
+      _loginFuture = _login(
+        emailController.text.trim(),
+        passwordController.text,
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Scaffold(
-        backgroundColor: AppColors.darkGreen5,
-        body: Center(
-          child: CircularProgressIndicator(color: Colors.white),
-        ),
-      );
-    }
-
     return Scaffold(
       backgroundColor: AppColors.lightGreen1,
       body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 420),
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              color: AppColors.darkGreen5,
-              borderRadius: BorderRadius.circular(28),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.25),
-                  blurRadius: 24,
-                  offset: const Offset(0, 12),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'Bem-vindo ao Equilibre',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.raleway(
-                    fontSize: 36,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                    letterSpacing: 1.3,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 48),
-
-                _buildTextField(
-                  controller: emailController,
-                  label: 'E-mail',
-                  icon: Icons.email_outlined,
-                  keyboardType: TextInputType.emailAddress,
-                  labelColor: Colors.white,
-                  iconColor: Colors.white,
-                  fillColor: Colors.white.withOpacity(0.15),
-                  focusedBorderColor: Colors.white,
-                ),
-                const SizedBox(height: 24),
-
-                _buildTextField(
-                  controller: passwordController,
-                  label: 'Senha',
-                  icon: Icons.lock_outline,
-                  obscureText: !_passwordVisible,
-                  labelColor: Colors.white,
-                  iconColor: Colors.white,
-                  fillColor: Colors.white.withOpacity(0.15),
-                  focusedBorderColor: Colors.white,
-                  isPasswordField: true,
-                  onVisibilityToggle: () {
-                    setState(() {
-                      _passwordVisible = !_passwordVisible;
-                    });
-                  },
-                  passwordVisible: _passwordVisible,
-                ),
-
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      // TODO: ação "esqueci minha senha"
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.white70,
-                      textStyle: const TextStyle(decoration: TextDecoration.underline),
+        child: FutureBuilder<Usuario?>(
+          future: _loginFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator(color: Colors.white);
+            } else if (snapshot.hasData && snapshot.data != null) {
+              // Login bem-sucedido, redireciona
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => HomePage(
+                      email: snapshot.data!.email,
+                      senha: snapshot.data!.senha,
                     ),
-                    child: const Text('Esqueci minha senha'),
                   ),
-                ),
-                const SizedBox(height: 36),
+                );
+              });
+              return const SizedBox.shrink();
+            } else if (snapshot.connectionState != ConnectionState.none &&
+                snapshot.data == null &&
+                snapshot.hasError == false) {
+              // Login falhou
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('E-mail e/ou senha incorretos!')),
+                );
+              });
+            }
 
-                _GlassButton(
-                  label: 'Entrar',
-                  icon: Icons.login,
-                  onPressed: _handleLogin,
+            // Tela de login padrão
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 420),
+                padding: const EdgeInsets.all(32),
+                decoration: BoxDecoration(
+                  color: AppColors.darkGreen5,
+                  borderRadius: BorderRadius.circular(28),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.25),
+                      blurRadius: 24,
+                      offset: const Offset(0, 12),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 18),
-                _GlassButton(
-                  label: 'Criar uma conta',
-                  outlined: true,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const RegisterPage()),
-                    );
-                  },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Bem-vindo ao Equilibre',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.raleway(
+                        fontSize: 36,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 48),
+                    _buildTextField(
+                      controller: emailController,
+                      label: 'E-mail',
+                      icon: Icons.email_outlined,
+                      keyboardType: TextInputType.emailAddress,
+                      labelColor: Colors.white,
+                      iconColor: Colors.white,
+                      fillColor: Colors.white.withOpacity(0.15),
+                      focusedBorderColor: Colors.white,
+                    ),
+                    const SizedBox(height: 24),
+                    _buildTextField(
+                      controller: passwordController,
+                      label: 'Senha',
+                      icon: Icons.lock_outline,
+                      obscureText: !_passwordVisible,
+                      labelColor: Colors.white,
+                      iconColor: Colors.white,
+                      fillColor: Colors.white.withOpacity(0.15),
+                      focusedBorderColor: Colors.white,
+                      isPasswordField: true,
+                      onVisibilityToggle: () {
+                        setState(() {
+                          _passwordVisible = !_passwordVisible;
+                        });
+                      },
+                      passwordVisible: _passwordVisible,
+                    ),
+                    const SizedBox(height: 36),
+                    _GlassButton(label: 'Entrar', icon: Icons.login, onPressed: _onLoginPressed),
+                    const SizedBox(height: 18),
+                    _GlassButton(
+                      label: 'Criar uma conta',
+                      outlined: true,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const RegisterPage()),
+                        );
+                      },
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -225,32 +267,9 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-  // 🔹 Validação e salvamento do login (usando apenas setUserStatus)
-  void _handleLogin() async {
-    String email = emailController.text.trim();
-    String senha = passwordController.text;
-
-    final usuario = await userDAO.validar(email, senha);
-
-    if (usuario != null) {
-       _prefs.setUserStatus(true);
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => HomePage(email: email, senha: senha),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('E-mail e/ou senha incorretos!')),
-      );
-    }
-  }
 }
 
-// 🔸 Botão Glassmorphism (sem alterações)
+// 🔸 Botão Glassmorphism
 class _GlassButton extends StatefulWidget {
   final String label;
   final IconData? icon;
@@ -295,9 +314,7 @@ class _GlassButtonState extends State<_GlassButton> {
         decoration: BoxDecoration(
           color: _isPressed ? bgColor.withOpacity(0.8) : bgColor,
           borderRadius: BorderRadius.circular(18),
-          border: widget.outlined
-              ? Border.all(color: borderColor, width: 1.5)
-              : null,
+          border: widget.outlined ? Border.all(color: borderColor, width: 1.5) : null,
           boxShadow: _isPressed
               ? [
             BoxShadow(

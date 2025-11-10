@@ -9,10 +9,10 @@ class HumorApi {
   Future<List<Humor>> findAll() async {
     List<Humor> listaHumores = [];
 
-    final response = await dio.get('$baseUrl/db');
+    final response = await dio.get('$baseUrl/humor');
 
     if (response.statusCode == 200) {
-      var listResult = response.data['humor'];
+      var listResult = response.data;
       for (var json in listResult) {
         Humor humor = Humor.fromJson(json);
         listaHumores.add(humor);

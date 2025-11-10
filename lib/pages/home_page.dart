@@ -1,6 +1,7 @@
 import 'package:equilibreapp/pages/perfil_page.dart';
 import 'package:flutter/material.dart';
 import '../utils/colors.dart';
+import '../utils/shared_prefs.dart';
 import 'home_content_page.dart';
 import 'login_page.dart';
 import 'notificacoes_page.dart';
@@ -64,6 +65,9 @@ class _HomePageState extends State<HomePage> {
                       MaterialPageRoute(builder: (context) => LoginPage()),
                           (route) => false,
                     );
+
+                    final SharedPrefs _prefs = SharedPrefs();
+                    _prefs.setUserStatus(false);
                   },
                   child: const Text('Sair'),
                 ),

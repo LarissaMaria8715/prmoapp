@@ -35,20 +35,20 @@ class Usuario {
 
   Usuario.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? 0;
-    nome = json['nome'];
-    email = json['email'];
-    senha = json['senha'];
-    dataNascimento = json['dataNascimento'];
-    genero = json['genero'];
-    altura = json['altura'];
-    peso = json['peso'];
-    objetivo = json['objetivo'];
-    praticaMeditacao = json['praticaMeditacao'];
-    recebeNotificacoes = json['recebeNotificacoes'];
-    condicaoSaude = json['condicaoSaude'];
-    telefone = json['telefone'];
-    cidade = json['cidade'];
-    estado = json['estado'];
+    nome = json['nome'] ?? '';
+    email = json['email'] ?? '';
+    senha = json['senha'] ?? '';
+    dataNascimento = json['dataNascimento'] ?? '';
+    genero = json['genero'] ?? '';
+    altura = (json['altura'] ?? 0).toDouble();
+    peso = (json['peso'] ?? 0).toDouble();
+    objetivo = json['objetivo'] ?? '';
+    praticaMeditacao = json['praticaMeditacao'] ?? 0;
+    recebeNotificacoes = json['recebeNotificacoes'] ?? 0;
+    condicaoSaude = json['condicaoSaude'] ?? '';
+    telefone = json['telefone'] ?? '';
+    cidade = json['cidade'] ?? '';
+    estado = json['estado'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
