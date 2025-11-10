@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../api/livro_api.dart';
-import '../model/livro_model.dart';
-import '../utils/colors.dart';
-import '../wigets/livro_card.dart';
+import '../../api/livro_api.dart';
+import '../../model/livro_model.dart';
+import '../../utils/colors.dart';
+import '../../wigets/livro_card.dart';
 class LivrosPage extends StatefulWidget {
   const LivrosPage({super.key});
 

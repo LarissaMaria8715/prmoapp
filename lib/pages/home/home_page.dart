@@ -1,10 +1,11 @@
-import 'package:equilibreapp/pages/perfil_page.dart';
+import 'package:equilibreapp/pages/perfil/perfil_page.dart';
 import 'package:flutter/material.dart';
-import '../utils/colors.dart';
-import '../utils/shared_prefs.dart';
+import '../../utils/colors.dart';
+import '../../utils/shared_prefs.dart';
+import '../login/login_page.dart';
+import '../notifications/notificacoes_page.dart';
 import 'home_content_page.dart';
-import 'login_page.dart';
-import 'notificacoes_page.dart';
+
 
 class HomePage extends StatefulWidget {
   final String email;

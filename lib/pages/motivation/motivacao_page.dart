@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // Importe a API e o Modelo
-import '../api/motivacao_api.dart';
-import '../model/quote_model.dart';
-import '../utils/colors.dart'; // Mantendo sua importação de cores
+import '../../api/motivacao_api.dart';
+import '../../model/quote_model.dart';
+import '../../utils/colors.dart'; // Mantendo sua importação de cores
 
 class MotivacaoPage extends StatefulWidget {
   const MotivacaoPage({super.key});

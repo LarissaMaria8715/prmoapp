@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../utils/shared_prefs.dart';
-import 'home_page.dart';
-import 'login_page.dart';
+import '../../utils/shared_prefs.dart';
+import '../home/home_page.dart';
+import '../login/login_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});

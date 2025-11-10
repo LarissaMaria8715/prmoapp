@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import '../database/habito_dao.dart';
-import '../model/habito_model.dart';
-import '../utils/colors.dart';
-import '../wigets/card_container.dart';
-import '../wigets/checkbox_habit.dart';
-import '../wigets/dropdown_autoavaliacao.dart';
-import '../wigets/slider_habit_widget.dart';
-import '../wigets/titulo_secao_widget.dart';
-import '../api/habitos_api.dart';
+import '../../database/habito_dao.dart';
+import '../../model/habito_model.dart';
+import '../../utils/colors.dart';
+import '../../wigets/card_container.dart';
+import '../../wigets/checkbox_habit.dart';
+import '../../wigets/dropdown_autoavaliacao.dart';
+import '../../wigets/slider_habit_widget.dart';
+import '../../wigets/titulo_secao_widget.dart';
+import '../../api/habitos_api.dart';
 
 class HabitosPage extends StatefulWidget {
   const HabitosPage({Key? key}) : super(key: key);

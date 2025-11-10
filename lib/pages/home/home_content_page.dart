@@ -1,18 +1,18 @@
-import 'package:equilibreapp/pages/agenda_page.dart';
-import 'package:equilibreapp/pages/habitos_page.dart';
-import 'package:equilibreapp/pages/humor_page.dart';
-import 'package:equilibreapp/pages/metas_page.dart';
-import 'package:equilibreapp/pages/music_page.dart';
-import 'package:equilibreapp/pages/respiracao_page.dart';
+import 'package:equilibreapp/pages/agenda/agenda_page.dart';
+import 'package:equilibreapp/pages/habits/habitos_page.dart';
+import 'package:equilibreapp/pages/humor/humor_page.dart';
+import 'package:equilibreapp/pages/goals/metas_page.dart';
+import 'package:equilibreapp/pages/music/music_page.dart';
+import 'package:equilibreapp/pages/breath/respiracao_page.dart';
 import 'package:equilibreapp/wigets/style_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../database/user_dao.dart';
-import '../utils/colors.dart';
-import 'calm_page.dart';
-import 'diario_page.dart';
-import 'motivacao_page.dart';
-import 'livro_page.dart';
+import '../../database/user_dao.dart';
+import '../../utils/colors.dart';
+import '../calm/calm_page.dart';
+import '../diary/diario_page.dart';
+import '../motivation/motivacao_page.dart';
+import '../book/livro_page.dart';
 
 class HomeContent extends StatelessWidget {
   final String email;

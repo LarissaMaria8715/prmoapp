@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:equilibreapp/utils/colors.dart';
-import '../database/user_dao.dart';
-import '../model/user_model.dart';
+import '../../database/user_dao.dart';
+import '../../model/user_model.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../database/music_dao.dart';
-import '../model/music_model.dart';
-import '../utils/colors.dart';
-import '../wigets/music_card.dart';
+import '../../database/music_dao.dart';
+import '../../model/music_model.dart';
+import '../../utils/colors.dart';
+import '../../wigets/music_card.dart';
 
 class MusicPage extends StatefulWidget {
   const MusicPage({super.key});

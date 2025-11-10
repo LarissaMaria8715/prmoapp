@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../api/diario_api.dart';
-import '../model/diario_model.dart';
-import '../database/diario_dao.dart';
-import '../utils/colors.dart';
+import '../../api/diario_api.dart';
+import '../../model/diario_model.dart';
+import '../../database/diario_dao.dart';
+import '../../utils/colors.dart';
 
 class DiarioPage extends StatefulWidget {
   const DiarioPage({super.key});

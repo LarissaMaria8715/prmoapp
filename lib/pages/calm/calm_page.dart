@@ -1,9 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../database/imagem_dao.dart';
-import '../model/imagem_model.dart';
-import '../utils/colors.dart';
-import '../wigets/imagem_com_moldura.dart'; // arquivo onde está sua paleta de cores
+import '../../database/imagem_dao.dart';
+import '../../model/imagem_model.dart';
+import '../../utils/colors.dart';
+import '../../wigets/imagem_com_moldura.dart'; // arquivo onde está sua paleta de cores
 
 class CalmaPage extends StatefulWidget {
   const CalmaPage({Key? key}) : super(key: key);

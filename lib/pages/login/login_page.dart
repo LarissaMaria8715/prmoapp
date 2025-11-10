@@ -1,11 +1,11 @@
-import 'package:equilibreapp/pages/register_page.dart';
+import 'package:equilibreapp/pages/registration/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../api/usuarios_api.dart';
-import '../utils/colors.dart';
-import '../model/user_model.dart';
-import '../utils/shared_prefs.dart';
-import 'home_page.dart';
+import '../../api/usuarios_api.dart';
+import '../../utils/colors.dart';
+import '../../model/user_model.dart';
+import '../../utils/shared_prefs.dart';
+import '../home/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
