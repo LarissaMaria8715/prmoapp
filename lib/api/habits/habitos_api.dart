@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../model/habito_model.dart';
+import '../../model/habits/habito_model.dart';
 
 class HabitosApi {
   final dio = Dio();

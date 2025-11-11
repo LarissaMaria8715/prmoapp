@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../database/music_dao.dart';
-import '../../model/music_model.dart';
+import '../../database/music/music_dao.dart';
+import '../../model/music/music_model.dart';
 import '../../utils/colors.dart';
 import '../../wigets/music_card.dart';
 

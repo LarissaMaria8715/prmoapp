@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../model/humor_model.dart';
+import '../../model/humor/humor_model.dart';
 
 class HumorApi {
   final dio = Dio();

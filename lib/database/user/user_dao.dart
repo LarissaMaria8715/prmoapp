@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
-import '../model/user_model.dart';
-import 'database_helper.dart';
+import '../../model/user/user_model.dart';
+import '../helper/database_helper.dart';
 
 class UsuarioDAO {
   Future<Database> _pegarBanco() async {

@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
-import '../model/diario_model.dart';
-import 'database_helper.dart';
+import '../../model/diary/diario_model.dart';
+import '../helper/database_helper.dart';
 
 class DiarioDAO {
   final DatabaseHelper _dbHelper = DatabaseHelper();

@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
-import '../model/habito_model.dart';
-import 'database_helper.dart';
+import '../../model/habits/habito_model.dart';
+import '../helper/database_helper.dart';
 
 class HabitoDAO {
   Future<Database> _getDatabase() async {

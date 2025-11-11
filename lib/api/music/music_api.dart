@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../model/music_model.dart';
+import '../../model/music/music_model.dart';
 
 class MusicApi {
   final Dio dio = Dio();

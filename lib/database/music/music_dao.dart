@@ -1,5 +1,5 @@
-import '../api/music_api.dart';
-import '../model/music_model.dart';
+import '../../api/music/music_api.dart';
+import '../../model/music/music_model.dart';
 
 class MusicDao {
   final MusicApi api = MusicApi();

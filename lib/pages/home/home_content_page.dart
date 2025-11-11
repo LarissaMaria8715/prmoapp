@@ -7,7 +7,7 @@ import 'package:equilibreapp/pages/breath/respiracao_page.dart';
 import 'package:equilibreapp/wigets/style_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../database/user_dao.dart';
+import '../../database/user/user_dao.dart';
 import '../../utils/colors.dart';
 import '../calm/calm_page.dart';
 import '../diary/diario_page.dart';

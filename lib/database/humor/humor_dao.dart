@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
-import '../model/humor_model.dart';
-import 'database_helper.dart';
+import '../../model/humor/humor_model.dart';
+import '../helper/database_helper.dart';
 
 class HumorDAO {
   Future<Database> _getDatabase() async {

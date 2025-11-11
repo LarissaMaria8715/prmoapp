@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../model/diario_model.dart';
+import '../../model/diary/diario_model.dart';
 
 class DiarioApi {
   final dio = Dio();

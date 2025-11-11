@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../model/livro_model.dart';
+import '../../model/book/livro_model.dart';
 
 class LivrosApi {
   final dio = Dio();

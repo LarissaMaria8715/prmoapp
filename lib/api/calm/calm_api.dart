@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../model/imagem_model.dart';
+import '../../model/calm/imagem_model.dart';
 
 class calmApi {
   static const String baseUrl = 'https://picsum.photos/v2/list';

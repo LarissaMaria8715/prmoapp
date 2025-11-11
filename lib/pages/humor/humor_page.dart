@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../utils/colors.dart';
-import '../../database/humor_dao.dart';
-import '../../model/humor_model.dart';
-import '../../api/humor_api.dart';
+import '../../database/humor/humor_dao.dart';
+import '../../model/humor/humor_model.dart';
+import '../../api/humor/humor_api.dart';
 
 class HumorPage extends StatefulWidget {
   const HumorPage({super.key});

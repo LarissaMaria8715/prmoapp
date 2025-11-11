@@ -6,7 +6,6 @@ import '../login/login_page.dart';
 import '../notifications/notificacoes_page.dart';
 import 'home_content_page.dart';
 
-
 class HomePage extends StatefulWidget {
   final String email;
   final String senha;

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import '../model/quote_model.dart';
-import 'translation_api.dart';
+import '../../model/quote/quote_model.dart';
+import '../translation/translation_api.dart';
 
 class MotivacaoApi {
   final dio = Dio();

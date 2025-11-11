@@ -1,5 +1,5 @@
-import '../api/calm_api.dart';
-import '../model/imagem_model.dart';
+import '../../api/calm/calm_api.dart';
+import '../../model/calm/imagem_model.dart';
 
 
 class ImagemDao {
