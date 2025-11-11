@@ -1,0 +1,45 @@
+import 'package:sqflite/sqflite.dart';
+import '../../model/diary/diario_model.dart';
+import '../helper/database_helper.dart';
+
+class DiarioDAO {
+  final DatabaseHelper _dbHelper = DatabaseHelper();
+
+  Future<Database> _getDatabase() async {
+    return await _dbHelper.initDB();
+  }
+
+  // Salvar nova entrada.
+  Future<int> salvar(Diario diario) async {
+    final db = await _getDatabase();
+    return await db.insert(
+      'diario',
+      diario.toJson(), // usa usuario_id, compatível com DB
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  // Listar entradas por usuário
+  Future<List<Diario>> listarPorUsuario(int usuarioId) async {
+    final db = await _getDatabase();
+
+    final result = await db.query(
+      'diario',
+      where: 'usuario_id = ?', // nome da coluna do banco
+      whereArgs: [usuarioId],
+      orderBy: 'id DESC',
+    );
+
+    return result.map((json) => Diario.fromJson(json)).toList();
+  }
+
+  // Deletar entrada por ID
+  Future<int> deletar(int id) async {
+    final db = await _getDatabase();
+    return await db.delete(
+      'diario',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+}

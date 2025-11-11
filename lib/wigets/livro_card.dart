@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../model/livro_model.dart';
+import '../model/book/livro_model.dart';
 import '../utils/colors.dart';
 
 class LivroCard extends StatelessWidget {
