@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../model/book/livro_model.dart';
-import '../utils/colors.dart';
+import '../../model/book/livro_model.dart';
+import '../../utils/colors.dart';
 
 class LivroCard extends StatelessWidget {
   final Livro livro;

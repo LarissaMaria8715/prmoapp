@@ -13,6 +13,7 @@ import '../calm/calm_page.dart';
 import '../diary/diario_page.dart';
 import '../motivation/motivacao_page.dart';
 import '../book/livro_page.dart';
+import '../places/places_page.dart';
 
 class HomeContent extends StatelessWidget {
   final String email;
@@ -97,8 +98,8 @@ class HomeContent extends StatelessWidget {
       _actionButton(Icons.image_outlined, 'Imagens', AppColors.darkWine1, () {
         Navigator.push(context, MaterialPageRoute(builder: (_) => CalmaPage()));
       }),
-      _actionButton(Icons.image_outlined, 'Lugares', AppColors.darkWine1, () {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => CalmaPage()));
+      _actionButton(Icons.place, 'Lugares', AppColors.darkPink2, () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => LugaresPage()));
       }),
     ];
 

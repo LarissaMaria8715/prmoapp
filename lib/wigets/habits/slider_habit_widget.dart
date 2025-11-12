@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../utils/colors.dart';
-import 'card_container.dart';
+import '../../utils/colors.dart';
+import '../card_container.dart';
 
 class SliderHabit extends StatelessWidget {
   final String title;

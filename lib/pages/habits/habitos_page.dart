@@ -4,10 +4,10 @@ import '../../database/habits/habito_dao.dart';
 import '../../model/habits/habito_model.dart';
 import '../../utils/colors.dart';
 import '../../wigets/card_container.dart';
-import '../../wigets/checkbox_habit.dart';
-import '../../wigets/dropdown_autoavaliacao.dart';
-import '../../wigets/slider_habit_widget.dart';
-import '../../wigets/titulo_secao_widget.dart';
+import '../../wigets/habits/checkbox_habit.dart';
+import '../../wigets/habits/dropdown_autoavaliacao.dart';
+import '../../wigets/habits/slider_habit_widget.dart';
+import '../../wigets/habits/titulo_secao_widget.dart';
 import '../../api/habits/habitos_api.dart';
 
 class HabitosPage extends StatefulWidget {
