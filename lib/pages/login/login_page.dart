@@ -20,56 +20,41 @@ class _LoginPageState extends State<LoginPage> {
   final SharedPrefs _prefs = SharedPrefs();
 
   bool _passwordVisible = false;
-  late Future<Usuario?> _loginFuture;
+  Future<Usuario?>? _loginFuture;
 
   @override
   void initState() {
     super.initState();
-    _loginFuture = _checkLoginStatus();
+    _checkLoginStatus();
   }
 
-  Future<Usuario?> _checkLoginStatus() async {
+  Future<void> _checkLoginStatus() async {
     final isLoggedIn = await _prefs.getUserStatus();
     if (isLoggedIn) {
-      // Se já está logado, redireciona direto para HomePage
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const HomePage(email: '', senha: '')),
-      );
+      // usuário já logado
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const HomePage(email: '', senha: ''),
+          ),
+        );
+      }
     }
-    return null;
   }
 
   Future<Usuario?> _login(String email, String senha) async {
     try {
       final api = UsuariosApi();
-      final usuarios = await api.findAll();
+      final usuario = await api.login(email, senha);
 
-      final usuarioEncontrado = usuarios.firstWhere(
-            (u) => u.email == email && u.senha == senha,
-        orElse: () => Usuario(
-          id: 0,
-          nome: '',
-          email: '',
-          senha: '',
-          dataNascimento: '',
-          genero: '',
-          altura: 0.0,
-          peso: 0.0,
-          objetivo: '',
-          praticaMeditacao: 0,
-          recebeNotificacoes: 0,
-          condicaoSaude: '',
-          telefone: '',
-          cidade: '',
-          estado: '',
-        ),
-      );
-
-      if (usuarioEncontrado.id != 0) {
+      if (usuario != null) {
         await _prefs.setUserStatus(true);
-        return usuarioEncontrado;
+        return usuario;
       } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('E-mail ou senha incorretos.')),
+        );
         return null;
       }
     } catch (e) {
@@ -107,7 +92,6 @@ class _LoginPageState extends State<LoginPage> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator(color: Colors.white);
             } else if (snapshot.hasData && snapshot.data != null) {
-              // Login bem-sucedido, redireciona
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 Navigator.pushReplacement(
                   context,
@@ -120,18 +104,8 @@ class _LoginPageState extends State<LoginPage> {
                 );
               });
               return const SizedBox.shrink();
-            } else if (snapshot.connectionState != ConnectionState.none &&
-                snapshot.data == null &&
-                snapshot.hasError == false) {
-              // Login falhou
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('E-mail e/ou senha incorretos!')),
-                );
-              });
             }
 
-            // Tela de login padrão
             return SingleChildScrollView(
               padding: const EdgeInsets.all(24),
               child: Container(
@@ -190,7 +164,11 @@ class _LoginPageState extends State<LoginPage> {
                       passwordVisible: _passwordVisible,
                     ),
                     const SizedBox(height: 36),
-                    _GlassButton(label: 'Entrar', icon: Icons.login, onPressed: _onLoginPressed),
+                    _GlassButton(
+                      label: 'Entrar',
+                      icon: Icons.login,
+                      onPressed: _onLoginPressed,
+                    ),
                     const SizedBox(height: 18),
                     _GlassButton(
                       label: 'Criar uma conta',
@@ -198,7 +176,9 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => const RegisterPage()),
+                          MaterialPageRoute(
+                            builder: (_) => const RegisterPage(),
+                          ),
                         );
                       },
                     ),
@@ -231,7 +211,10 @@ class _LoginPageState extends State<LoginPage> {
       obscureText: obscureText,
       keyboardType: keyboardType,
       style: GoogleFonts.poppins(
-          color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+        color: Colors.white,
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+      ),
       cursorColor: Colors.white70,
       decoration: InputDecoration(
         prefixIcon: icon != null ? Icon(icon, color: iconColor) : null,
@@ -258,7 +241,9 @@ class _LoginPageState extends State<LoginPage> {
         suffixIcon: isPasswordField
             ? IconButton(
           icon: Icon(
-            passwordVisible ? Icons.visibility : Icons.visibility_off,
+            passwordVisible
+                ? Icons.visibility
+                : Icons.visibility_off,
             color: Colors.white70,
           ),
           onPressed: onVisibilityToggle,
@@ -269,7 +254,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-// 🔸 Botão Glassmorphism
 class _GlassButton extends StatefulWidget {
   final String label;
   final IconData? icon;
@@ -314,7 +298,9 @@ class _GlassButtonState extends State<_GlassButton> {
         decoration: BoxDecoration(
           color: _isPressed ? bgColor.withOpacity(0.8) : bgColor,
           borderRadius: BorderRadius.circular(18),
-          border: widget.outlined ? Border.all(color: borderColor, width: 1.5) : null,
+          border: widget.outlined
+              ? Border.all(color: borderColor, width: 1.5)
+              : null,
           boxShadow: _isPressed
               ? [
             BoxShadow(

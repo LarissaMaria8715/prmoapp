@@ -14,6 +14,7 @@ class Usuario {
   late String telefone;
   late String cidade;
   late String estado;
+  late String foto;
 
   Usuario({
     this.id = 0,
@@ -31,6 +32,7 @@ class Usuario {
     required this.telefone,
     required this.cidade,
     required this.estado,
+    this.foto = '',
   });
 
   Usuario.fromJson(Map<String, dynamic> json) {
@@ -40,8 +42,16 @@ class Usuario {
     senha = json['senha'] ?? '';
     dataNascimento = json['dataNascimento'] ?? '';
     genero = json['genero'] ?? '';
-    altura = (json['altura'] ?? 0).toDouble();
-    peso = (json['peso'] ?? 0).toDouble();
+
+    // ✅ Converte número seguro
+    altura = (json['altura'] is int)
+        ? (json['altura'] as int).toDouble()
+        : (json['altura'] ?? 0.0).toDouble();
+
+    peso = (json['peso'] is int)
+        ? (json['peso'] as int).toDouble()
+        : (json['peso'] ?? 0.0).toDouble();
+
     objetivo = json['objetivo'] ?? '';
     praticaMeditacao = json['praticaMeditacao'] ?? 0;
     recebeNotificacoes = json['recebeNotificacoes'] ?? 0;
@@ -49,25 +59,27 @@ class Usuario {
     telefone = json['telefone'] ?? '';
     cidade = json['cidade'] ?? '';
     estado = json['estado'] ?? '';
+    foto = json['foto'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (id != 0) data['id'] = id;
-    data['nome'] = nome;
-    data['email'] = email;
-    data['senha'] = senha;
-    data['dataNascimento'] = dataNascimento;
-    data['genero'] = genero;
-    data['altura'] = altura;
-    data['peso'] = peso;
-    data['objetivo'] = objetivo;
-    data['praticaMeditacao'] = praticaMeditacao;
-    data['recebeNotificacoes'] = recebeNotificacoes;
-    data['condicaoSaude'] = condicaoSaude;
-    data['telefone'] = telefone;
-    data['cidade'] = cidade;
-    data['estado'] = estado;
-    return data;
+    return {
+      if (id != 0) 'id': id,
+      'nome': nome,
+      'email': email,
+      'senha': senha,
+      'dataNascimento': dataNascimento,
+      'genero': genero,
+      'altura': altura,
+      'peso': peso,
+      'objetivo': objetivo,
+      'praticaMeditacao': praticaMeditacao,
+      'recebeNotificacoes': recebeNotificacoes,
+      'condicaoSaude': condicaoSaude,
+      'telefone': telefone,
+      'cidade': cidade,
+      'estado': estado,
+      'foto': foto,
+    };
   }
 }

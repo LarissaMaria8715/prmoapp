@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../model/music/music_model.dart';
+import '../../model/music/music_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../utils/colors.dart';
+import '../../utils/colors.dart';
 
 class MusicCard extends StatelessWidget {
   final Music music;

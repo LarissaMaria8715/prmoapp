@@ -5,6 +5,7 @@ class AppColors {
   static const black = Color(0xFF000000);
 
   // ROSA (LUGARES)
+  static const lightPink = Color(0xFFFFE9F1);
   static const lightPink1 = Color(0xFFF8BBD0);
   static const lightPink2 = Color(0xFFF48FB1);
   static const lightPink3 = Color(0xFFF06292);
@@ -30,7 +31,7 @@ class AppColors {
 
 
   // PARQUES - VERDE FOLHA
-  static const lightLeaf1 = Color(0xFFE8F5E9);
+  static const lightLeaf1 = Color(0xFFF6FFF7);
   static const lightLeaf2 = Color(0xFFC8E6C9);
   static const lightLeaf3 = Color(0xFFA5D6A7);
   static const lightLeaf4 = Color(0xFF81C784);

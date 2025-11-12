@@ -3,23 +3,24 @@ import '../../model/user/user_model.dart';
 
 class UsuariosApi {
   final dio = Dio();
-  final String baseUrl = 'https://my-json-server.typicode.com/LarissaMaria8715/equilibre-api';
+  final String baseUrl =
+      'https://my-json-server.typicode.com/LarissaMaria8715/equilibre-api';
 
-  Future<List<Usuario>> findAll() async {
-    List<Usuario> listaUsuarios = [];
+  Future<Usuario?> login(String email, String senha) async {
+    final loginResponse = await dio.get('$baseUrl/login');
+    if (loginResponse.statusCode == 200) {
+      final List logins = loginResponse.data;
+      final match = logins.firstWhere(
+            (l) => l['email'] == email && l['senha'] == senha,
+        orElse: () => null,
+      );
 
-    final response = await dio.get('$baseUrl/usuarios');
-
-    if (response.statusCode == 200) {
-      var listResult = response.data;
-      for (var json in listResult) {
-        Usuario usuario = Usuario.fromJson(json);
-        listaUsuarios.add(usuario);
+      if (match != null) {
+        final userResponse =
+        await dio.get('$baseUrl/usuarios/${match['usuarioId']}');
+        return Usuario.fromJson(userResponse.data);
       }
     }
-
-    await Future.delayed(Duration(seconds: 2));
-
-    return listaUsuarios;
+    return null;
   }
 }
