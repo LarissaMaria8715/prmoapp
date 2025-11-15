@@ -49,18 +49,6 @@ class RestaurantesPage extends StatelessWidget {
             imagem: item['imagem']!,
             corPrimaria: AppColors.darkCoral4,
             corSecundaria: AppColors.darkCoral1,
-            onVerMapa: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Abrindo ${item['titulo']} no mapa...',
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  backgroundColor: AppColors.darkPink3,
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
-            },
           );
         },
       ),

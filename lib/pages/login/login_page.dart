@@ -31,7 +31,6 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _checkLoginStatus() async {
     final isLoggedIn = await _prefs.getUserStatus();
     if (isLoggedIn) {
-      // usuário já logado
       if (mounted) {
         Navigator.pushReplacement(
           context,

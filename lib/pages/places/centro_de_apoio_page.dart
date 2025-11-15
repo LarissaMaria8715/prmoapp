@@ -49,15 +49,6 @@ class CentrosApoioPage extends StatelessWidget {
             imagem: item['imagem']!,
             corPrimaria: AppColors.darkLavender3,
             corSecundaria: AppColors.darkLavender1,
-            onVerMapa: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Abrindo ${item['titulo']} no mapa...'),
-                  backgroundColor: AppColors.darkPink4,
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
-            },
           );
         },
       ),

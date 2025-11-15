@@ -49,15 +49,6 @@ class HospitaisPage extends StatelessWidget {
             imagem: item['imagem']!,
             corPrimaria: AppColors.darkTurquoise3,
             corSecundaria: AppColors.darkTurquoise2,
-            onVerMapa: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Abrindo ${item['titulo']} no mapa...'),
-                  backgroundColor: AppColors.lightPink3,
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
-            },
           );
         },
       ),
