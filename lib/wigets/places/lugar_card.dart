@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class LugarCard extends StatelessWidget {
+import '../../pages/places/google_maps_page.dart';
+
+class LugarCard extends StatefulWidget {
   final String titulo;
   final String telefone;
   final String endereco;
   final String imagem;
   final Color corPrimaria;
   final Color corSecundaria;
-  final VoidCallback onVerMapa;
 
   const LugarCard({
     Key? key,
@@ -18,8 +21,42 @@ class LugarCard extends StatelessWidget {
     required this.imagem,
     required this.corPrimaria,
     required this.corSecundaria,
-    required this.onVerMapa,
   }) : super(key: key);
+
+  @override
+  State<LugarCard> createState() => _LugarCardState();
+}
+
+class _LugarCardState extends State<LugarCard> {
+
+  Future<void> _abrirMapa() async {
+    try {
+      List<Location> locations =
+      await locationFromAddress(widget.endereco);
+
+      if (locations.isNotEmpty) {
+        final lat = locations[0].latitude;
+        final lng = locations[0].longitude;
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => GoogleMapsPage(
+              latLong: LatLng(lat, lng),
+            ),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Local não encontrado!")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Erro ao localizar endereço.")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,14 +64,14 @@ class LugarCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [corPrimaria, corSecundaria],
+          colors: [widget.corPrimaria, widget.corSecundaria],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: corPrimaria.withOpacity(0.3),
+            color: widget.corPrimaria.withOpacity(0.3),
             blurRadius: 10,
             offset: const Offset(0, 6),
           ),
@@ -47,7 +84,7 @@ class LugarCard extends StatelessWidget {
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
             child: Image.asset(
-              imagem,
+              widget.imagem,
               width: double.infinity,
               height: 180,
               fit: BoxFit.cover,
@@ -62,7 +99,7 @@ class LugarCard extends StatelessWidget {
               children: [
                 // TÍTULO
                 Text(
-                  titulo,
+                  widget.titulo,
                   style: GoogleFonts.raleway(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -77,7 +114,7 @@ class LugarCard extends StatelessWidget {
                     const Icon(Icons.phone, size: 18, color: Colors.white),
                     const SizedBox(width: 6),
                     Text(
-                      telefone,
+                      widget.telefone,
                       style: GoogleFonts.poppins(
                         fontSize: 14,
                         color: Colors.white.withOpacity(0.9),
@@ -95,7 +132,7 @@ class LugarCard extends StatelessWidget {
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
-                        endereco,
+                        widget.endereco,
                         style: GoogleFonts.poppins(
                           fontSize: 14,
                           color: Colors.white.withOpacity(0.9),
@@ -112,7 +149,7 @@ class LugarCard extends StatelessWidget {
                     width: double.infinity,
                     child: TextButton(
                       style: _mapButtonStyle(),
-                      onPressed: onVerMapa,
+                      onPressed: _abrirMapa,
                       child: Text(
                         'Ver no mapa',
                         style: GoogleFonts.poppins(
