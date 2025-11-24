@@ -18,17 +18,15 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   checkUserLogin() async {
-    bool status = await SharedPrefs().getUserStatus();
+    int userId = await SharedPrefs().getUserId();
 
     await Future.delayed(const Duration(seconds: 3));
 
-    if (status) {
+    if (userId!=0) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => const HomePage(
-            email: '',
-            senha: '',
           ),
         ),
       );

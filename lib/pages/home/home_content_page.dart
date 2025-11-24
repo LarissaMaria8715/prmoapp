@@ -16,13 +16,14 @@ import '../book/livro_page.dart';
 import '../places/places_page.dart';
 
 class HomeContent extends StatelessWidget {
-  final String email;
-  final String senha;
 
-  const HomeContent({Key? key, required this.email, required this.senha}) : super(key: key);
+
+  const HomeContent({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // recuperar do provieder
+    // context.watch
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(24),

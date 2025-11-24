@@ -1,4 +1,5 @@
 import 'package:equilibreapp/pages/registration/register_page.dart';
+import 'package:equilibreapp/provider/profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../api/user/usuarios_api.dart';
@@ -64,21 +65,49 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _onLoginPressed() {
-    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Preencha todos os campos!')),
-      );
-      return;
-    }
+  Future<void> onPressed() async{
+    String email = emailController.text;
+    String password = passwordController.text;
 
-    setState(() {
-      _loginFuture = _login(
-        emailController.text.trim(),
-        passwordController.text,
+    //try {
+      //Usuario? user = await UsuariosApi().login(email, password);
+    //} catch () {
+
+    //}
+    Usuario? user = await UsuariosApi().login(email, password);
+    if(user != null) {
+
+      SharedPrefs().setUserID(user.id);
+      ProfileProvider().setUser(user);
+      // salvar no provider
+      // context.read
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return HomePage();
+          },
+        ),
       );
-    });
+    }else {
+      print('Usuario e/ou senha incorretos!');
+    }
   }
+  //  void _onLoginPressed() {
+    //if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      //ScaffoldMessenger.of(context).showSnackBar(
+        //const SnackBar(content: Text('Preencha todos os campos!')),
+      //);
+    //  return;
+    //}
+
+  //  setState(() {
+    //  _loginFuture = _login(
+   //     emailController.text.trim(),
+  //      passwordController.text,
+   //   );
+   // });
+  //}
 
   @override
   Widget build(BuildContext context) {

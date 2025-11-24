@@ -3,8 +3,7 @@ import '../../model/user/user_model.dart';
 
 class UsuariosApi {
   final dio = Dio();
-  final String baseUrl =
-      'https://my-json-server.typicode.com/LarissaMaria8715/equilibre-api';
+  final String baseUrl = 'https://my-json-server.typicode.com/LarissaMaria8715/equilibre-api';
 
   Future<Usuario?> login(String email, String senha) async {
     final loginResponse = await dio.get('$baseUrl/login');
@@ -21,6 +20,7 @@ class UsuariosApi {
         return Usuario.fromJson(userResponse.data);
       }
     }
+    //throw Exception('Usuário não encontrado!');
     return null;
   }
 }
