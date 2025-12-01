@@ -77,7 +77,7 @@ class _HospitaisPageState extends State<HospitaisPage> {
                 endereco: item.endereco,
                 imagem: 'assets/images/equilibre.jpg',
                 corPrimaria: AppColors.darkTurquoise3,
-                corSecundaria: AppColors.darkTurquoise2,
+                corSecundaria: AppColors.darkTurquoise2, lugar: null,
               );
             },
           );
