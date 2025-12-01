@@ -10,7 +10,7 @@ class Hospital {
     required this.nome,
     required this.endereco,
     required this.telefone,
-    required this.foto,
+    required this.foto, required double latitude, required double longitude,
   });
 
   factory Hospital.fromJson(Map<String, dynamic> json) {

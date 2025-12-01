@@ -13,9 +13,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Equilibre',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
       home: const SplashPage(),
     );
   }

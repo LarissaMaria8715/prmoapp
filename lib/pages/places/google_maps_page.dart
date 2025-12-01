@@ -29,7 +29,7 @@ class GoogleMapsPageState extends State<GoogleMapsPage> {
           ),
         ),
         backgroundColor: Colors.green,
-        automaticallyImplyLeading: true, // mostra o botão de voltar
+        automaticallyImplyLeading: true,
         elevation: 3,
       ),
       body: GoogleMap(
