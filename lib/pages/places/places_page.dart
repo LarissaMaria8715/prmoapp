@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../utils/colors.dart';
 import '../../wigets/places/lugares_button.dart';
-import 'centro_de_apoio_page.dart';
 import 'hospitais_page.dart';
 import 'parques_page.dart';
-import 'restaurantes_page.dart';
 
 class LugaresPage extends StatelessWidget {
   const LugaresPage({Key? key}) : super(key: key);
@@ -34,16 +32,6 @@ class LugaresPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               LugaresButton(
-                icon: Icons.support_agent_outlined,
-                label: 'Centros de Apoio',
-                backgroundColor: AppColors.darkLavender4,
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const CentrosApoioPage()),
-                ),
-              ),
-              const SizedBox(height: 24),
-              LugaresButton(
                 icon: Icons.local_hospital_outlined,
                 label: 'Hospitais',
                 backgroundColor: AppColors.darkTurquoise4,
@@ -60,16 +48,6 @@ class LugaresPage extends StatelessWidget {
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const ParquesPage()),
-                ),
-              ),
-              const SizedBox(height: 24),
-              LugaresButton(
-                icon: Icons.restaurant_outlined,
-                label: 'Restaurantes',
-                backgroundColor: AppColors.darkCoral4,
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const RestaurantesPage()),
                 ),
               ),
             ],

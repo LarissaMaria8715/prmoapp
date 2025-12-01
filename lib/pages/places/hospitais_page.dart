@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../api/places/hospital/hospital_api.dart';
-import '../../model/hospital/hospital.dart';
+import '../../model/places/hospital/hospital.dart';
 import '../../utils/colors.dart';
 import '../../wigets/places/lugar_card.dart';
 

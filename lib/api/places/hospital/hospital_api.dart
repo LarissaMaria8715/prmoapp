@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:geocoding/geocoding.dart';
-import '../../../model/hospital/hospital.dart';
+
+import '../../../model/places/hospital/hospital.dart';
 
 class HospitalsApi {
   final dio = Dio();
