@@ -7,7 +7,6 @@ import '../../utils/colors.dart';
 import '../../model/user/user_model.dart';
 import '../../utils/shared_prefs.dart';
 import '../home/home_page.dart';
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 

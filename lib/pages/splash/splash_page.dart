@@ -16,7 +16,6 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
     checkUserLogin();
   }
-
   checkUserLogin() async {
     int userId = await SharedPrefs().getUserId();
 
