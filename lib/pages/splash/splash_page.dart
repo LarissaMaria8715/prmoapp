@@ -16,7 +16,6 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
     checkUserLogin();
   }
-
   checkUserLogin() async {
     int userId = await SharedPrefs().getUserId();
 
@@ -26,7 +25,7 @@ class _SplashPageState extends State<SplashPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const HomePage(
+          builder: (context) => const HomePage(email: '', senha: '',
           ),
         ),
       );

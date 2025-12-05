@@ -7,7 +7,6 @@ import '../../utils/colors.dart';
 import '../../model/user/user_model.dart';
 import '../../utils/shared_prefs.dart';
 import '../home/home_page.dart';
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -22,6 +21,8 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _passwordVisible = false;
   Future<Usuario?>? _loginFuture;
+
+  get _onLoginPressed => null;
 
   @override
   void initState() {
@@ -85,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
         context,
         MaterialPageRoute(
           builder: (context) {
-            return HomePage();
+            return HomePage(email: '', senha: '',);
           },
         ),
       );
