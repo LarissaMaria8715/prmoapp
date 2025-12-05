@@ -2,37 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
+import 'package:provider/provider.dart';
 import '../../pages/places/google_maps_page.dart';
+import '../../provider/favoritos_provider.dart';
 
-class LugarCard extends StatefulWidget {
-  final String titulo;
-  final String telefone;
-  final String endereco;
-  final String imagem;
-  final Color corPrimaria;
-  final Color corSecundaria;
+class LugarCard extends StatelessWidget {
+  final Lugar lugar;
 
-  const LugarCard({
-    Key? key,
-    required this.titulo,
-    required this.telefone,
-    required this.endereco,
-    required this.imagem,
-    required this.corPrimaria,
-    required this.corSecundaria,
-  }) : super(key: key);
+  const LugarCard({Key? key, required this.lugar}) : super(key: key);
 
-  @override
-  State<LugarCard> createState() => _LugarCardState();
-}
-
-class _LugarCardState extends State<LugarCard> {
-
-  Future<void> _abrirMapa() async {
+  Future<void> _abrirMapa(BuildContext context) async {
     try {
-      List<Location> locations =
-      await locationFromAddress(widget.endereco);
+      List<Location> locations = await locationFromAddress(lugar.endereco);
 
       if (locations.isNotEmpty) {
         final lat = locations[0].latitude;
@@ -47,31 +28,31 @@ class _LugarCardState extends State<LugarCard> {
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Local não encontrado!")),
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Local não encontrado!")));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Erro ao localizar endereço.")),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Erro ao localizar endereço.")));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final favoritosProvider = Provider.of<FavoritosProvider>(context);
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [widget.corPrimaria, widget.corSecundaria],
+          colors: [lugar.corPrimaria, lugar.corSecundaria],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: widget.corPrimaria.withOpacity(0.3),
+            color: lugar.corPrimaria.withOpacity(0.3),
             blurRadius: 10,
             offset: const Offset(0, 6),
           ),
@@ -80,26 +61,59 @@ class _LugarCardState extends State<LugarCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // IMAGEM
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
-            child: Image.asset(
-              widget.imagem,
-              width: double.infinity,
-              height: 180,
-              fit: BoxFit.cover,
-            ),
+          // IMAGEM + FAVORITO
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+                child: Image.asset(
+                  lugar.imagem,
+                  width: double.infinity,
+                  height: 180,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned(
+                top: 10,
+                right: 10,
+                child: GestureDetector(
+                  onTap: () {
+                    if (favoritosProvider.isFavorito(lugar)) {
+                      favoritosProvider.removeFavorito(lugar);
+                    } else {
+                      favoritosProvider.addFavorito(lugar);
+                    }
+                  },
+                  child: Consumer<FavoritosProvider>(
+                    builder: (context, provider, _) {
+                      final isFavorito = provider.isFavorito(lugar);
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.35),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          isFavorito ? Icons.favorite : Icons.favorite_border,
+                          color: isFavorito ? Colors.redAccent : Colors.white,
+                          size: 26,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
-
           // CONTEÚDO
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // TÍTULO
                 Text(
-                  widget.titulo,
+                  lugar.titulo,
                   style: GoogleFonts.raleway(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -107,14 +121,12 @@ class _LugarCardState extends State<LugarCard> {
                   ),
                 ),
                 const SizedBox(height: 8),
-
-                // TELEFONE
                 Row(
                   children: [
                     const Icon(Icons.phone, size: 18, color: Colors.white),
                     const SizedBox(width: 6),
                     Text(
-                      widget.telefone,
+                      lugar.telefone,
                       style: GoogleFonts.poppins(
                         fontSize: 14,
                         color: Colors.white.withOpacity(0.9),
@@ -123,8 +135,6 @@ class _LugarCardState extends State<LugarCard> {
                   ],
                 ),
                 const SizedBox(height: 6),
-
-                // ENDEREÇO
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -132,7 +142,7 @@ class _LugarCardState extends State<LugarCard> {
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
-                        widget.endereco,
+                        lugar.endereco,
                         style: GoogleFonts.poppins(
                           fontSize: 14,
                           color: Colors.white.withOpacity(0.9),
@@ -142,14 +152,12 @@ class _LugarCardState extends State<LugarCard> {
                   ],
                 ),
                 const SizedBox(height: 16),
-
-                // BOTÃO MAPA
                 Center(
                   child: SizedBox(
                     width: double.infinity,
                     child: TextButton(
                       style: _mapButtonStyle(),
-                      onPressed: _abrirMapa,
+                      onPressed: () => _abrirMapa(context),
                       child: Text(
                         'Ver no mapa',
                         style: GoogleFonts.poppins(
