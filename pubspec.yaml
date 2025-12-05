@@ -43,7 +43,7 @@ dependencies:
   xml2json: ^6.0.2
   google_maps_flutter:
   geocoding:
-  provider:
+
 dev_dependencies:
   flutter_test:
     geocoding: ^2.1.1

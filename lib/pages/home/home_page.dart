@@ -7,8 +7,12 @@ import '../notifications/notificacoes_page.dart';
 import 'home_content_page.dart';
 
 class HomePage extends StatefulWidget {
+  final String email;
+  final String senha;
+
 
   const HomePage({super.key, required String email, required String senha});
+  const HomePage({super.key, required this.email, required this.
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -22,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _pages = [
-      HomeContent(),
+      HomeContent(email: widget.email, senha: widget.senha),
       PerfilPage(),
     ];
   }
