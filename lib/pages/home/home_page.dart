@@ -8,7 +8,7 @@ import 'home_content_page.dart';
 
 class HomePage extends StatefulWidget {
 
-  const HomePage({super.key});
+  const HomePage({super.key, required String email, required String senha});
 
   @override
   State<HomePage> createState() => _HomePageState();

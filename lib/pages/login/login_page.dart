@@ -23,6 +23,8 @@ class _LoginPageState extends State<LoginPage> {
   bool _passwordVisible = false;
   Future<Usuario?>? _loginFuture;
 
+  get _onLoginPressed => null;
+
   @override
   void initState() {
     super.initState();
@@ -85,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
         context,
         MaterialPageRoute(
           builder: (context) {
-            return HomePage();
+            return HomePage(email: '', senha: '',);
           },
         ),
       );
