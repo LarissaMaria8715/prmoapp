@@ -1,31 +1,23 @@
 class Hospital {
   final int id;
   final String nome;
-  final String endereco;
   final String telefone;
-  final String foto;
-  final double latitude;
-  final double longitude;
+  final String endereco;
+  final String imagem; // novo campo
 
   Hospital({
     required this.id,
     required this.nome,
-    required this.endereco,
     required this.telefone,
-    required this.foto,
-    required this.latitude,
-    required this.longitude,
+    required this.endereco,
+    required this.imagem,
   });
 
-  factory Hospital.fromJson(Map<String, dynamic> json) {
-    return Hospital(
-      id: json['id'],
-      nome: json['nome'],
-      endereco: json['endereco'],
-      telefone: json['telefone'],
-      foto: json['foto'],
-      latitude: json['latitude'] ?? 0.0,
-      longitude: json['longitude'] ?? 0.0,
-    );
-  }
+  factory Hospital.fromJson(Map<String, dynamic> json) => Hospital(
+    id: json['id'],
+    nome: json['nome'],
+    telefone: json['telefone'],
+    endereco: json['endereco'],
+    imagem: json['imagem'],
+  );
 }

@@ -15,13 +15,17 @@ import '../places/places_page.dart';
 
 class HomeContent extends StatelessWidget {
 
+  final String email;
+  final String senha;
 
-  const HomeContent({Key? key}) : super(key: key);
+  const HomeContent({
+    Key? key,
+    required this.email,
+    required this.senha,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // recuperar do provieder
-    // context.watch
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -51,14 +55,18 @@ class HomeContent extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
+
+              // Exibindo o email do usuário no topo
               Text(
-                'Cuide do seu equilíbrio mental e emocional',
+                'Bem-vindo(a), $email',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.poppins(
                   color: AppColors.darkGreen5.withOpacity(0.8),
                   fontSize: 16,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
+
               const SizedBox(height: 40),
               _actionButtonsGrid(context),
             ],
