@@ -29,9 +29,9 @@ class HospitalsApi {
             nome: json['nome'],
             endereco: json['endereco'],
             telefone: json['telefone'],
-            latitude: loc.latitude,
-            longitude: loc.longitude, foto: '',
+            imagem: json['imagem'] ?? 'assets/images/equilibre.jpg',
           );
+
 
           hospitais.add(finalHosp);
         } catch (e) {

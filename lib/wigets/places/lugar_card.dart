@@ -3,8 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import '../../pages/places/google_maps_page.dart';
+import '../../model/places/lugar/lugar.dart';
 import '../../provider/favoritos_provider.dart';
+import '../../pages/places/google_maps_page.dart';
 
 class LugarCard extends StatelessWidget {
   final Lugar lugar;
@@ -14,11 +15,9 @@ class LugarCard extends StatelessWidget {
   Future<void> _abrirMapa(BuildContext context) async {
     try {
       List<Location> locations = await locationFromAddress(lugar.endereco);
-
       if (locations.isNotEmpty) {
         final lat = locations[0].latitude;
         final lng = locations[0].longitude;
-
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -28,12 +27,14 @@ class LugarCard extends StatelessWidget {
           ),
         );
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Local não encontrado!")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Local não encontrado!")),
+        );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Erro ao localizar endereço.")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Erro ao localizar endereço.")),
+      );
     }
   }
 
@@ -66,11 +67,35 @@ class LugarCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
-                child: Image.asset(
+                child: Image.network(
                   lugar.imagem,
                   width: double.infinity,
                   height: 180,
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    // fallback caso a imagem não carregue
+                    return Container(
+                      width: double.infinity,
+                      height: 180,
+                      color: Colors.grey,
+                      child: const Icon(Icons.broken_image, size: 50, color: Colors.white),
+                    );
+                  },
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return SizedBox(
+                      width: double.infinity,
+                      height: 180,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                              (loadingProgress.expectedTotalBytes ?? 1)
+                              : null,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
               Positioned(

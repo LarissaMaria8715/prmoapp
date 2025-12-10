@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../api/places/hospital/hospital_api.dart';
 import '../../model/places/hospital/hospital.dart';
+import '../../model/places/lugar/lugar.dart';
 import '../../utils/colors.dart';
 import '../../wigets/places/lugar_card.dart';
 
@@ -70,15 +71,17 @@ class _HospitaisPageState extends State<HospitaisPage> {
             padding: const EdgeInsets.all(16),
             itemCount: hospitais.length,
             itemBuilder: (context, index) {
-              final item = hospitais[index];
-              return LugarCard(
-                titulo: item.nome,
-                telefone: item.telefone,
-                endereco: item.endereco,
-                imagem: 'assets/images/equilibre.jpg',
+              final hospital = hospitais[index];
+              final lugar = Lugar(
+                titulo: hospital.nome,
+                telefone: hospital.telefone,
+                endereco: hospital.endereco,
+                imagem: hospital.imagem,
                 corPrimaria: AppColors.darkTurquoise3,
-                corSecundaria: AppColors.darkTurquoise2, lugar: null,
+                corSecundaria: AppColors.darkTurquoise2,
               );
+
+              return LugarCard(lugar: lugar);
             },
           );
         },

@@ -1,4 +1,4 @@
-import 'package:equilibreapp/pages/perfil/perfil_page.dart';
+import 'package:equilibreapp/pages/perfil/favoritos_page.dart';
 import 'package:flutter/material.dart';
 import '../../utils/colors.dart';
 import '../../utils/shared_prefs.dart';
@@ -10,9 +10,11 @@ class HomePage extends StatefulWidget {
   final String email;
   final String senha;
 
-
-  const HomePage({super.key, required String email, required String senha});
-  const HomePage({super.key, required this.email, required this.
+  const HomePage({
+    super.key,
+    required this.email,
+    required this.senha,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -27,7 +29,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _pages = [
       HomeContent(email: widget.email, senha: widget.senha),
-      PerfilPage(),
+      const FavoritosPage(),
     ];
   }
 
@@ -58,18 +60,18 @@ class _HomePageState extends State<HomePage> {
               content: const Text('Deseja realmente sair da sua conta?'),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(), // fecha o diálogo
+                  onPressed: () => Navigator.of(context).pop(),
                   child: const Text('Cancelar'),
                 ),
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    final SharedPrefs prefs = SharedPrefs();
+                    await prefs.setUserStatus(false);
+
                     Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => LoginPage()),
+                      MaterialPageRoute(builder: (context) => const LoginPage()),
                           (route) => false,
                     );
-
-                    final SharedPrefs _prefs = SharedPrefs();
-                    _prefs.setUserStatus(false);
                   },
                   child: const Text('Sair'),
                 ),
@@ -84,7 +86,7 @@ class _HomePageState extends State<HomePage> {
           icon: const Icon(Icons.notifications_active, color: Colors.white, size: 32),
           onPressed: () {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => NotificacoesPage()),
+              MaterialPageRoute(builder: (context) => const NotificacoesPage()),
             );
           },
         ),

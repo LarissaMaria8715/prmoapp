@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../api/places/parks/parks_api.dart';
+import '../../model/places/lugar/lugar.dart';
 import '../../model/places/parks/park.dart';
 import '../../utils/colors.dart';
 import '../../wigets/places/lugar_card.dart';
@@ -41,12 +42,19 @@ class _ParquesPageState extends State<ParquesPage> {
         future: futureParques,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           final parques = snapshot.data!;
+
+          if (parques.isEmpty) {
+            return const Center(
+              child: Text(
+                'Nenhum parque encontrado.',
+                style: TextStyle(fontSize: 16),
+              ),
+            );
+          }
 
           return ListView.builder(
             padding: const EdgeInsets.all(16),
@@ -54,14 +62,17 @@ class _ParquesPageState extends State<ParquesPage> {
             itemBuilder: (context, index) {
               final park = parques[index];
 
-              return LugarCard(
+              // Cria o objeto Lugar com imagem
+              final lugar = Lugar(
                 titulo: park.nome,
-                telefone: '(00) 00000-0000',
+                telefone: '(00) 00000-0000', // caso não tenha telefone
                 endereco: park.endereco,
-                imagem: 'assets/images/equilibre.jpg',
+                imagem: park.imagem, // pega a imagem do parque
                 corPrimaria: AppColors.darkLeaf3,
                 corSecundaria: AppColors.darkLeaf1,
               );
+
+              return LugarCard(lugar: lugar);
             },
           );
         },

@@ -19,24 +19,20 @@ class ParksApi {
       for (var json in response.data) {
         print('[PARKS_API] Processando parque: ${json['nome']}');
 
-        Park tmp = Park(
-          nome: json['nome'],
-          endereco: json['endereco'],
-          latitude: 0,
-          longitude: 0,
-        );
-
         try {
-          print('[PARKS_API] Fazendo geocoding -> ${tmp.endereco}');
-          final locations = await locationFromAddress(tmp.endereco);
+          final endereco = json['endereco'];
+          print('[PARKS_API] Fazendo geocoding -> $endereco');
+
+          final locations = await locationFromAddress(endereco);
           final loc = locations.first;
           print('[PARKS_API] Geocoding OK → lat: ${loc.latitude}, lng: ${loc.longitude}');
 
           Park finalPark = Park(
-            nome: tmp.nome,
-            endereco: tmp.endereco,
+            nome: json['nome'],
+            endereco: endereco,
             latitude: loc.latitude,
             longitude: loc.longitude,
+            imagem: json['imagem'] ?? 'assets/images/equilibre.jpg',
           );
 
           parques.add(finalPark);
